@@ -21,9 +21,7 @@ var result = {
             if (foundCreeps.length < role.requiredNumber && !Game.spawns['Spawn1'].spawning) {
                 // TODO: only spawn creep if it is really necessary
                 var newName = role.roleName + ' ' + Game.time;
-                // TODO: custom spawn method on the roles (extended?)
                 // TODO: do not always use spawn1
-                // TODO: use biggest creep possible
                 if (role.spawnCreep(Game.spawns['Spawn1'], newName)) {
                     console.log('Spawning new creep: ' + newName);
                 }
@@ -51,6 +49,8 @@ var result = {
                     }
                 }
                 usedCreepRole.run(creep);
+                
+                creep.room.visual.text(usedCreepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
             } else {
                 // if no role could be found for a creep... he gets to be a harvester
                 console.log("COULD NOT FIND ROLE: " + creep.memory.role);

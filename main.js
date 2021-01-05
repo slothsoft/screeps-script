@@ -2,7 +2,7 @@ var roleManager = require('manager.role');
 
 module.exports.loop = function () {
 
-    console.log(Game.spawns['Spawn1'].room.energyAvailable);
+    // console.log("Energy: " + Game.spawns['Spawn1'].room.energyAvailable);
 
     // delete the memory of deceased creeps 
 
