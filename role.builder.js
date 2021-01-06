@@ -6,9 +6,9 @@ var RolePrototype = require('role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Builder';
-result.requiredNumber = 1;
+result.requiredNumber = 2;
 result.color = '#ffff00';
-result.symbol = '🚧';
+result.symbol = '🔨';
 result.spawnCreep = spawn => result.spawnCreepWithParts(spawn, [WORK,CARRY,MOVE]);
     
 result.isNecessary = function(room) {

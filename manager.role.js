@@ -2,10 +2,13 @@
  * This class knows ALL roles. And is able to switch creeps bitween them if necessary.
  */
  
+var constants = require('main.constants');
+
 var roleHarvester = require('role.harvester');
 var roleBuilder = require('role.builder');
 var roleUpgrader = require('role.upgrader');
-var allRoles = [roleHarvester, roleBuilder, roleUpgrader];
+var roleHandyman = require('role.handyman');
+var allRoles = [roleHarvester, roleBuilder, roleUpgrader, roleHandyman];
 
 
 var result = {
@@ -15,6 +18,7 @@ var result = {
 
     repopulateCreeps: function() {    
         // TODO: maybe use renewCreep() instead?
+        // TODO: maybe use renewCreep for big creeps only?
         allRoles.forEach(role => {
             var foundCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role.roleName);
             
@@ -50,12 +54,13 @@ var result = {
                 }
                 usedCreepRole.run(creep);
                 
-                creep.room.visual.text(usedCreepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
+                if (constants.DEBUG_ROLES) {
+                    creep.room.visual.text(usedCreepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
+                }
             } else {
                 // if no role could be found for a creep... he gets to be a harvester
                 console.log("COULD NOT FIND ROLE: " + creep.memory.role);
                 roleHarvester.run(creep);
-    	        creep.say('🤯 role');
             }
         }
     }

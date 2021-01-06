@@ -5,7 +5,7 @@ var RolePrototype = require('role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Harvester';
-result.requiredNumber = 2;
+result.requiredNumber = 4;
 result.color = '#ffffff';
 result.symbol = '🔄';
 result.spawnCreep = spawn => result.spawnCreepWithParts(spawn, [WORK,CARRY,MOVE]);
