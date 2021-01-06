@@ -1,3 +1,4 @@
+var info = require('main.info');
 var roleManager = require('manager.role');
 
 module.exports.loop = function () {
@@ -29,5 +30,5 @@ module.exports.loop = function () {
     
     
     roleManager.moveCreeps();
-    
+    info.print(Game.spawns['Spawn1'].room);
 }

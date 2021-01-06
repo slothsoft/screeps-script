@@ -3,6 +3,7 @@
  */
  
 var constants = require('main.constants');
+var info = require('main.info');
 
 var roleHarvester = require('role.harvester');
 var roleBuilder = require('role.builder');
@@ -35,6 +36,8 @@ var result = {
     moveCreeps: function() {  
         // TODO: not all on the same resource
     
+        var rolesInfo = new Map();
+    
         for(var name in Game.creeps) {
             var creep = Game.creeps[name];
             var creepRole = _.filter(allRoles, (role) => creep.memory.role == role.roleName);
@@ -50,16 +53,21 @@ var result = {
                     }
                 }
                 usedCreepRole.run(creep);
+                rolesInfo.set(usedCreepRole, (rolesInfo.get(usedCreepRole) || 0) + 1);
                 
                 if (constants.DEBUG_ROLES) {
                     creep.room.visual.text(usedCreepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
                 }
+                
+                
             } else {
                 // if no role could be found for a creep... he gets to be a harvester
                 console.log("COULD NOT FIND ROLE: " + creep.memory.role);
                 roleHarvester.run(creep);
             }
         }
+        
+        info.roles = rolesInfo;
     }
 
 };
