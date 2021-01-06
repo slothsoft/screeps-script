@@ -13,10 +13,6 @@ var result = {
             var room = Game.rooms[roomName];
             this.printRolesInfoForRoom(room);
             this.printConsole(room);
-            
-            if (constants.DEBUG_GENERAL_INFO) {
-                this.printGeneralInfo(room);
-            }
         }
     },
     
@@ -57,28 +53,6 @@ var result = {
     
     log: function(newLine) {   
         this.console.splice(0, 0, newLine);
-    },
-    
-    printGeneralInfo: function(room) {   
-        var x = room.memory.base.generalInfoX;
-        var y = room.memory.base.generalInfoY;
-        
-        var oldestCreep = this.getOldestCreep();
-        if (oldestCreep) {
-            room.visual.text("Oldest: " + oldestCreep.name, x, y++, {align: 'left', opacity: 0.8});
-            room.visual.text("Ticks Left: " + oldestCreep.ticksToLive, x, y++, {align: 'left', opacity: 0.8});
-        }
-    },
-    
-    getOldestCreep: function() {  
-        var oldestCreep;
-        for (var creepName in Game.creeps) {
-            var creep = Game.creeps[creepName];
-            if (!oldestCreep || creep.ticksToLive < oldestCreep.ticksToLive) { 
-                oldestCreep = creep;
-            }
-        }
-        return oldestCreep;
     },
 };
 

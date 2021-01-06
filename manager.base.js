@@ -46,8 +46,6 @@ var result = {
                  consoleX: 38,
                  consoleY: 44,
                  consoleHeight: 5,
-                 generalInfoX: 0, 
-                 generalInfoY: 44,
             };
             info.log("🏠 Created new base: " + initialSpawn.room.memory.base.name);
         }

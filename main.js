@@ -16,3 +16,19 @@ module.exports.loop = function () {
     baseManager.runAll();
     info.print();
 }
+
+// some helper methods to make managing this thing more easily
+
+fetchOldestCreep = function (baseName) {
+    var oldestCreep;
+    for (var creepName in Game.creeps) {
+        var creep = Game.creeps[creepName];
+        if ((!oldestCreep || creep.ticksToLive < oldestCreep.ticksToLive) && (!baseName || creep.room.memory.base.name == baseName)) { 
+            oldestCreep = creep;
+        }
+    }
+    if (oldestCreep) 
+        console.log("Oldest creep: " + oldestCreep.name + " (" + oldestCreep.ticksToLive + " ttl)");
+    else 
+        console.log("No creep found.");
+}
