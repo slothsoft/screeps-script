@@ -6,7 +6,7 @@ var RolePrototype = require('role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Builder';
-result.requiredNumber = 3;
+result.requiredNumber = 1;
 result.color = '#ffff00';
 result.symbol = '🔨';
     

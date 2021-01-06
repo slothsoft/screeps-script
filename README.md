@@ -25,4 +25,8 @@ My scripts for the game [Screeps](https://screeps.com/).
 
 ## Open Tasks
 
-- _role.handyman_ - stay with one structure until inventory empty (or fully repaired)
+- _role.handyman_ 
+    - stay with one structure until inventory empty (or fully repaired)
+    - only repair structures that need at least the entire inventory
+- create "end user" console (and remove all console.log)
+- make watchtower useful

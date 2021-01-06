@@ -4,8 +4,6 @@
 
 var result = {
     
-    roles: { /* role => number of creeps */},
-
     print: function() {   
         for (var roomName in Game.rooms) {
             this.printRolesInfoForRoom(Game.rooms[roomName]);

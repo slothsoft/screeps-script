@@ -5,7 +5,7 @@ var RolePrototype = require('role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Harvester';
-result.requiredNumber = 4;
+result.requiredNumber = 2;
 result.color = '#ffffff';
 result.symbol = '🧺';
 

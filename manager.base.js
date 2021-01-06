@@ -70,7 +70,7 @@ var result = {
             var baseName = room.memory.base.name;
             var foundCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role.roleName && creep.memory.home == baseName);
             
-            if (foundCreeps.length < role.requiredNumber) {
+            if (foundCreeps.length < room.memory.base.roleInfo[role.roleName].requiredNumber) {
                 var freeSpawn = this.fetchFreeSpawn(room);
                 if (freeSpawn) {
                     if (role.spawnCreep(freeSpawn)) {
@@ -84,7 +84,7 @@ var result = {
     fetchFreeSpawn: function(room) {  
         for (var spawnName in Game.spawns) {
             var spawn = Game.spawns[spawnName];
-            if (spawn.memory.home.memory.home == room && !spawn.spawning) {
+            if (spawn.memory.home == room.memory.base.name && !spawn.spawning) {
                 return spawn;
             }
         }
@@ -98,7 +98,7 @@ var result = {
     showSpawningAnimation: function() {  
         for (var spawnName in Game.spawns) {
             var spawn = Game.spawns[spawnName];
-            if(spawn.spawning) { 
+            if (spawn.spawning) { 
                 var spawningCreep = Game.creeps[spawn.spawning.name];
                 spawn.room.visual.text('🔁', spawn.pos.x - 1, spawn.pos.y, {align: 'center', opacity: 0.8});
             }
