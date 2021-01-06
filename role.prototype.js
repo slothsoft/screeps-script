@@ -133,7 +133,10 @@ const result = {
         var newName = this.roleName + ' ' + Game.time;
         var parts = this.calculateMaxParts(spawn, parts);
         if (parts) {
-            spawn.spawnCreep(parts, newName, {memory: {role: this.roleName}});
+            spawn.spawnCreep(parts, newName, {memory: {
+                role: this.roleName,
+                home: spawn.memory.home,
+            }});
             return true;
         }
         return false;

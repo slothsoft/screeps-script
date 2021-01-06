@@ -25,6 +25,4 @@ My scripts for the game [Screeps](https://screeps.com/).
 
 ## Open Tasks
 
-- _manager.role.js_ - do not always use spawn1 
-- _manager.role.js_ - not all on the same resource 
 - _role.handyman_ - stay with one structure until inventory empty (or fully repaired)
