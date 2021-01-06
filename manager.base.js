@@ -41,8 +41,15 @@ var result = {
             // Congratz! We just spawned our very first base!
             initialSpawn.room.memory.base = {
                  name : "Dresden", // the best city ever
+                 roleInfoX: 0,
+                 roleInfoY: 0,
+                 consoleX: 38,
+                 consoleY: 44,
+                 consoleHeight: 5,
+                 generalInfoX: 0, 
+                 generalInfoY: 44,
             };
-            console.log("Created new base: " + initialSpawn.room.memory.base.name);
+            info.log("🏠 Created new base: " + initialSpawn.room.memory.base.name);
         }
         
         // all spawns (and all creeps) have a home, so that we find them again
@@ -51,6 +58,7 @@ var result = {
             var spawn = Game.spawns[spawnName];
             if (!spawn.memory.home) {
                 spawn.memory.home = initialSpawn.room.memory.base.name;
+                info.log("🏠 Created new spawn in base: " + spawn.room.memory.home);
             }
         }
     },
@@ -74,7 +82,7 @@ var result = {
                 var freeSpawn = this.fetchFreeSpawn(room);
                 if (freeSpawn) {
                     if (role.spawnCreep(freeSpawn)) {
-                        console.log('Spawning new creep: ' + newName);
+                        info.log(role.symbol + ' Spawning new creep for role: ' + role.roleName);
                     }
                 }
             }
@@ -100,7 +108,7 @@ var result = {
             var spawn = Game.spawns[spawnName];
             if (spawn.spawning) { 
                 var spawningCreep = Game.creeps[spawn.spawning.name];
-                spawn.room.visual.text('🔁', spawn.pos.x - 1, spawn.pos.y, {align: 'center', opacity: 0.8});
+                spawn.room.visual.text('🔁', spawn.pos.x - 1, spawn.pos.y, {align: 'left', opacity: 0.8});
             }
         }
     },
@@ -139,7 +147,7 @@ var result = {
                 
             } else {
                 // if no role could be found for a creep... he gets to be a harvester
-                console.log("COULD NOT FIND ROLE: " + creep.memory.role);
+                info.log("☢ COULD NOT FIND ROLE: " + creep.memory.role);
                 roleHarvester.run(creep);
             }
         }
