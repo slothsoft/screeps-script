@@ -34,9 +34,8 @@ var result = {
     // Move the creeps around
     
     moveCreeps: function() {  
-        // TODO: not all on the same resource
-    
-        var rolesInfo = new Map();
+        
+        this.initRoleInfos();
     
         for(var name in Game.creeps) {
             var creep = Game.creeps[name];
@@ -53,7 +52,7 @@ var result = {
                     }
                 }
                 usedCreepRole.run(creep);
-                rolesInfo.set(usedCreepRole, (rolesInfo.get(usedCreepRole) || 0) + 1);
+                creep.room.memory.base.roleInfo.get(usedCreepRole.roleName).currentNumber++;
                 
                 if (constants.DEBUG_ROLES) {
                     creep.room.visual.text(usedCreepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
@@ -66,9 +65,32 @@ var result = {
                 roleHarvester.run(creep);
             }
         }
+    },
+    
+    /**
+     * Init role info on room, so we can print it (or do whatever)
+     **/
+    
+    initRoleInfos: function() {  
+        for (var roomName in Game.rooms) {
+            this.initRoleInfo(Game.rooms[roomName]);
+        }
+    },
         
-        info.roles = rolesInfo;
-    }
+    initRoleInfo: function(room) {  
+        var currentRoleInfo = new Map(); 
+        
+        for (var roleIndex in allRoles) {
+            var role = allRoles[roleIndex];
+            var originalRoleInfo = room.memory.base.roleInfo && room.memory.base.roleInfo[role.roleName];
+            currentRoleInfo.set(role.roleName, {
+                symbol: role.symbol,
+                requiredNumber: (originalRoleInfo && originalRoleInfo.requiredNumber) || role.requiredNumber,
+                currentNumber: 0,
+            });
+        }
+        room.memory.base.roleInfo = currentRoleInfo;
+    },
 
 };
 

@@ -9,12 +9,10 @@ My scripts for the game [Screeps](https://screeps.com/).
 
 ## Features
 
-There are the following roles:
+- each room has a fancy overview GUI:
 
-- 🔨 - Builder
-- 🔧 - Handyman
-- 🧺 - Harvester
-- ⚡ - Upgrader 
+![fancy GUI](readme/fancy-gui.png)
+
 
 
 ### Creeps

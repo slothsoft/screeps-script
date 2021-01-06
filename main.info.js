@@ -6,13 +6,23 @@ var result = {
     
     roles: { /* role => number of creeps */},
 
-    print: function(room) {   
-        //room.controller.memory.infoX = 7;
-        var y = 0;
-        for (const [role, count] of this.roles) {
-          console.log(role.roleName, count)
-          room.visual.text(role.symbol + " " + role.roleName + " " + count + "/" + role.requiredNumber, 0, y, {align: 'left', opacity: 0.8});
-          y++;
+    print: function() {   
+        for (var roomName in Game.rooms) {
+            this.printRolesInfoForRoom(Game.rooms[roomName]);
+        }
+    },
+    
+    printRolesInfoForRoom: function(room) {   
+        var x = room.memory.base.roleInfoX || 0;
+        var y = room.memory.base.roleInfoY || 0;
+        
+        if (!room.memory.base.roleInfo)
+            return;
+        
+        room.visual.text(room.memory.base.name, x, y++, {align: 'left', opacity: 0.8});
+        
+        for (const [role, count] of room.memory.base.roleInfo) {
+          room.visual.text(count.symbol + " " + role + " " + count.currentNumber + "/" + count.requiredNumber, x, y++, {align: 'left', opacity: 0.8});
         }
     },
 };
