@@ -17,13 +17,10 @@ var result = {
     /** Test for each role if enough creeps are present (else create them) */
 
     repopulateCreeps: function() {    
-        // TODO: maybe use renewCreep() instead?
-        // TODO: maybe use renewCreep for big creeps only?
         allRoles.forEach(role => {
             var foundCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role.roleName);
             
             if (foundCreeps.length < role.requiredNumber && !Game.spawns['Spawn1'].spawning) {
-                // TODO: only spawn creep if it is really necessary
                 var newName = role.roleName + ' ' + Game.time;
                 // TODO: do not always use spawn1
                 if (role.spawnCreep(Game.spawns['Spawn1'], newName)) {

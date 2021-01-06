@@ -9,14 +9,12 @@ result.roleName = 'Upgrader';
 result.requiredNumber = 1;
 result.color = '#00ff00';
 result.symbol = '⚡';
-result.spawnCreep = spawn => result.spawnCreepWithParts(spawn, [WORK,CARRY,MOVE]);
-    
-result.isNecessary = function(room) {
-    return true;
+
+result.findTargets = function(room) {
+    return [ room.controller ];
 };
 
-/** @param {Creep} creep **/
-result.run = function(creep) {
+result.work = function(creep) {
         
     if(creep.memory.upgrading && creep.store[RESOURCE_ENERGY] == 0) {
         creep.memory.upgrading = false;
@@ -26,9 +24,7 @@ result.run = function(creep) {
     }
 
     if(creep.memory.upgrading) {
-        if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: this.color}});
-        }
+        this.moveToClosestTarget(creep, target => creep.upgradeController(target));
     } else {
         this.moveToSource(creep);
     }
