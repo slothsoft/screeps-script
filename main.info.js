@@ -21,8 +21,9 @@ var result = {
         
         room.visual.text(room.memory.base.name, x, y++, {align: 'left', opacity: 0.8});
         
-        for (const [role, count] of room.memory.base.roleInfo) {
-          room.visual.text(count.symbol + " " + role + " " + count.currentNumber + "/" + count.requiredNumber, x, y++, {align: 'left', opacity: 0.8});
+        for (const role in room.memory.base.roleInfo) {
+            var count = room.memory.base.roleInfo[role];
+            room.visual.text(count.symbol + " " + role + " " + count.currentNumber + "/" + count.requiredNumber, x, y++, {align: 'left', opacity: 0.8});
         }
     },
 };

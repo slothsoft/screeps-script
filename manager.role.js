@@ -52,7 +52,7 @@ var result = {
                     }
                 }
                 usedCreepRole.run(creep);
-                creep.room.memory.base.roleInfo.get(usedCreepRole.roleName).currentNumber++;
+                creep.room.memory.base.roleInfo[usedCreepRole.roleName].currentNumber++;
                 
                 if (constants.DEBUG_ROLES) {
                     creep.room.visual.text(usedCreepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
@@ -78,16 +78,16 @@ var result = {
     },
         
     initRoleInfo: function(room) {  
-        var currentRoleInfo = new Map(); 
+        var currentRoleInfo = { }; 
         
         for (var roleIndex in allRoles) {
             var role = allRoles[roleIndex];
             var originalRoleInfo = room.memory.base.roleInfo && room.memory.base.roleInfo[role.roleName];
-            currentRoleInfo.set(role.roleName, {
+            currentRoleInfo[role.roleName] = {
                 symbol: role.symbol,
                 requiredNumber: (originalRoleInfo && originalRoleInfo.requiredNumber) || role.requiredNumber,
                 currentNumber: 0,
-            });
+            };
         }
         room.memory.base.roleInfo = currentRoleInfo;
     },
