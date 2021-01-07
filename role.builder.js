@@ -9,25 +9,10 @@ result.roleName = 'Builder';
 result.requiredNumber = 1;
 result.color = '#ffff00';
 result.symbol = '🔨';
+result.work = creep => result.commuteBetweenSourceAndTarget(creep, target => creep.build(target));
     
 result.findTargets = function(room) {
     return room.find(FIND_CONSTRUCTION_SITES);
-};
-
-result.work = function(creep) {
-
-    if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
-        creep.memory.building = false;
-    }
-    if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
-        creep.memory.building = true;
-    }
-
-    if(creep.memory.building) {
-        this.moveToClosestTarget(creep, target => creep.build(target));
-    } else {
-        this.moveToSource(creep);
-    }
 };
 
 module.exports = result;

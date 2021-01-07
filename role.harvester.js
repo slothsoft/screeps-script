@@ -8,6 +8,7 @@ result.roleName = 'Harvester';
 result.requiredNumber = 2;
 result.color = '#ffffff';
 result.symbol = '🧺';
+result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
 
 result.findTargets = function(room)  {
     return room.find(FIND_MY_STRUCTURES, {
@@ -18,14 +19,6 @@ result.findTargets = function(room)  {
                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
     });
-};
-
-result.work = function(creep) {
-    if(creep.store.getFreeCapacity() > 0) {
-        this.moveToSource(creep);
-    } else {
-        this.moveToClosestTarget(creep, target => creep.transfer(target, RESOURCE_ENERGY));
-    }
 };
 
 module.exports = Object.create(result);

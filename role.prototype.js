@@ -3,6 +3,7 @@
  * - basic fields & methods
  * - moving to an appropriate source
  * - spawning new creeps
+ * - commuting between an source and a target
  * 
  * You need to implement / set
  * - roleName, requiredNumber
@@ -121,6 +122,30 @@ const result = {
     work: function(creep) {
         // do nothing on default   
         creep.say('🔔 unimplemented');
+    },
+    
+    
+    /** 
+     * Creep goes to source until full, then works till it's empty and starts over. 
+     * 
+     * @param {Creep} creep 
+     * @param function the work that should be done there
+     **/
+    
+    commuteBetweenSourceAndTarget: function(creep, work) {
+        
+        if (creep.memory.working && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.working = false;
+        }
+        if (!creep.memory.working && creep.store.getFreeCapacity() == 0) {
+            creep.memory.working = true;
+        }
+    
+        if (creep.memory.working) {
+            this.moveToClosestTarget(creep, work);
+        } else {
+            this.moveToSource(creep);
+        }
     },
     
     /** 

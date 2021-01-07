@@ -9,19 +9,12 @@ result.roleName = 'Handyman';
 result.requiredNumber = 0;
 result.color = '#0000ff';
 result.symbol = '🔧';
+result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  creep.repair(target));
     
 result.findTargets = function(room)  {
     return room.find(FIND_STRUCTURES, {
         filter: object => object.hits < object.hitsMax
     }).sort((a, b) => a.hits - b.hits);
-};
-
-result.work = function(creep) {
-    if (creep.store.getFreeCapacity() > 0) {
-        this.moveToSource(creep);
-    } else {
-        this.moveToClosestTarget(creep, target => creep.repair(target));
-    }
 };
 
 module.exports = result;
