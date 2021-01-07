@@ -21,7 +21,7 @@ const result = {
     symbol: '❗',
     
     spawnCreep: function(spawn) {
-    	return this.spawnCreepWithParts(spawn, [WORK, CARRY, CARRY, MOVE]);
+    	return this.spawnCreepWithParts(spawn, [WORK, CARRY, MOVE, MOVE]);
     },
 
     /** 

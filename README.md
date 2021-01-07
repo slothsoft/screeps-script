@@ -26,3 +26,4 @@ My scripts for the game [Screeps](https://screeps.com/).
 ## Open Tasks
 
 - make watchtower useful
+- give roles a priority

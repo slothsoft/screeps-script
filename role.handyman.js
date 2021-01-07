@@ -13,7 +13,7 @@ result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  cr
     
 result.sortTargetForClosest = function(targets, creep) {
     if (creep.memory.target) {
-        var creepTarget = _.filter(targets, (target) => target.id == creep.memory.target);
+        var creepTarget = creep.room.find(FIND_STRUCTURES, { filter: object => ((object.hits < object.hitsMax) && (object.id == creep.memory.target)) });
         if (creepTarget.length > 0) {
             return creepTarget;
         }
