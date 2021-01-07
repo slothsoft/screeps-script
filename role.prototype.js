@@ -11,7 +11,8 @@
  * - findTargets()
  * - work()
  */
- 
+var info = require('main.info');
+
 const result = {
     
     roleName: 'XXX',
@@ -77,8 +78,20 @@ const result = {
     moveToClosestTarget: function(creep, work) {
     	var target = this.findClosestTarget(creep);
     	
-        if (target && work(target) == ERR_NOT_IN_RANGE) {
+    	if (!target) return;
+    	
+    	var workResult = work(target);
+        if (workResult == ERR_NOT_IN_RANGE) {
+            if (creep.memory.debug) {      
+                info.log(creep.memory.role + " is moving to target " + target.id);  
+            }
         	this.moveToLocation(creep, target);
+        } else if (workResult == OK) {     
+            if (creep.memory.debug) {
+                info.log(creep.memory.role + " is working on target " + target.id);  
+            }
+        } else {      
+            info.log(creep.memory.role + " cannot work: " + workResult);  
         }
     },  
 
@@ -101,8 +114,21 @@ const result = {
 
     moveToSource: function(creep) {
         var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-        if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+        
+    	if (!source) return;
+    	
+    	var harvestResult = creep.harvest(source);
+        if (harvestResult == ERR_NOT_IN_RANGE) {
+            if (creep.memory.debug) {      
+                info.log(creep.memory.role + " is moving to source " + source.id);  
+            }
             this.moveToLocation(creep, source);
+        } else if (harvestResult == OK) {     
+            if (creep.memory.debug) {
+                info.log(creep.memory.role + " is harvesting from source " + source.id);  
+            }
+        } else {      
+            info.log(creep.memory.role + " cannot harvest: " + harvestResult);  
         }
     },
 
@@ -162,11 +188,13 @@ const result = {
         var newName = this.roleName + ' ' + Game.time;
         var parts = this.calculateMaxParts(spawn, parts);
         if (parts) {
-            spawn.spawnCreep(parts, newName, {memory: {
+            var spawnResult = spawn.spawnCreep(parts, newName, {memory: {
                 role: this.roleName,
                 home: spawn.memory.home,
             }});
-            return true;
+            if (spawnResult == OK) {
+                return Game.creeps[newName];
+            }
         }
         return false;
     },
@@ -175,9 +203,10 @@ const result = {
     
     calculateMaxParts: function(spawn, parts) {
         var costs = this.calculateCostsForParts(parts);
-        var multiplier = 0;
+        var multiplier = spawn.room.memory.base.partsMinMultiplier || 0;
+        var partsMaxMultiplier = spawn.room.memory.base.partsMaxMultiplier || 20;
       
-        while ((multiplier + 1) * costs <= spawn.room.energyAvailable) {
+        while ((multiplier + 1) * costs <= spawn.room.energyAvailable && multiplier < partsMaxMultiplier) {
             multiplier++;
         }
         

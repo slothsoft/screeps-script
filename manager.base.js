@@ -20,7 +20,11 @@ var result = {
         this.init();
         
         for (var roomName in Game.rooms) {
-            this.runBase(Game.rooms[roomName]);
+            var room = Game.rooms[roomName];
+            if (room.memory.base) {
+                // room with a base
+                this.runBase(room);
+            }
         }
     },
     
@@ -79,8 +83,9 @@ var result = {
             if (foundCreeps.length < room.memory.base.roleInfo[role.roleName].requiredNumber) {
                 var freeSpawn = this.fetchFreeSpawn(room);
                 if (freeSpawn) {
-                    if (role.spawnCreep(freeSpawn)) {
-                        info.log(role.symbol + ' Spawning new creep for role: ' + role.roleName);
+                    var resultingCreep = role.spawnCreep(freeSpawn);
+                    if (resultingCreep) {
+                        info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
                     }
                 }
             }
@@ -90,6 +95,7 @@ var result = {
     fetchFreeSpawn: function(room) {  
         for (var spawnName in Game.spawns) {
             var spawn = Game.spawns[spawnName];
+            
             if (spawn.memory.home == room.memory.base.name && !spawn.spawning) {
                 return spawn;
             }
@@ -104,6 +110,7 @@ var result = {
     showSpawningAnimation: function() {  
         for (var spawnName in Game.spawns) {
             var spawn = Game.spawns[spawnName];
+            
             if (spawn.spawning) { 
                 var spawningCreep = Game.creeps[spawn.spawning.name];
                 spawn.room.visual.text('🔁', spawn.pos.x - 1, spawn.pos.y, {align: 'left', opacity: 0.8});
@@ -117,36 +124,39 @@ var result = {
     
     moveCreeps: function(room) {  
         for(var name in Game.creeps) {
-            var creep = Game.creeps[name];
-            
-            if (creep.room != room) {
-                continue;
-            }
-            
-            var creepRole = _.filter(allRoles, (role) => creep.memory.role == role.roleName);
-            
-            if(creepRole.length > 0) {
-                var usedCreepRole = creepRole[0];
+            try {
+                var creep = Game.creeps[name];
                 
-                if (!usedCreepRole.isNecessary(creep.room)) {
-                    // we have creeps in a role that is not necessary - try to find something better to do
-                    var necessaryRole = _.filter(allRoles, (role) => role.isNecessary(creep.room));
-                    if (necessaryRole.length > 0) {
-                        usedCreepRole = necessaryRole[0];
+                if (creep.room != room || creep.spawning) {
+                    continue;
+                }
+                
+                var creepRole = _.filter(allRoles, (role) => creep.memory.role == role.roleName);
+                
+                if(creepRole.length > 0) {
+                    var usedCreepRole = creepRole[0];
+                    
+                    if (!usedCreepRole.isNecessary(creep.room)) {
+                        // we have creeps in a role that is not necessary - try to find something better to do
+                        var necessaryRole = _.filter(allRoles, (role) => role.isNecessary(creep.room));
+                        if (necessaryRole.length > 0) {
+                            usedCreepRole = necessaryRole[0];
+                        }
                     }
+                    usedCreepRole.run(creep);
+                    creep.room.memory.base.roleInfo[usedCreepRole.roleName].currentNumber++;
+                    
+                    if (constants.DEBUG_ROLES) {
+                        creep.room.visual.text(usedCreepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
+                    }
+                } else {
+                    // if no role could be found for a creep... he gets to be a harvester
+                    info.log("☢ COULD NOT FIND ROLE: " + creep.memory.role);
+                    roleHarvester.run(creep);
                 }
-                usedCreepRole.run(creep);
-                creep.room.memory.base.roleInfo[usedCreepRole.roleName].currentNumber++;
-                
-                if (constants.DEBUG_ROLES) {
-                    creep.room.visual.text(usedCreepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
-                }
-                
-                
-            } else {
-                // if no role could be found for a creep... he gets to be a harvester
-                info.log("☢ COULD NOT FIND ROLE: " + creep.memory.role);
-                roleHarvester.run(creep);
+            } catch (e) {
+                console.error(e.stack);
+                info.log(e);
             }
         }
     },
@@ -155,7 +165,7 @@ var result = {
      * Init role info on room, so we can print it (or do whatever)
      **/
 
-    initRoleInfo: function(room) {  
+    initRoleInfo: function(room) { 
         var currentRoleInfo = { }; 
         
         for (var roleIndex in allRoles) {

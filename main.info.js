@@ -6,13 +6,16 @@ var constants = require('main.constants');
 
 var result = {
     
+    consoleTime: [],
     console: [],
     
     print: function() {   
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
-            this.printRolesInfoForRoom(room);
-            this.printConsole(room);
+            if (room.memory.base) {
+                this.printRolesInfoForRoom(room);
+                this.printConsole(room);
+            }
         }
     },
     
@@ -33,6 +36,7 @@ var result = {
     
     printConsole: function(room) {   
         var x = room.memory.base.consoleX;
+        var xLine = x + 5;
         var yMin = room.memory.base.consoleY;
         var height = room.memory.base.consoleHeight || 5;
         var y = yMin + height;
@@ -40,10 +44,12 @@ var result = {
         if (this.console.length == 0) {
             room.visual.text("<no console entries>", x, y, {align: 'left', opacity: 0.8});
         } else {
-                
             for (const lineIndex in this.console) {
-                room.visual.text(this.console[lineIndex], x, y--, {align: 'left'});
+                var time = this.consoleTime[lineIndex];
+                room.visual.text(time.toISOString().substring(2, 16).replace("T", " "), x, y, {align: 'left'});
+                room.visual.text(this.console[lineIndex], xLine, y, {align: 'left'});
                 
+                y--;
                 if (y <= yMin) {
                     break;
                 }
@@ -52,6 +58,7 @@ var result = {
     },
     
     log: function(newLine) {   
+        this.consoleTime.splice(0, 0, new Date());
         this.console.splice(0, 0, newLine);
     },
 };
