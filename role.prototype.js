@@ -56,10 +56,14 @@ const result = {
     findClosestTarget: function(creep) {
         var targets = this.findTargets(creep.room);
         if (targets) {
-        	targets = _.sortBy(targets, t => creep.pos.getRangeTo(t));
+        	targets = this.sortTargetForClosest(targets, creep);
         	return targets.length > 0 ? targets[0] : null;
 		}
         return null;
+    },
+    
+    sortTargetForClosest: function(targets, creep) {
+        return _.sortBy(targets, t => creep.pos.getRangeTo(t));
     },
 
     /** 

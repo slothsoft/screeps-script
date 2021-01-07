@@ -21,4 +21,5 @@ result.findTargets = function(room)  {
     });
 };
 
-module.exports = Object.create(result);
+module.exports = result;
+
