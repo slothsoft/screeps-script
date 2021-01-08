@@ -14,7 +14,8 @@ result.requiredNumber = 1;
 result.color = '#ff9900';
 result.symbol = '🏭';
 result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
-result.priority = 100;
+result.priority = -1;
+result.isNecessary = room => true;
 
 result.spawnCreep = function(spawn) {
 	return this.spawnCreepWithParts(spawn, [MOVE, MOVE, MOVE, CARRY]);

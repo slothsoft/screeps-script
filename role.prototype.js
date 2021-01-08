@@ -11,6 +11,8 @@
  * - findTargets()
  * - work()
  */
+ 
+var constants = require('main.constants');
 var info = require('main.info');
 var game = require('main.game');
 
@@ -21,6 +23,9 @@ const result = {
     color: '#ff0000',
     symbol: '❗',
     priority: 0, // the higher the better
+    
+    useStorageAsSource: constants.SOURCE_USE_STORAGE,
+    useSourceAsSource: constants.SOURCE_USE_SOURCE,
     
     spawnCreep: function(spawn) {
     	return this.spawnCreepWithParts(spawn, [WORK, CARRY, MOVE, MOVE]);
@@ -115,13 +120,31 @@ const result = {
      */
 
     moveToSource: function(creep) {
-        var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE, {
-                filter: (structure) => game.findAllCreeps().filter(creep => creep.memory.homeSource == structure.id).length == 0
-            });
         
+        var storages = this.useStorageAsSource ? creep.room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_STORAGE ||
+                            structure.structureType == STRUCTURE_CONTAINER ||
+                            structure.structureType == STRUCTURE_LINK) && 
+                            structure.store.getCapacity(RESOURCE_ENERGY) > 0;
+                }}) : [];
+                
+        var sources = this.useSourceAsSource ? creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE, {
+                filter: (source) => {
+                    if (game.findAllCreeps().filter(creep => creep.memory.homeSource == source.id).length) {
+                        // source was claimed by a miner
+                        return false;
+                    }
+                    return source.energy > 0;
+                }}) : [];
+        
+        var possibleSources = storages.concat(sources);
+        
+        _.sortBy(possibleSources, t => creep.pos.getRangeTo(t));
+        var source = possibleSources.length == 0 ? null : possibleSources[0];
     	if (!source) return;
     	
-    	var harvestResult = creep.harvest(source);
+    	var harvestResult = source.structureType ? creep.withdraw(source, RESOURCE_ENERGY) : creep.harvest(source);
         if (harvestResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
                 info.log(creep.memory.role + " is moving to source " + source.id);  
@@ -132,7 +155,7 @@ const result = {
                 info.log(creep.memory.role + " is harvesting from source " + source.id);  
             }
         } else {      
-            info.log(creep.memory.role + " cannot harvest: " + harvestResult);  
+            info.log(creep.memory.role + " cannot harvest: " + harvestResult + " (" + source.id + ")");  
         }
     },
 

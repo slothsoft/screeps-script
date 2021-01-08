@@ -54,5 +54,6 @@ My scripts for the game [Screeps](https://screeps.com/).
 - make watchtower useful
 - road builders?
 - test if we can skip phase 1 with the use of containers
-- containers and storages should be sources as well (except maybe for harvesters?)
+- make links useful
 - don't switch to roles where you missing parts
+- remove console entries after a while

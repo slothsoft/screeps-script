@@ -11,8 +11,9 @@ var result = Object.create(RolePrototype);
 result.roleName = 'Miner';
 result.requiredNumber = 0;
 result.color = '#000000';
-result.symbol = '⛰';
+result.symbol = '🛒';
 result.priority = -1;
+result.isNecessary = room => true;
     
 result.spawnCreep = function(spawn) {
 	return this.spawnCreepWithPartsAndSingle(spawn, [WORK], [MOVE, CARRY]);
@@ -23,6 +24,8 @@ result.spawnCreep = function(spawn) {
 result.getPartsMaxMultiplier = spawn => 5;
 
 result.work = function(creep) {
+    this.creep = creep;
+    
     if (!creep.memory.initialTicksToLive) {
         // this is the first time we actually DO something
         // -> remember intial ticksToLive for later
@@ -83,10 +86,13 @@ result.moveToSource = function(creep) {
 };
 
 result.findTargets = function(room) {
-    return room.find(FIND_MY_STRUCTURES, {
+    var testCreepPosition = this.creep && this.creep.memory.ticksToSource;
+    return room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_STORAGE ||
-                        structure.structureType == STRUCTURE_CONTAINER) && 
+                        structure.structureType == STRUCTURE_CONTAINER ||
+                        structure.structureType == STRUCTURE_LINK) && 
+                       (!testCreepPosition || this.creep.pos.inRangeTo(structure, 7)) &&
                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
     });

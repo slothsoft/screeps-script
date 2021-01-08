@@ -19,7 +19,26 @@ module.exports.loop = function () {
             });
             if(closestDamagedStructure) {
                 // takes waaaay too much energy
-                // tower.repair(closestDamagedStructure);
+                tower.repair(closestDamagedStructure);
+            }
+            
+        }
+        
+    }
+    var tower = Game.getObjectById('5ff8c26eabeae4cd163c0adc');
+    if(tower) {
+
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if(closestHostile) {
+            tower.attack(closestHostile);
+        } else {
+            
+            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => structure.hits < structure.hitsMax
+            });
+            if(closestDamagedStructure) {
+                // takes waaaay too much energy
+                tower.repair(closestDamagedStructure);
             }
             
         }

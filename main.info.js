@@ -40,13 +40,13 @@ var result = {
         }
         
         room.visual.text(unusedRoles + " 0/0", x, y++, {align: 'left', opacity: 0.8});
-    },
+    }, 
     
     printConsole: function(room) {   
         var x = room.memory.base.consoleX;
         var xLine = x + 5;
         var yMin = room.memory.base.consoleY;
-        var height = room.memory.base.consoleHeight || 5;
+        var height = this.getHeight(room);
         var y = yMin + height;
         
         if (this.console.length == 0) {
@@ -65,13 +65,30 @@ var result = {
         }
     },
     
+    getHeight: function(room) {   
+        return room.memory.base.consoleHeight || 5;
+    },
+    
     log: function(newLine) {   
         if (newLine === 'object' && newLine !== null) {
             console.log(JSON.stringify(newLine));
         }
+        var height = this.getMaxHeight();
         
         this.consoleTime.splice(0, 0, new Date());
+        this.consoleTime.slice(0, height);
+        
         this.console.splice(0, 0, newLine);
+        this.console.slice(0, height);
+    },
+    
+    getMaxHeight: function() {   
+        var result = 0;
+        for (var roomName in Game.rooms) {
+            var height = this.getHeight(Game.rooms[roomName])
+            result = height > result ? height : height;
+        }
+        return result;
     },
 };
 

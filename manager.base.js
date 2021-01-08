@@ -150,7 +150,7 @@ var result = {
                     
                     if (!usedCreepRole.isNecessary(creep.room)) {
                         // we have creeps in a role that is not necessary - try to find something better to do
-                        var necessaryRole = _.filter(allRoles, (role) => role.isNecessary(creep.room));
+                        var necessaryRole = _.filter(allRoles, (role) => room.memory.base.roleInfo[role.roleName].requiredNumber > 0 && role.isNecessary(creep.room));
                         if (necessaryRole.length > 0) {
                             usedCreepRole = necessaryRole[0];
                         }
@@ -185,7 +185,7 @@ var result = {
             var originalRoleInfo = room.memory.base.roleInfo && room.memory.base.roleInfo[role.roleName];
             currentRoleInfo[role.roleName] = {
                 symbol: role.symbol,
-                requiredNumber: (originalRoleInfo && originalRoleInfo.requiredNumber) || role.requiredNumber,
+                requiredNumber: originalRoleInfo && originalRoleInfo.requiredNumber,
                 currentNumber: 0,
             };
         }
