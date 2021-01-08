@@ -12,7 +12,8 @@ var roleHarvester = require('role.harvester');
 var roleBuilder = require('role.builder');
 var roleUpgrader = require('role.upgrader');
 var roleHandyman = require('role.handyman');
-var allRoles = [roleHarvester, roleBuilder, roleUpgrader, roleHandyman];
+var roleExplorer = require('role.explorer');
+var allRoles = [roleHarvester, roleBuilder, roleUpgrader, roleHandyman, roleExplorer];
 
 var result = {
     
@@ -43,15 +44,7 @@ var result = {
             
         if (game.getSpawnCount() == 1 && !initialSpawn.room.memory.base) {
             // Congratz! We just spawned our very first base!
-            initialSpawn.room.memory.base = {
-                 name : "Dresden", // the best city ever
-                 roleInfoX: 0,
-                 roleInfoY: 0,
-                 consoleX: 38,
-                 consoleY: 44,
-                 consoleHeight: 5,
-            };
-            info.log("🏠 Created new base: " + initialSpawn.room.memory.base.name);
+            this.initSpawn( initialSpawn, "Dresden"); //
         }
         
         // all spawns (and all creeps) have a home, so that we find them again
@@ -65,11 +58,27 @@ var result = {
         }
     },
     
+    initSpawn: function(spawn, baseName) {  
+        spawn.room.memory.base = {
+             name : baseName,
+             roleInfoX: 0,
+             roleInfoY: 0,
+             consoleX: 38,
+             consoleY: 44,
+             consoleHeight: 5,
+        };
+        info.log("🏠 Created new base: " + initialSpawn.room.memory.base.name);
+    },
+    
     runBase: function(room) {  
         this.initRoleInfo(room);
         this.repopulateCreeps(room);
         this.showSpawningAnimation();
         this.moveCreeps(room);
+    },
+    
+    myTest: function(test) {  
+        info.log(test);
     },
     
     
@@ -155,7 +164,7 @@ var result = {
                     roleHarvester.run(creep);
                 }
             } catch (e) {
-                console.error(e.stack);
+                console.log(e.stack);
                 info.log(e);
             }
         }
