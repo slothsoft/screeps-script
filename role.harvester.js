@@ -9,6 +9,7 @@ result.requiredNumber = 2;
 result.color = '#ffffff';
 result.symbol = '🧺';
 result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
+result.priority = 100;
 
 result.findTargets = function(room)  {
     return room.find(FIND_MY_STRUCTURES, {

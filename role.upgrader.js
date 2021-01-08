@@ -9,7 +9,8 @@ result.roleName = 'Upgrader';
 result.requiredNumber = 1;
 result.color = '#00ff00';
 result.symbol = '⚡';
-result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  creep.upgradeController(target));
+result.work = creep => result.commuteBetweenSourceAndTarget(creep, target => creep.upgradeController(target));
+result.priority = 50;
 
 result.findTargets = function(room) {
     return [ room.controller ];

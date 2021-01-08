@@ -8,6 +8,14 @@ var result = {
         var result = 0;
         for (var s in Game.spawns) result++;
         return result;
+    },
+    
+    findAllCreeps: function() {
+        var result = [];
+        for (var creepName in Game.creeps) {
+            result.push(Game.creeps[creepName]);
+        }
+        return result;
     }
 };
 

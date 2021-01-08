@@ -32,7 +32,7 @@ var result = {
         
         for (const role in room.memory.base.roleInfo) {
             var count = room.memory.base.roleInfo[role];
-            if (count.requiredNumber) {
+            if (count.currentNumber || count.requiredNumber) {
                 room.visual.text(count.symbol + " " + role + " " + count.currentNumber + "/" + count.requiredNumber, x, y++, {align: 'left', opacity: 0.8});
             } else {
                 unusedRoles += count.symbol;
@@ -66,6 +66,10 @@ var result = {
     },
     
     log: function(newLine) {   
+        if (newLine === 'object' && newLine !== null) {
+            console.log(JSON.stringify(newLine));
+        }
+        
         this.consoleTime.splice(0, 0, new Date());
         this.console.splice(0, 0, newLine);
     },

@@ -12,6 +12,7 @@
  * - work()
  */
 var info = require('main.info');
+var game = require('main.game');
 
 const result = {
     
@@ -19,6 +20,7 @@ const result = {
     requiredNumber: 0,
     color: '#ff0000',
     symbol: '❗',
+    priority: 0, // the higher the better
     
     spawnCreep: function(spawn) {
     	return this.spawnCreepWithParts(spawn, [WORK, CARRY, MOVE, MOVE]);
@@ -113,7 +115,9 @@ const result = {
      */
 
     moveToSource: function(creep) {
-        var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+        var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE, {
+                filter: (structure) => game.findAllCreeps().filter(creep => creep.memory.homeSource == structure.id).length == 0
+            });
         
     	if (!source) return;
     	
@@ -140,6 +144,27 @@ const result = {
      **/
     
     run: function(creep) {
+        
+        // selfdestructing is more important than working
+        
+        if (creep.memory.selfdestruct) {
+            var spawn = creep.pos.findClosestByPath(FIND_MY_SPAWNS);
+            if (spawn) {
+                var recycleAnswer = spawn.recycleCreep(creep);
+                if (recycleAnswer == ERR_NOT_IN_RANGE) {
+                    if (creep.memory.debug) {      
+                        info.log(creep.memory.role + " is moving to spawn " + spawn.id);  
+                    }
+                    this.moveToLocation(creep, spawn);
+                } else if (recycleAnswer == OK) {  
+                    if (creep.memory.debug) {
+                        info.log(creep.memory.role + " was recycled.");  
+                    }
+                }
+            }
+            return;
+        }
+        
         this.work(creep);
     },
 
@@ -182,13 +207,26 @@ const result = {
      * Spawns a creep that has the needed parts (or many of them).
      * 
      * @param {Spawn} spawn 
+     * @param parts to duplicate
      **/
     
     spawnCreepWithParts: function(spawn, parts) {
-        var newName = this.roleName + ' ' + Game.time;
-        var parts = this.calculateMaxParts(spawn, parts);
+        return this.spawnCreepWithPartsAndSingle(spawn, parts, []);
+    },
+    
+    /** 
+     * Spawns a creep that has the needed parts (or many of them) and a single part of some other type.
+     * 
+     * @param {Spawn} spawn 
+     * @param parts to duplicate
+     * @param singleParts that are added as is
+     **/
+    
+    spawnCreepWithPartsAndSingle: function(spawn, parts, singleParts) {
+        var parts = this.calculateMaxParts(spawn, parts, singleParts);
         if (parts) {
-            var spawnResult = spawn.spawnCreep(parts, newName, {memory: {
+            var newName = this.roleName + ' ' + Game.time;
+            var spawnResult = spawn.spawnCreep(parts, newName, { memory: {
                 role: this.roleName,
                 home: spawn.memory.home,
             }});
@@ -201,12 +239,13 @@ const result = {
     
     // after this point, the rest are only helper methods
     
-    calculateMaxParts: function(spawn, parts) {
+    calculateMaxParts: function(spawn, parts, singleParts) {
         var costs = this.calculateCostsForParts(parts);
-        var multiplier = spawn.room.memory.base.partsMinMultiplier || 0;
-        var partsMaxMultiplier = spawn.room.memory.base.partsMaxMultiplier || 20;
+        var singleCosts = singleParts ? this.calculateCostsForParts(singleParts) : 0;
+        var multiplier = this.getPartsMinMultiplier(spawn);
+        var partsMaxMultiplier = this.getPartsMaxMultiplier(spawn);
       
-        while ((multiplier + 1) * costs <= spawn.room.energyAvailable && multiplier < partsMaxMultiplier) {
+        while ((multiplier + 1) * costs + singleCosts <= spawn.room.energyAvailable && multiplier < partsMaxMultiplier) {
             multiplier++;
         }
         
@@ -215,7 +254,15 @@ const result = {
             return null;
         }
         
-        return this.replicateParts(parts, multiplier);
+        return singleParts ? singleParts.concat(this.replicateParts(parts, multiplier)) : this.replicateParts(parts, multiplier);
+    },
+    
+    getPartsMinMultiplier: function(spawn) {
+        return spawn.room.memory.base.partsMinMultiplier || 0;
+    },
+    
+    getPartsMaxMultiplier: function(spawn) {
+        return spawn.room.memory.base.partsMaxMultiplier || 20;
     },
     
     calculateCostsForParts: function(parts) {

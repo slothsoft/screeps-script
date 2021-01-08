@@ -13,7 +13,10 @@ var roleBuilder = require('role.builder');
 var roleUpgrader = require('role.upgrader');
 var roleHandyman = require('role.handyman');
 var roleExplorer = require('role.explorer');
-var allRoles = [roleHarvester, roleBuilder, roleUpgrader, roleHandyman, roleExplorer];
+var roleMiner = require('role.miner');
+var roleStorekeeper = require('role.storekeeper');
+var allRoles = [roleHarvester, roleBuilder, roleUpgrader, roleHandyman, roleExplorer, roleMiner,
+        roleStorekeeper].sort((a, b) => b.priority - a.priority);
 
 var result = {
     
