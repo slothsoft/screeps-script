@@ -28,10 +28,18 @@ var result = {
         
         room.visual.text(room.memory.base.name, x, y++, {align: 'left', opacity: 0.8});
         
+        var unusedRoles = "";
+        
         for (const role in room.memory.base.roleInfo) {
             var count = room.memory.base.roleInfo[role];
-            room.visual.text(count.symbol + " " + role + " " + count.currentNumber + "/" + count.requiredNumber, x, y++, {align: 'left', opacity: 0.8});
+            if (count.requiredNumber) {
+                room.visual.text(count.symbol + " " + role + " " + count.currentNumber + "/" + count.requiredNumber, x, y++, {align: 'left', opacity: 0.8});
+            } else {
+                unusedRoles += count.symbol;
+            }
         }
+        
+        room.visual.text(unusedRoles + " 0/0", x, y++, {align: 'left', opacity: 0.8});
     },
     
     printConsole: function(room) {   
