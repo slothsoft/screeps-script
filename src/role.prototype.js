@@ -13,8 +13,8 @@
  */
  
 var constants = require('main.constants');
-var info = require('main.info');
 var game = require('main.game');
+var info = require('main.info');
 
 const result = {
     
@@ -69,6 +69,13 @@ const result = {
 		}
         return null;
     },
+
+    /* 
+     * Sorts the targets so the closest is first. If there are other
+     * things to take into consideration, this function is overriden.
+     * 
+     * @param {Creep} creep 
+     */
     
     sortTargetForClosest: function(targets, creep) {
         return _.sortBy(targets, t => creep.pos.getRangeTo(t));
@@ -159,7 +166,6 @@ const result = {
         }
     },
 
-    
     /* 
      * Creep AI gets run. Creep might decide working is not in its best interest. 
      * 
@@ -168,7 +174,7 @@ const result = {
     
     run: function(creep) {
         
-        // selfdestructing is more important than working
+        // self-destructing is more important than working
         
         if (creep.memory.selfdestruct) {
             var spawn = creep.pos.findClosestByPath(FIND_MY_SPAWNS);
@@ -201,7 +207,6 @@ const result = {
         // do nothing on default   
         creep.say('🔔 unimplemented');
     },
-    
     
     /* 
      * Creep goes to source until full, then works till it's empty and starts over. 
@@ -261,6 +266,14 @@ const result = {
     },
     
     // after this point, the rest are only helper methods
+
+    /* 
+     * Calculate the max parts we can afford.
+     * 
+     * @param {Spawn} spawn 
+     * @param parts to duplicate
+     * @param singleParts that are added as is
+     */
     
     calculateMaxParts: function(spawn, parts, singleParts) {
         var costs = this.calculateCostsForParts(parts);
@@ -279,20 +292,44 @@ const result = {
         
         return singleParts ? singleParts.concat(this.replicateParts(parts, multiplier)) : this.replicateParts(parts, multiplier);
     },
+
+    /* 
+     * Returns the minimum multiplier for the parts for this role.
+     * 
+     * @param {Spawn} spawn 
+     */
     
     getPartsMinMultiplier: function(spawn) {
         return spawn.room.memory.base.partsMinMultiplier || 0;
     },
+
+    /* 
+     * Returns the maximum multiplier for the parts for this role.
+     * 
+     * @param {Spawn} spawn 
+     */
     
     getPartsMaxMultiplier: function(spawn) {
         return spawn.room.memory.base.partsMaxMultiplier || 20;
     },
+
+    /* 
+     * Calculates the costs for the parts in the array.
+     * 
+     * @param parts array
+     */
     
     calculateCostsForParts: function(parts) {
         var result = 0;
         parts.forEach(part => result += this.calculateCostsForSinglePart(part));
         return result;
     },
+
+    /* 
+     * Calculates the costs for a single part.
+     * 
+     * @param part
+     */
         
     calculateCostsForSinglePart: function(part) {
         if (part == WORK) {
@@ -300,6 +337,13 @@ const result = {
         }
         return 50; // MOVE & CARRY
     },
+
+    /* 
+     * Creates a new array and puts the parts array in there a specific amount of times.
+     * 
+     * @param part array
+     * @param multiplier how often to replicate the array
+     */
     
     replicateParts: function(parts, multiplier) {
         var result = [];

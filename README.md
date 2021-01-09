@@ -4,15 +4,15 @@ My scripts for the game [Screeps](https://screeps.com/).
 
 - [Features](#features)
      - [Creeps](#creeps)
+- [Game Phases](#game-phases)
 - [Open Tasks](#open-tasks)
 
 
 ## Features
 
-- each room has a fancy overview GUI:
-
-![fancy GUI](readme/fancy-gui.png)
-
+<img align="right" width="170" height="160" src="readme/fancy-gui.png">
+- each room has a fancy overview GUI
+- each room has a console which prints most info
 
 
 ### Creeps
@@ -58,6 +58,5 @@ My scripts for the game [Screeps](https://screeps.com/).
 - don't switch to roles where you missing parts
 - remove console entries after a while
 - try to refactor to have common methods at central place
-- document what is undocumented
 - test is now necessary
 - the role info is for the room, not the base?

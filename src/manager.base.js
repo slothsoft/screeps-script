@@ -20,6 +20,10 @@ var allRoles = [roleHarvester, roleBuilder, roleUpgrader, roleHandyman, roleExpl
 
 var result = {
     
+	/*
+	 * Runs this manager on all rooms.
+	 */	
+	
     runAll: function() {  
         this.init();
         
@@ -31,6 +35,10 @@ var result = {
             }
         }
     },
+
+	/*
+	 * Initializes this manager.
+	 */	
     
     init: function() {  
         var initialSpawn;
@@ -60,6 +68,13 @@ var result = {
             }
         }
     },
+
+	/*
+	 * Initializes the spawn as a base.
+	 * 
+	 * @param {Spawn} spawn
+	 * @param baseName
+	 */	
     
     initSpawn: function(spawn, baseName) {  
         spawn.room.memory.base = {
@@ -72,6 +87,12 @@ var result = {
         };
         info.log('🏠 Created new base: ' + initialSpawn.room.memory.base.name);
     },
+
+	/*
+	 * Runs this manager on a specific rooms.
+	 * 
+	 * @param {Room} room
+	 */	
     
     runBase: function(room) {  
         this.initRoleInfo(room);
@@ -80,13 +101,10 @@ var result = {
         this.moveCreeps(room);
     },
     
-    myTest: function(test) {  
-        info.log(test);
-    },
-    
-    
     /* 
-     * Test for each role if enough creeps are present (else create them) 
+     * Test for each role if enough creeps are present (else create them).
+     * 
+	 * @param {Room} room
      */
 
     repopulateCreeps: function(room) {    
@@ -102,6 +120,9 @@ var result = {
        
     /* 
      * Spawns a creep in a room for a specific role.
+     * 
+	 * @param {Room} room
+	 * @param role
      */
 
     spawnCreepForRole: function(room, role) {    
@@ -113,6 +134,12 @@ var result = {
             }
         }
     },
+
+    /* 
+     * Fetches a free spawn for a particular room.
+     * 
+	 * @param {Room} room
+     */
     
     fetchFreeSpawn: function(room) {  
         for (var spawnName in Game.spawns) {
@@ -126,7 +153,7 @@ var result = {
     },  
         
     /*
-     * show spawning 'animation'
+     * Show spawning 'animation' for each spawn.
      */
     
     showSpawningAnimation: function() {  
@@ -141,7 +168,9 @@ var result = {
     },
     
     /*
-     * Move the creeps around
+     * Move the creeps around for a specific room.
+     * 
+	 * @param {Room} room
      */
     
     moveCreeps: function(room) {  
@@ -184,7 +213,9 @@ var result = {
     },
     
     /*
-     * Init role info on room, so we can print it (or do whatever)
+     * Init role info on room, so we can print it (or do whatever).
+     * 
+	 * @param {Room} room
      */
 
     initRoleInfo: function(room) { 

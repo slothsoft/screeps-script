@@ -1,9 +1,13 @@
-var info = require('main.info');
+/*
+ * The main loop of the game. 
+ */
 
-var minerExplorer = require('role.miner');
+var info = require('main.info');
 
 var baseManager = require('manager.base');
 var linkManager = require('manager.link');
+
+var minerExplorer = require('role.miner');
 
 module.exports.loop = function () {
 
@@ -64,6 +68,8 @@ module.exports.loop = function () {
 
 /*
  * Prints the oldest creep with its ticks to live to the console.
+ * 
+ * @param baseName
  */
 
 fetchOldestCreep = function (baseName) {
@@ -81,7 +87,10 @@ fetchOldestCreep = function (baseName) {
 };
 
 /*
- * Spawns a mimer for a specific source.
+ * Spawns a miner for a specific source.
+ * 
+ * @param spawnName
+ * @param sourceName
  */
  
 spawnMiner = function (spawnName, sourceName) { 
@@ -106,6 +115,8 @@ spawnMiner = function (spawnName, sourceName) {
 
 /*
  * Moves the creep back to a spawn and self-destructs it.
+ * 
+ * @param creepName
  */
  
 selfdestruct = function (creepName) { 

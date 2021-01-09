@@ -2,12 +2,18 @@
  * This module is used to display some information to the screen, so debugging is easier.
  */
  
+// TODO: print -> visualize ?
+
 var constants = require('main.constants');
 
 var result = {
     
     consoleTime: [],
     console: [],
+    
+    /*
+     * Displays the collected information on the screen.
+     */
     
     print: function() {   
         for (var roomName in Game.rooms) {
@@ -18,6 +24,12 @@ var result = {
             }
         }
     },
+
+    /*
+     * Displays the role infos for a specific room on the screen.
+     * 
+     * @param {Room} room 
+     */
     
     printRolesInfoForRoom: function(room) {   
         var x = room.memory.base.roleInfoX || 0;
@@ -41,6 +53,12 @@ var result = {
         
         room.visual.text(unusedRoles + ' 0/0', x, y++, {align: 'left', opacity: 0.8});
     }, 
+
+    /*
+     * Displays the console for a specific room on the screen.
+     * 
+     * @param {Room} room 
+     */
     
     printConsole: function(room) {   
         var x = room.memory.base.consoleX;
@@ -64,10 +82,22 @@ var result = {
             }
         }
     },
+
+    /*
+     * Returns the console height for a specific room.
+     * 
+     * @param {Room} room 
+     */
     
     getHeight: function(room) {   
         return room.memory.base.consoleHeight || 5;
     },
+
+    /*
+     * Logs the string to the UI console.
+     * 
+     * @param the new line
+     */
     
     log: function(newLine) {   
         if (newLine === 'object' && newLine !== null) {
@@ -81,6 +111,12 @@ var result = {
         this.console.splice(0, 0, newLine);
         this.console.slice(0, height);
     },
+
+    /*
+     * Returns the max console height for all rooms.
+     * 
+     * @param the new line
+     */
     
     getMaxHeight: function() {   
         var result = 0;
