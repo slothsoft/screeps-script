@@ -1,0 +1,26 @@
+{
+  "name": "@slothsoft/screeps-script",
+  "version": "1.0.0",
+  "description": "My scripts for the game Screeps.",
+  "main": "main.js",
+  "scripts": {
+    "test": "qunit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slothsoft/screeps-script.git"
+  },
+  "keywords": [
+    "screeps"
+  ],
+  "author": "Stef Schulz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/slothsoft/screeps-script/issues"
+  },
+  "homepage": "https://github.com/slothsoft/screeps-script#readme",
+  "devDependencies": {
+    "@slothsoft/qunit-reporter": "^0.2.0",
+    "qunit": "^2.9.2"
+  }
+}
