@@ -1,8 +1,8 @@
 var classUnderTest = require('../src/role.upgrader.js');
 var assert = require('assert');
 
-describe('role.upgrader', function() {
-	it('exists', function() {
+describe('role.upgrader', () => {
+	it('exists', () => {
 		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

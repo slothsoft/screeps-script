@@ -1,5 +1,7 @@
 # Screeps Script
 
+[![Build Status](https://travis-ci.org/slothsoft/screeps-script.svg?branch=master)](https://travis-ci.org/slothsoft/screeps-script)
+
 My scripts for the game [Screeps](https://screeps.com/).
 
 - [Features](#features)

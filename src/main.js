@@ -74,7 +74,7 @@ module.exports.loop = function () {
  * @param baseName
  */
 
-fetchOldestCreep = function (baseName) {
+global.fetchOldestCreep = function (baseName) {
     var oldestCreep;
     for (var creepName in Game.creeps) {
         var creep = Game.creeps[creepName];
@@ -94,8 +94,8 @@ fetchOldestCreep = function (baseName) {
  * @param spawnName
  * @param sourceName
  */
- 
-spawnMiner = function (spawnName, sourceName) { 
+
+global.spawnMiner = function (spawnName, sourceName) { 
     if (!sourceName) {
         info.log('🛑 The source is mandatory!');
         return;
@@ -121,7 +121,7 @@ spawnMiner = function (spawnName, sourceName) {
  * @param creepName
  */
  
-selfdestruct = function (creepName) { 
+global.selfdestruct = function (creepName) { 
     var creep = Game.creeps[creepName];
     if (!creep) {
         info.log('🛑 Could not find creep: ' + creepName);

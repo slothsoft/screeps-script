@@ -3,6 +3,7 @@
  */
  
 // TODO: print -> visualize ?
+// TODO: generally make methods more consistent
 
 var constants = require('./main.constants');
 
@@ -94,6 +95,15 @@ var result = {
     },
 
     /*
+     * Clears the UI console.
+     */
+    
+    clearLog: function() {   
+        this.consoleTime = [];
+        this.console = [];
+    },
+    
+    /*
      * Logs the string to the UI console.
      * 
      * @param the new line
@@ -108,10 +118,10 @@ var result = {
         var height = this.getMaxHeight();
         
         this.consoleTime.splice(0, 0, new Date());
-        this.consoleTime.slice(0, height);
+        this.consoleTime = this.consoleTime.slice(0, height);
         
         this.console.splice(0, 0, newLine);
-        this.console.slice(0, height);
+        this.console = this.console.slice(0, height);
     },
 
     /*
