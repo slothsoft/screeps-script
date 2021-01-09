@@ -1,7 +1,8 @@
-var constants = require('../src/role.builder.js');
+var classUnderTest = require('../src/role.builder.js');
+var assert = require('assert');
 
-QUnit.module('role.builder', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('role.builder', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

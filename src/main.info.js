@@ -102,6 +102,8 @@ var result = {
     log: function(newLine) {   
         if (newLine === 'object' && newLine !== null) {
             console.log(JSON.stringify(newLine));
+        } else {
+        	console.log(newLine);
         }
         var height = this.getMaxHeight();
         

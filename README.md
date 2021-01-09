@@ -5,12 +5,14 @@ My scripts for the game [Screeps](https://screeps.com/).
 - [Features](#features)
      - [Creeps](#creeps)
 - [Game Phases](#game-phases)
+- [Dev Notes](#dev-notes)
 - [Open Tasks](#open-tasks)
 
 
 ## Features
 
 <img align="right" width="170" height="160" src="readme/fancy-gui.png">
+
 - each room has a fancy overview GUI
 - each room has a console which prints most info
 
@@ -46,6 +48,10 @@ My scripts for the game [Screeps](https://screeps.com/).
 - use Link for Room Controller
 
 
+
+## Dev Notes
+
+- tests start real screeps server to run tests against
 
 
 

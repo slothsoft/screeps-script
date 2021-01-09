@@ -1,7 +1,8 @@
-var constants = require('../src/role.handyman.js');
+var classUnderTest = require('../src/role.handyman.js');
+var assert = require('assert');
 
-QUnit.module('role.handyman', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('role.handyman', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

@@ -1,7 +1,8 @@
-var constants = require('../src/manager.base.js');
+var classUnderTest = require('../src/manager.base.js');
+var assert = require('assert');
 
-QUnit.module('manager.base', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('manager.base', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

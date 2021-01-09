@@ -4,7 +4,7 @@
   "description": "My scripts for the game Screeps.",
   "main": "src/main.js",
   "scripts": {
-    "test": "qunit"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,6 @@
   "homepage": "https://github.com/slothsoft/screeps-script#readme",
   "devDependencies": {
     "@slothsoft/qunit-reporter": "^0.2.0",
-    "qunit": "^2.9.2"
+    "mocha": "^8.2.1"
   }
 }

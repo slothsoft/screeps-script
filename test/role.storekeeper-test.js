@@ -1,7 +1,8 @@
-var constants = require('../src/role.storekeeper.js');
+var classUnderTest = require('../src/role.storekeeper.js');
+var assert = require('assert');
 
-QUnit.module('role.storekeeper', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('role.storekeeper', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

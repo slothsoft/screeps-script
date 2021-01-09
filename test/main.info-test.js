@@ -1,7 +1,8 @@
-var constants = require('../src/main.info.js');
+var classUnderTest = require('../src/main.info.js');
+var assert = require('assert');
 
-QUnit.module('main.info', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('main.info', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

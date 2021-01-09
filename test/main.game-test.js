@@ -1,7 +1,8 @@
-var constants = require('../src/main.game.js');
+var classUnderTest = require('../src/main.game.js');
+var assert = require('assert');
 
-QUnit.module('main.game', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('main.game', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

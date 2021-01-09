@@ -1,7 +1,8 @@
-var constants = require('../src/role.upgrader.js');
+var classUnderTest = require('../src/role.upgrader.js');
+var assert = require('assert');
 
-QUnit.module('role.upgrader', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('role.upgrader', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

@@ -1,7 +1,8 @@
-var constants = require('../src/role.harvester.js');
+var classUnderTest = require('../src/role.harvester.js');
+var assert = require('assert');
 
-QUnit.module('role.harvester', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('role.harvester', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });

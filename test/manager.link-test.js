@@ -1,7 +1,8 @@
-var constants = require('../src/manager.link.js');
+var classUnderTest = require('../src/manager.link.js');
+var assert = require('assert');
 
-QUnit.module('manager.link', function() {
-	QUnit.test('exists', function(assert) {
-		assert.equal(typeof constants === 'object' && constants !== null, true);
+describe('manager.link', function() {
+	it('exists', function() {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 });
