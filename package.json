@@ -2,7 +2,7 @@
   "name": "@slothsoft/screeps-script",
   "version": "1.0.0",
   "description": "My scripts for the game Screeps.",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "test": "qunit"
   },

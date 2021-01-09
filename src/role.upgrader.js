@@ -2,7 +2,7 @@
  * Upgrader handle the room controller.
  */
  
-var RolePrototype = require('role.prototype');
+var RolePrototype = require('./role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Upgrader';

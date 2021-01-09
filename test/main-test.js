@@ -1,5 +1,4 @@
- oldRequire = require;
- require = oldRequire;
+var http = require('http');
 var constants = require('../src/main.js');
 
 QUnit.module('main', function() {

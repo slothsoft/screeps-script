@@ -3,9 +3,9 @@
  * a new base there.
  */
  
-var info = require('main.info');
+var info = require('./main.info');
 
-var RolePrototype = require('role.prototype');
+var RolePrototype = require('./role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Explorer';

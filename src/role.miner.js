@@ -3,9 +3,9 @@
  * So have a container or storage ready for him to use.
  */
  
-var info = require('main.info');
+var info = require('./main.info');
 
-var RolePrototype = require('role.prototype');
+var RolePrototype = require('./role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Miner';

@@ -12,9 +12,9 @@
  * - work()
  */
  
-var constants = require('main.constants');
-var game = require('main.game');
-var info = require('main.info');
+var constants = require('./main.constants');
+var game = require('./main.game');
+var info = require('./main.info');
 
 const result = {
     

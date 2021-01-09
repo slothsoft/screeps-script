@@ -2,7 +2,7 @@
  * 
  */
  
-var info = require('main.info');
+var info = require('./main.info');
 
 var result = {
     

@@ -4,7 +4,7 @@
  
 // TODO: print -> visualize ?
 
-var constants = require('main.constants');
+var constants = require('./main.constants');
 
 var result = {
     

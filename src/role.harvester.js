@@ -2,7 +2,7 @@
  * Harvester collect resources that can be used to do stuff.
  */
 
-var RolePrototype = require('role.prototype');
+var RolePrototype = require('./role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Harvester';

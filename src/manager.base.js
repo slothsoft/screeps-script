@@ -4,17 +4,17 @@
  * then one base, all further have to be marked manually?
  */
  
-var game = require('main.game');
-var constants = require('main.constants');
-var info = require('main.info');
+var game = require('./main.game');
+var constants = require('./main.constants');
+var info = require('./main.info');
 
-var roleHarvester = require('role.harvester');
-var roleBuilder = require('role.builder');
-var roleUpgrader = require('role.upgrader');
-var roleHandyman = require('role.handyman');
-var roleExplorer = require('role.explorer');
-var roleMiner = require('role.miner');
-var roleStorekeeper = require('role.storekeeper');
+var roleHarvester = require('./role.harvester');
+var roleBuilder = require('./role.builder');
+var roleUpgrader = require('./role.upgrader');
+var roleHandyman = require('./role.handyman');
+var roleExplorer = require('./role.explorer');
+var roleMiner = require('./role.miner');
+var roleStorekeeper = require('./role.storekeeper');
 var allRoles = [roleHarvester, roleBuilder, roleUpgrader, roleHandyman, roleExplorer, roleMiner,
         roleStorekeeper].sort((a, b) => b.priority - a.priority);
 

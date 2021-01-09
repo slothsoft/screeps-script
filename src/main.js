@@ -2,12 +2,12 @@
  * The main loop of the game. 
  */
 
-var info = require('main.info');
+var info = require('./main.info');
 
-var baseManager = require('manager.base');
-var linkManager = require('manager.link');
+var baseManager = require('./manager.base');
+var linkManager = require('./manager.link');
 
-var minerExplorer = require('role.miner');
+var minerExplorer = require('./role.miner');
 
 module.exports.loop = function () {
 

@@ -2,7 +2,7 @@
  * Builder create buildings. 
  */
  
-var RolePrototype = require('role.prototype');
+var RolePrototype = require('./role.prototype');
  
 var result = Object.create(RolePrototype);
 result.roleName = 'Builder';
