@@ -62,9 +62,9 @@ module.exports.loop = function () {
 
 // some helper methods to make managing this thing more easily
 
-/**
+/*
  * Prints the oldest creep with its ticks to live to the console.
- **/
+ */
 
 fetchOldestCreep = function (baseName) {
     var oldestCreep;
@@ -75,23 +75,23 @@ fetchOldestCreep = function (baseName) {
         }
     }
     if (oldestCreep) 
-        info.log("Oldest creep: " + oldestCreep.name + " (" + oldestCreep.ticksToLive + " ttl)");
+        info.log('Oldest creep: ' + oldestCreep.name + ' (' + oldestCreep.ticksToLive + ' ttl)');
     else 
-        info.log("No creep found.");
+        info.log('No creep found.');
 };
 
-/**
+/*
  * Spawns a mimer for a specific source.
- **/
+ */
  
 spawnMiner = function (spawnName, sourceName) { 
     if (!sourceName) {
-        info.log("🛑 The source is mandatory!");
+        info.log('🛑 The source is mandatory!');
         return;
     }
     var spawn = Game.spawns[spawnName];
     if (!spawn) {
-        info.log("🛑 Could not find spawn: " + spawnName);
+        info.log('🛑 Could not find spawn: ' + spawnName);
         return;
     }
     var resultingCreep = minerExplorer.spawnCreep(spawn);
@@ -104,14 +104,14 @@ spawnMiner = function (spawnName, sourceName) {
     return resultingCreep;
 };
 
-/**
+/*
  * Moves the creep back to a spawn and self-destructs it.
- **/
+ */
  
 selfdestruct = function (creepName) { 
     var creep = Game.creeps[creepName];
     if (!creep) {
-        info.log("🛑 Could not find creep: " + creepName);
+        info.log('🛑 Could not find creep: ' + creepName);
         return;
     }
     creep.memory.selfdestruct = true;

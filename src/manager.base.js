@@ -1,5 +1,5 @@
 /*
- * A base is a "virtual" construct. It most closely resembles a "room".
+ * A base is a 'virtual' construct. It most closely resembles a 'room'.
  * To configure a base, the first spawn is marked as such. To create more 
  * then one base, all further have to be marked manually?
  */
@@ -47,7 +47,7 @@ var result = {
             
         if (game.getSpawnCount() == 1 && !initialSpawn.room.memory.base) {
             // Congratz! We just spawned our very first base!
-            this.initSpawn( initialSpawn, "Dresden"); //
+            this.initSpawn( initialSpawn, 'Dresden'); //
         }
         
         // all spawns (and all creeps) have a home, so that we find them again
@@ -56,7 +56,7 @@ var result = {
             var spawn = Game.spawns[spawnName];
             if (!spawn.memory.home) {
                 spawn.memory.home = initialSpawn.room.memory.base.name;
-                info.log("🏠 Created new spawn in base: " + spawn.room.memory.home);
+                info.log('🏠 Created new spawn in base: ' + spawn.room.memory.home);
             }
         }
     },
@@ -70,7 +70,7 @@ var result = {
              consoleY: 44,
              consoleHeight: 5,
         };
-        info.log("🏠 Created new base: " + initialSpawn.room.memory.base.name);
+        info.log('🏠 Created new base: ' + initialSpawn.room.memory.base.name);
     },
     
     runBase: function(room) {  
@@ -85,7 +85,7 @@ var result = {
     },
     
     
-    /** 
+    /* 
      * Test for each role if enough creeps are present (else create them) 
      */
 
@@ -100,7 +100,7 @@ var result = {
         });
     },
        
-    /** 
+    /* 
      * Spawns a creep in a room for a specific role.
      */
 
@@ -125,9 +125,9 @@ var result = {
         return null;
     },  
         
-    /**
-     * show spawning "animation"
-     **/
+    /*
+     * show spawning 'animation'
+     */
     
     showSpawningAnimation: function() {  
         for (var spawnName in Game.spawns) {
@@ -140,9 +140,9 @@ var result = {
         }
     },
     
-    /**
+    /*
      * Move the creeps around
-     **/
+     */
     
     moveCreeps: function(room) {  
         for(var name in Game.creeps) {
@@ -173,7 +173,7 @@ var result = {
                     }
                 } else {
                     // if no role could be found for a creep... he gets to be a harvester
-                    info.log("☢ COULD NOT FIND ROLE: " + creep.memory.role);
+                    info.log('☢ COULD NOT FIND ROLE: ' + creep.memory.role);
                     roleHarvester.run(creep);
                 }
             } catch (e) {
@@ -183,9 +183,9 @@ var result = {
         }
     },
     
-    /**
+    /*
      * Init role info on room, so we can print it (or do whatever)
-     **/
+     */
 
     initRoleInfo: function(room) { 
         var currentRoleInfo = { }; 

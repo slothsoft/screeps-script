@@ -37,15 +37,15 @@ result.moveToSource = function(creep) {
 	var withdrawResult = creep.withdraw(source, RESOURCE_ENERGY);
     if (withdrawResult == ERR_NOT_IN_RANGE) {
         if (creep.memory.debug) {      
-            info.log(creep.memory.role + " is moving to source " + source.id);  
+            info.log(creep.memory.role + ' is moving to source ' + source.id);  
         }
         this.moveToLocation(creep, source);
     } else if (withdrawResult == OK) {     
         if (creep.memory.debug) {
-            info.log(creep.memory.role + " is withdrawing from source " + source.id);  
+            info.log(creep.memory.role + ' is withdrawing from source ' + source.id);  
         }
     } else {      
-        info.log(creep.memory.role + " cannot withdraw: " + withdrawResult);  
+        info.log(creep.memory.role + ' cannot withdraw: ' + withdrawResult);  
     }
 };
 

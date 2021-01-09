@@ -1,4 +1,4 @@
-/**
+/*
  * This code is shared between the roles. It has standard behavior like:
  * - basic fields & methods
  * - moving to an appropriate source
@@ -31,19 +31,19 @@ const result = {
     	return this.spawnCreepWithParts(spawn, [WORK, CARRY, MOVE, MOVE]);
     },
 
-    /** 
+    /* 
      * Return true if a creep with this role would have work to do, 
      * i.e. if the role is currently _really_ necessary.
      * 
      * @param {Room} room 
-     **/
+     */
     
     isNecessary: function(room) {
         var targets = this.findTargets(room);
         return targets && targets.length > 0;
     },
     
-    /** 
+    /* 
      * Returns the primary target for the creep, e.g. energy stores for harvester and 
      * construction sites for builders. 
      * 
@@ -54,7 +54,7 @@ const result = {
         return [];
     },
 
-    /** 
+    /* 
      * Returns the closest primary target for the creep, e.g. energy stores for harvester and 
      * construction sites for builders. 
      * 
@@ -74,7 +74,7 @@ const result = {
         return _.sortBy(targets, t => creep.pos.getRangeTo(t));
     },
 
-    /** 
+    /* 
      * Moves a creep to its closest primary target, e.g. energy stores for harvester and 
      * construction sites for builders. 
      * 
@@ -90,19 +90,19 @@ const result = {
     	var workResult = work(target);
         if (workResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
-                info.log(creep.memory.role + " is moving to target " + target.id);  
+                info.log(creep.memory.role + ' is moving to target ' + target.id);  
             }
         	this.moveToLocation(creep, target);
         } else if (workResult == OK) {     
             if (creep.memory.debug) {
-                info.log(creep.memory.role + " is working on target " + target.id);  
+                info.log(creep.memory.role + ' is working on target ' + target.id);  
             }
         } else {      
-            info.log(creep.memory.role + " cannot work: " + workResult);  
+            info.log(creep.memory.role + ' cannot work: ' + workResult);  
         }
     },  
 
-    /** 
+    /* 
      * Moves a creep to a location. 
      * 
      * @param {Creep} creep 
@@ -113,7 +113,7 @@ const result = {
     	creep.moveTo(location, {visualizePathStyle: {stroke: this.color}});
     },
 
-    /** 
+    /* 
      * Moves a creep to a source. 
      * 
      * @param {Creep} creep 
@@ -147,24 +147,24 @@ const result = {
     	var harvestResult = source.structureType ? creep.withdraw(source, RESOURCE_ENERGY) : creep.harvest(source);
         if (harvestResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
-                info.log(creep.memory.role + " is moving to source " + source.id);  
+                info.log(creep.memory.role + ' is moving to source ' + source.id);  
             }
             this.moveToLocation(creep, source);
         } else if (harvestResult == OK) {     
             if (creep.memory.debug) {
-                info.log(creep.memory.role + " is harvesting from source " + source.id);  
+                info.log(creep.memory.role + ' is harvesting from source ' + source.id);  
             }
         } else {      
-            info.log(creep.memory.role + " cannot harvest: " + harvestResult + " (" + source.id + ")");  
+            info.log(creep.memory.role + ' cannot harvest: ' + harvestResult + ' (' + source.id + ')');  
         }
     },
 
     
-    /** 
+    /* 
      * Creep AI gets run. Creep might decide working is not in its best interest. 
      * 
      * @param {Creep} creep 
-     **/
+     */
     
     run: function(creep) {
         
@@ -176,12 +176,12 @@ const result = {
                 var recycleAnswer = spawn.recycleCreep(creep);
                 if (recycleAnswer == ERR_NOT_IN_RANGE) {
                     if (creep.memory.debug) {      
-                        info.log(creep.memory.role + " is moving to spawn " + spawn.id);  
+                        info.log(creep.memory.role + ' is moving to spawn ' + spawn.id);  
                     }
                     this.moveToLocation(creep, spawn);
                 } else if (recycleAnswer == OK) {  
                     if (creep.memory.debug) {
-                        info.log(creep.memory.role + " was recycled.");  
+                        info.log(creep.memory.role + ' was recycled.');  
                     }
                 }
             }
@@ -191,11 +191,11 @@ const result = {
         this.work(creep);
     },
 
-    /** 
+    /* 
      * Creep works. 
      * 
      * @param {Creep} creep 
-     **/
+     */
     
     work: function(creep) {
         // do nothing on default   
@@ -203,12 +203,12 @@ const result = {
     },
     
     
-    /** 
+    /* 
      * Creep goes to source until full, then works till it's empty and starts over. 
      * 
      * @param {Creep} creep 
      * @param function the work that should be done there
-     **/
+     */
     
     commuteBetweenSourceAndTarget: function(creep, work) {
         
@@ -226,24 +226,24 @@ const result = {
         }
     },
     
-    /** 
+    /* 
      * Spawns a creep that has the needed parts (or many of them).
      * 
      * @param {Spawn} spawn 
      * @param parts to duplicate
-     **/
+     */
     
     spawnCreepWithParts: function(spawn, parts) {
         return this.spawnCreepWithPartsAndSingle(spawn, parts, []);
     },
     
-    /** 
+    /* 
      * Spawns a creep that has the needed parts (or many of them) and a single part of some other type.
      * 
      * @param {Spawn} spawn 
      * @param parts to duplicate
      * @param singleParts that are added as is
-     **/
+     */
     
     spawnCreepWithPartsAndSingle: function(spawn, parts, singleParts) {
         var parts = this.calculateMaxParts(spawn, parts, singleParts);

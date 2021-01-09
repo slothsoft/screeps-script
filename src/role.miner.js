@@ -44,7 +44,7 @@ result.work = function(creep) {
         if (creep.ticksToLive < ticksToGetReady) {
             var spawnedCreep = spawnMiner(creep.memory.homeSpawn, creep.memory.homeSource);
             if (spawnedCreep) {
-                info.log(this.symbol + " Training the replacement " + this.roleName);
+                info.log(this.symbol + ' Training the replacement ' + this.roleName);
                 creep.memory.trainedReplacement = true;
             }
         }
@@ -59,7 +59,7 @@ result.moveToSource = function(creep) {
     });
     
 	if (sources.length == 0) {
-        info.log("🛑 Could not find source: " + creep.memory.homeSource);
+        info.log('🛑 Could not find source: ' + creep.memory.homeSource);
 	    return;
 	}
 	
@@ -68,7 +68,7 @@ result.moveToSource = function(creep) {
 	var harvestResult = creep.harvest(source);
     if (harvestResult == ERR_NOT_IN_RANGE) {
         if (creep.memory.debug) {      
-            info.log(creep.memory.role + " is moving to source " + source.id);  
+            info.log(creep.memory.role + ' is moving to source ' + source.id);  
         }
         this.moveToLocation(creep, source);
     } else if (harvestResult == OK) {     
@@ -78,10 +78,10 @@ result.moveToSource = function(creep) {
             creep.memory.ticksToSource = creep.ticksToLive;
         }
         if (creep.memory.debug) {
-            info.log(creep.memory.role + " is harvesting from source " + source.id);  
+            info.log(creep.memory.role + ' is harvesting from source ' + source.id);  
         }
     } else {      
-        info.log(creep.memory.role + " cannot harvest: " + harvestResult);  
+        info.log(creep.memory.role + ' cannot harvest: ' + harvestResult);  
     }
 };
 

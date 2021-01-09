@@ -28,18 +28,18 @@ var result = {
         
         room.visual.text(room.memory.base.name, x, y++, {align: 'left', opacity: 0.8});
         
-        var unusedRoles = "";
+        var unusedRoles = '';
         
         for (const role in room.memory.base.roleInfo) {
             var count = room.memory.base.roleInfo[role];
             if (count.currentNumber || count.requiredNumber) {
-                room.visual.text(count.symbol + " " + role + " " + count.currentNumber + "/" + count.requiredNumber, x, y++, {align: 'left', opacity: 0.8});
+                room.visual.text(count.symbol + ' ' + role + ' ' + count.currentNumber + '/' + count.requiredNumber, x, y++, {align: 'left', opacity: 0.8});
             } else {
                 unusedRoles += count.symbol;
             }
         }
         
-        room.visual.text(unusedRoles + " 0/0", x, y++, {align: 'left', opacity: 0.8});
+        room.visual.text(unusedRoles + ' 0/0', x, y++, {align: 'left', opacity: 0.8});
     }, 
     
     printConsole: function(room) {   
@@ -50,11 +50,11 @@ var result = {
         var y = yMin + height;
         
         if (this.console.length == 0) {
-            room.visual.text("<no console entries>", x, y, {align: 'left', opacity: 0.8});
+            room.visual.text('<no console entries>', x, y, {align: 'left', opacity: 0.8});
         } else {
             for (const lineIndex in this.console) {
                 var time = this.consoleTime[lineIndex];
-                room.visual.text(time.toISOString().substring(2, 16).replace("T", " "), x, y, {align: 'left'});
+                room.visual.text(time.toISOString().substring(2, 16).replace('T', ' '), x, y, {align: 'left'});
                 room.visual.text(this.console[lineIndex], xLine, y, {align: 'left'});
                 
                 y--;

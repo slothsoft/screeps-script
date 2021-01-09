@@ -21,8 +21,8 @@ result.findTargets = function(room) {
     return result;
 };
 
-const PHASE_GOTO_FLAG_ROOM = "gotoFlagRoom";
-const PHASE_CLAIM_FLAG_ROOM = "claimFlagRoom";
+const PHASE_GOTO_FLAG_ROOM = 'gotoFlagRoom';
+const PHASE_CLAIM_FLAG_ROOM = 'claimFlagRoom';
 
 result.work = function(creep) {
     if (!creep.memory.phase) {
@@ -41,7 +41,7 @@ result.work = function(creep) {
 
 /*
  * Find the correct Flag to go to
- **/
+ */
  
 result.goToFlagRoom = function(creep) {
     var targetFlag;
@@ -54,8 +54,8 @@ result.goToFlagRoom = function(creep) {
     if (!targetFlag) {
         targetFlag = result.findClosestTarget(creep);
         creep.memory.target = targetFlag.name;
-        info.log(result.roleName + " travels to " + targetFlag.name);
-        console.log("asd");
+        info.log(result.roleName + ' travels to ' + targetFlag.name);
+        console.log('asd');
     }
     
     // walk towards my flag
@@ -64,8 +64,8 @@ result.goToFlagRoom = function(creep) {
     
     if (creep.room == targetFlag.room) {
         creep.memory.phase = PHASE_CLAIM_FLAG_ROOM;
-        info.log(result.roleName + " claims the room of " + targetFlag.name);
-        console.log("Tas");
+        info.log(result.roleName + ' claims the room of ' + targetFlag.name);
+        console.log('Tas');
     }
 }
 
