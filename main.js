@@ -3,6 +3,7 @@ var info = require('main.info');
 var minerExplorer = require('role.miner');
 
 var baseManager = require('manager.base');
+var linkManager = require('manager.link');
 
 module.exports.loop = function () {
 
@@ -54,6 +55,7 @@ module.exports.loop = function () {
         }
     }
     
+    linkManager.manageAll();
     baseManager.runAll();
     info.print();
 }

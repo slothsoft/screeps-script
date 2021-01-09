@@ -85,7 +85,9 @@ var result = {
     },
     
     
-    /** Test for each role if enough creeps are present (else create them) */
+    /** 
+     * Test for each role if enough creeps are present (else create them) 
+     */
 
     repopulateCreeps: function(room) {    
         allRoles.forEach(role => {
@@ -93,15 +95,23 @@ var result = {
             var foundCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role.roleName && creep.memory.home == baseName);
             
             if (foundCreeps.length < room.memory.base.roleInfo[role.roleName].requiredNumber) {
-                var freeSpawn = this.fetchFreeSpawn(room);
-                if (freeSpawn) {
-                    var resultingCreep = role.spawnCreep(freeSpawn);
-                    if (resultingCreep) {
-                        info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
-                    }
-                }
+                this.spawnCreepForRole(room, role);
             }
         });
+    },
+       
+    /** 
+     * Spawns a creep in a room for a specific role.
+     */
+
+    spawnCreepForRole: function(room, role) {    
+        var freeSpawn = this.fetchFreeSpawn(room);
+        if (freeSpawn) {
+            var resultingCreep = role.spawnCreep(freeSpawn);
+            if (resultingCreep) {
+                info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
+            }
+        }
     },
     
     fetchFreeSpawn: function(room) {  

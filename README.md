@@ -57,3 +57,7 @@ My scripts for the game [Screeps](https://screeps.com/).
 - make links useful
 - don't switch to roles where you missing parts
 - remove console entries after a while
+- try to refactor to have common methods at central place
+- document what is undocumented
+- test is now necessary
+- the role info is for the room, not the base?
