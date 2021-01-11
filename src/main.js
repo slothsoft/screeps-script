@@ -59,8 +59,6 @@ module.exports.loop = function () {
         }
     }
 
-    console.log("test");
-    
     linkManager.manageAll();
     baseManager.runAll();
     info.print();

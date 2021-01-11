@@ -1,4 +1,4 @@
-var classUnderTest = require('../src/role.handyman.js');
+var classUnderTest = require('../src/role.handyman');
 var assert = require('assert');
 
 describe('role.handyman', () => {

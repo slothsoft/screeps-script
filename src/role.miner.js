@@ -16,7 +16,7 @@ result.priority = -1;
 result.isNecessary = room => true;
     
 result.spawnCreep = function(spawn) {
-	return this.spawnCreepWithPartsAndSingle(spawn, [WORK], [MOVE, CARRY]);
+	return this.spawnCreepWithParts(spawn, [WORK], [MOVE, CARRY]);
 };
 
 // A source has 3000 energy and Respawns in 300 ticks. So we will never need to harvest more than

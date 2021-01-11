@@ -1,4 +1,4 @@
-var classUnderTest = require('../src/manager.base.js');
+var classUnderTest = require('../src/manager.base');
 var assert = require('assert');
 
 describe('manager.base', () => {

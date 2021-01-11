@@ -1,5 +1,7 @@
-var classUnderTest = require('../src/main.constants.js');
+var classUnderTest = require('../src/main.constants');
 var assert = require('assert');
+
+// All methods tested.
 
 describe('main.constants', () => {
 	it('exists', () => {

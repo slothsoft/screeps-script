@@ -1,4 +1,4 @@
-var classUnderTest = require('../src/role.miner.js');
+var classUnderTest = require('../src/role.miner');
 var assert = require('assert');
 
 describe('role.miner', () => {

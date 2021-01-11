@@ -1,4 +1,4 @@
-var classUnderTest = require('../src/role.explorer.js');
+var classUnderTest = require('../src/role.explorer');
 var assert = require('assert');
 
 describe('role.explorer', () => {

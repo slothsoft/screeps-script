@@ -16,20 +16,22 @@ var constants = require('./main.constants');
 var game = require('./main.game');
 var info = require('./main.info');
 
-const result = {
+class Prototype {
     
-    roleName: 'XXX',
-    requiredNumber: 0,
-    color: '#ff0000',
-    symbol: '❗',
-    priority: 0, // the higher the better
+	constructor(roleName = 'XXX', requiredNumber = 0, color = '#ff0000', symbol = '❗') {
+	    this.roleName = roleName;
+	    this.requiredNumber = requiredNumber;
+	    this.color = color;
+	    this.symbol = symbol;
+	    this.priority = 0; // the higher the better
+	    
+	    this.useStorageAsSource = constants.SOURCE_USE_STORAGE;
+	    this.useSourceAsSource = constants.SOURCE_USE_SOURCE;
+	}
     
-    useStorageAsSource: constants.SOURCE_USE_STORAGE,
-    useSourceAsSource: constants.SOURCE_USE_SOURCE,
-    
-    spawnCreep: function(spawn) {
+    spawnCreep(spawn) {
     	return this.spawnCreepWithParts(spawn, [WORK, CARRY, MOVE, MOVE]);
-    },
+    }
 
     /* 
      * Return true if a creep with this role would have work to do, 
@@ -38,10 +40,10 @@ const result = {
      * @param {Room} room 
      */
     
-    isNecessary: function(room) {
+    isNecessary(room) {
         var targets = this.findTargets(room);
         return targets && targets.length > 0;
-    },
+    }
     
     /* 
      * Returns the primary target for the creep, e.g. energy stores for harvester and 
@@ -50,9 +52,9 @@ const result = {
      * @param {Room} room 
      */
 
-    findTargets: function(room) {
+    findTargets(room) {
         return [];
-    },
+    }
 
     /* 
      * Returns the closest primary target for the creep, e.g. energy stores for harvester and 
@@ -61,14 +63,14 @@ const result = {
      * @param {Creep} creep 
      */
     
-    findClosestTarget: function(creep) {
+    findClosestTarget(creep) {
         var targets = this.findTargets(creep.room);
         if (targets) {
         	targets = this.sortTargetForClosest(targets, creep);
         	return targets.length > 0 ? targets[0] : null;
 		}
         return null;
-    },
+    }
 
     /* 
      * Sorts the targets so the closest is first. If there are other
@@ -77,9 +79,9 @@ const result = {
      * @param {Creep} creep 
      */
     
-    sortTargetForClosest: function(targets, creep) {
+    sortTargetForClosest(targets, creep) {
         return _.sortBy(targets, t => creep.pos.getRangeTo(t));
-    },
+    }
 
     /* 
      * Moves a creep to its closest primary target, e.g. energy stores for harvester and 
@@ -89,7 +91,7 @@ const result = {
      * @param function the work that should be done there
      */
 
-    moveToClosestTarget: function(creep, work) {
+    moveToClosestTarget(creep, work) {
     	var target = this.findClosestTarget(creep);
     	
     	if (!target) return;
@@ -107,7 +109,7 @@ const result = {
         } else {      
             info.log(creep.memory.role + ' cannot work: ' + workResult);  
         }
-    },  
+    }  
 
     /* 
      * Moves a creep to a location. 
@@ -116,9 +118,9 @@ const result = {
      * @param location
      */
     
-    moveToLocation: function(creep, location) {
+    moveToLocation(creep, location) {
     	creep.moveTo(location, {visualizePathStyle: {stroke: this.color}});
-    },
+    }
 
     /* 
      * Moves a creep to a source. 
@@ -126,7 +128,7 @@ const result = {
      * @param {Creep} creep 
      */
 
-    moveToSource: function(creep) {
+    moveToSource(creep) {
         
         var storages = this.useStorageAsSource ? creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
@@ -136,7 +138,7 @@ const result = {
                             structure.store.getCapacity(RESOURCE_ENERGY) > 0;
                 }}) : [];
                 
-        var sources = this.useSourceAsSource ? creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE, {
+        var sources = this.useSourceAsSource ? creep.room.find(FIND_SOURCES_ACTIVE, {
                 filter: (source) => {
                     if (game.findAllCreeps().filter(creep => creep.memory.homeSource == source.id).length) {
                         // source was claimed by a miner
@@ -164,7 +166,7 @@ const result = {
         } else {      
             info.log(creep.memory.role + ' cannot harvest: ' + harvestResult + ' (' + source.id + ')');  
         }
-    },
+    }
 
     /* 
      * Creep AI gets run. Creep might decide working is not in its best interest. 
@@ -172,7 +174,7 @@ const result = {
      * @param {Creep} creep 
      */
     
-    run: function(creep) {
+    run(creep) {
         
         // self-destructing is more important than working
         
@@ -195,7 +197,7 @@ const result = {
         }
         
         this.work(creep);
-    },
+    }
 
     /* 
      * Creep works. 
@@ -203,10 +205,10 @@ const result = {
      * @param {Creep} creep 
      */
     
-    work: function(creep) {
+    work(creep) {
         // do nothing on default   
         creep.say('🔔 unimplemented');
-    },
+    }
     
     /* 
      * Creep goes to source until full, then works till it's empty and starts over. 
@@ -215,7 +217,7 @@ const result = {
      * @param function the work that should be done there
      */
     
-    commuteBetweenSourceAndTarget: function(creep, work) {
+    commuteBetweenSourceAndTarget(creep, work) {
         
         if (creep.memory.working && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.working = false;
@@ -229,19 +231,8 @@ const result = {
         } else {
             this.moveToSource(creep);
         }
-    },
-    
-    /* 
-     * Spawns a creep that has the needed parts (or many of them).
-     * 
-     * @param {Spawn} spawn 
-     * @param parts to duplicate
-     */
-    
-    spawnCreepWithParts: function(spawn, parts) {
-        return this.spawnCreepWithPartsAndSingle(spawn, parts, []);
-    },
-    
+    }
+
     /* 
      * Spawns a creep that has the needed parts (or many of them) and a single part of some other type.
      * 
@@ -250,7 +241,7 @@ const result = {
      * @param singleParts that are added as is
      */
     
-    spawnCreepWithPartsAndSingle: function(spawn, parts, singleParts) {
+    spawnCreepWithParts(spawn, parts, singleParts = []) {
         var parts = this.calculateMaxParts(spawn, parts, singleParts);
         if (parts) {
             var newName = this.roleName + ' ' + Game.time;
@@ -263,7 +254,7 @@ const result = {
             }
         }
         return false;
-    },
+    }
     
     // after this point, the rest are only helper methods
 
@@ -275,8 +266,11 @@ const result = {
      * @param singleParts that are added as is
      */
     
-    calculateMaxParts: function(spawn, parts, singleParts) {
+    calculateMaxParts(spawn, parts = [], singleParts = []) {
         var costs = this.calculateCostsForParts(parts);
+        
+        if (!costs) return null; // we can't spawn empty parts
+        
         var singleCosts = singleParts ? this.calculateCostsForParts(singleParts) : 0;
         var multiplier = this.getPartsMinMultiplier(spawn);
         var partsMaxMultiplier = this.getPartsMaxMultiplier(spawn);
@@ -291,7 +285,7 @@ const result = {
         }
         
         return singleParts ? singleParts.concat(this.replicateParts(parts, multiplier)) : this.replicateParts(parts, multiplier);
-    },
+    }
 
     /* 
      * Returns the minimum multiplier for the parts for this role.
@@ -299,9 +293,9 @@ const result = {
      * @param {Spawn} spawn 
      */
     
-    getPartsMinMultiplier: function(spawn) {
-        return spawn.room.memory.base.partsMinMultiplier || 0;
-    },
+    getPartsMinMultiplier(spawn) {
+        return (spawn.room.memory.base && spawn.room.memory.base.partsMinMultiplier) || 0;
+    }
 
     /* 
      * Returns the maximum multiplier for the parts for this role.
@@ -309,9 +303,9 @@ const result = {
      * @param {Spawn} spawn 
      */
     
-    getPartsMaxMultiplier: function(spawn) {
-        return spawn.room.memory.base.partsMaxMultiplier || 20;
-    },
+    getPartsMaxMultiplier(spawn) {
+        return (spawn.room.memory.base && spawn.room.memory.base.partsMaxMultiplier) || 20;
+    }
 
     /* 
      * Calculates the costs for the parts in the array.
@@ -319,11 +313,11 @@ const result = {
      * @param parts array
      */
     
-    calculateCostsForParts: function(parts) {
+    calculateCostsForParts(parts) {
         var result = 0;
         parts.forEach(part => result += this.calculateCostsForSinglePart(part));
         return result;
-    },
+    }
 
     /* 
      * Calculates the costs for a single part.
@@ -331,12 +325,9 @@ const result = {
      * @param part
      */
         
-    calculateCostsForSinglePart: function(part) {
-        if (part == WORK) {
-            return 100;
-        }
-        return 50; // MOVE & CARRY
-    },
+    calculateCostsForSinglePart(part) {
+        return BODYPART_COST[part];
+    }
 
     /* 
      * Creates a new array and puts the parts array in there a specific amount of times.
@@ -345,14 +336,14 @@ const result = {
      * @param multiplier how often to replicate the array
      */
     
-    replicateParts: function(parts, multiplier) {
+    replicateParts(parts, multiplier) {
         var result = [];
         for (var i = 0; i < multiplier; i++) {
             result = result.concat(parts);
         }
         return result;
-    },
+    }
     
 };
 
-module.exports = result;
+module.exports = Prototype;

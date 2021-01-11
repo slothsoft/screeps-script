@@ -54,6 +54,21 @@ My scripts for the game [Screeps](https://screeps.com/).
 ## Dev Notes
 
 - tests start real screeps server to run tests against
+- Tests:
+    - [ ] main-test.js
+    - [X] main.constants-test.js
+    - [ ] main.game-test.js
+    - [X] main.info-test.js
+    - [ ] manager.base-test.js
+    - [ ] manager.link-test.js
+    - [ ] role.builder-test.js
+    - [ ] role.explorer-test.js
+    - [ ] role.handyman-test.js
+    - [ ] role.harvester-test.js
+    - [ ] role.miner-test.js
+    - [ ] role.prototype-test.js
+    - [ ] role.storekeeper-test.js
+    - [ ] role.upgrader-test.js
 
 
 

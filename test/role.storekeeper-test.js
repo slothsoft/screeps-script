@@ -1,4 +1,4 @@
-var classUnderTest = require('../src/role.storekeeper.js');
+var classUnderTest = require('../src/role.storekeeper');
 var assert = require('assert');
 
 describe('role.storekeeper', () => {

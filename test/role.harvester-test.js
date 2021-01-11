@@ -1,4 +1,4 @@
-var classUnderTest = require('../src/role.harvester.js');
+var classUnderTest = require('../src/role.harvester');
 var assert = require('assert');
 
 describe('role.harvester', () => {
