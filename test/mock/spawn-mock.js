@@ -28,7 +28,7 @@ class Spawn {
 		var bodyCost = this.calculateCostsForParts(body);
 		if (bodyCost <= this.room.energyAvailable) {
 			this.room.energyAvailable -= bodyCost;
-			new Creep(name, opts.memory);
+			new Creep(name, body, opts.memory);
 			return OK;
 		}
 		return ERR_NOT_ENOUGH_ENERGY;

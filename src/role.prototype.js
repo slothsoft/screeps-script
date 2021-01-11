@@ -5,18 +5,24 @@
  * - spawning new creeps
  * - commuting between an source and a target
  * 
- * You need to implement / set
+ * You need to implement / set:
  * - roleName, requiredNumber
  * - (color, symbol)
  * - findTargets()
  * - work()
+ * 
+ * You might need to override / set:
+ * - priority
+ * - useStorageAsSource, useSourceAsSource
+ * - isNecessary() (on default it returns if a valid target is found)
+ * - sortTargetForClosest() (on default it sorts for positions)
  */
  
 var constants = require('./main.constants');
 var game = require('./main.game');
 var info = require('./main.info');
 
-class Prototype {
+class RolePrototype {
     
 	constructor(roleName = 'XXX', requiredNumber = 0, color = '#ff0000', symbol = '❗') {
 	    this.roleName = roleName;
@@ -28,6 +34,10 @@ class Prototype {
 	    this.useStorageAsSource = constants.SOURCE_USE_STORAGE;
 	    this.useSourceAsSource = constants.SOURCE_USE_SOURCE;
 	}
+	
+	/*
+	 * Creates a single creep for this role.
+	 */
     
     spawnCreep(spawn) {
     	return this.spawnCreepWithParts(spawn, [WORK, CARRY, MOVE, MOVE]);
@@ -107,10 +117,21 @@ class Prototype {
                 info.log(creep.memory.role + ' is working on target ' + target.id);  
             }
         } else {      
-            info.log(creep.memory.role + ' cannot work: ' + workResult);  
+        	this.handleTargetWorkResult(creep, workResult);
         }
     }  
 
+    /* 
+     * Handles result of work on target.
+     * 
+     * @param {Creep} creep 
+     * @param work result
+     */
+
+    handleTargetWorkResult(creep, workResult) {
+    	info.log(creep.memory.role + ' cannot work: ' + workResult);  
+    }
+    
     /* 
      * Moves a creep to a location. 
      * 
@@ -346,4 +367,4 @@ class Prototype {
     
 };
 
-module.exports = Prototype;
+module.exports = RolePrototype;
