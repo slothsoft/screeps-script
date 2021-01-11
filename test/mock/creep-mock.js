@@ -27,7 +27,8 @@ global.BODYPART_COST = {
 class Creep {
 
 	constructor(name, memory = {}) {
-		this.id = name ? name : 'Creep' + Game.creeps.length;
+		require('./game-mock');
+		this.id = name;
 	    Game.creeps[this.id] = this;
 		
 	    this.memory = Memory.creeps[this.id] = memory;

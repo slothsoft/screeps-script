@@ -26,7 +26,7 @@ class GameClass {
 		this.creeps = [];
 		this.rooms = [];
 	    this.spawns = [];
-	    this.time = 42; //new Date().getTime();
+	    this.time = 1; //new Date().getTime();
 	}
 
 	method() {
@@ -35,3 +35,5 @@ class GameClass {
 }
 
 global.Game = new GameClass();
+
+module.exports.Game = Game;

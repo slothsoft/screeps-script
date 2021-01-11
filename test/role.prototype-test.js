@@ -1,11 +1,28 @@
 var Prototype = require('../src/role.prototype');
 var assert = require('assert');
 
-require('./mock/creep-mock');
 require('./mock/game-mock');
+require('./mock/creep-mock');
 var Spawn = require('./mock/spawn-mock');
 
+// TODO: Test these methods
+// - spawnCreep()
+// - isNecessary()
+// - findTargets()
+// - findClosestTarget()
+// - sortTargetForClosest()
+// - moveToClosestTarget()
+// - moveToLocation()
+// - moveToSource()
+// - run()
+// - work()
+// - commuteBetweenSourceAndTarget()
+
 describe('role.protoype', () => {
+	before(() => {
+	    global.Game = require('./mock/game-mock').Game;
+	});
+	
 	it('exists', () => {
 		var startsWith = 'class Prototype';
 		assert.equal(startsWith, Prototype.toString().substring(0, startsWith.length));
@@ -327,25 +344,10 @@ describe('role.protoype', () => {
 		it('default => creep with 1 x parts', () => {
 			var spawn = new Spawn();
 			spawn.room.energyAvailable = 150;
-			spawn.spawnCreep([WORK, MOVE])
 			var object = new Prototype();
 			
 			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE]);
 			assert.equal(Game.creeps['XXX 1'], creep);
 		});
 	});
-
 });
-
-
-//spawnCreep()
-//isNecessary()
-//findTargets()
-//findClosestTarget()
-//sortTargetForClosest()
-//moveToClosestTarget()
-//moveToLocation()
-//moveToSource()
-//run()
-//work()
-//commuteBetweenSourceAndTarget()
