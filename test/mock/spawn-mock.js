@@ -7,20 +7,17 @@ require('./memory-mock');
 
 var Creep = require('./creep-mock');
 var Room = require('./room-mock');
+var RoomPosition = require('./room-position-mock.js');
 
 class Spawn {
 
 	constructor(room = new Room()) {
-		// no idea why it works in Room and not here
-		if (!Game.spawns) 
-			Game.spawns = [];
-		// end 'no idea'
-		
 		this.id = 'Spawn' + Game.spawns.length;
 	    Game.spawns[this.id] = this;
 		
 	    this.memory = Memory.spawns[this.id] = {};
-			
+		this.pos = new RoomPosition();	
+	    
 	    this.room = room;
 	}
 	

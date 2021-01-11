@@ -8,14 +8,14 @@
  * You need to implement / set:
  * - roleName, requiredNumber
  * - (color, symbol)
- * - findTargets()
- * - work()
+ * - findTargets(room)
+ * - work(creep)
  * 
  * You might need to override / set:
  * - priority
  * - useStorageAsSource, useSourceAsSource
- * - isNecessary() (on default it returns if a valid target is found)
- * - sortTargetForClosest() (on default it sorts for positions)
+ * - isNecessary(room) (on default it returns if a valid target is found)
+ * - sortTargetForClosest(targets, creep) (on default it sorts for positions)
  */
  
 var constants = require('./main.constants');
@@ -90,7 +90,7 @@ class RolePrototype {
      */
     
     sortTargetForClosest(targets, creep) {
-        return _.sortBy(targets, t => creep.pos.getRangeTo(t));
+        return targets.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
     }
 
     /* 
@@ -149,29 +149,9 @@ class RolePrototype {
      * @param {Creep} creep 
      */
 
-    moveToSource(creep) {
+    moveToClosestSource(creep) {
+        var source = this.findClosestSource(creep);
         
-        var storages = this.useStorageAsSource ? creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_STORAGE ||
-                            structure.structureType == STRUCTURE_CONTAINER ||
-                            structure.structureType == STRUCTURE_LINK) && 
-                            structure.store.getCapacity(RESOURCE_ENERGY) > 0;
-                }}) : [];
-                
-        var sources = this.useSourceAsSource ? creep.room.find(FIND_SOURCES_ACTIVE, {
-                filter: (source) => {
-                    if (game.findAllCreeps().filter(creep => creep.memory.homeSource == source.id).length) {
-                        // source was claimed by a miner
-                        return false;
-                    }
-                    return source.energy > 0;
-                }}) : [];
-        
-        var possibleSources = storages.concat(sources);
-        
-        _.sortBy(possibleSources, t => creep.pos.getRangeTo(t));
-        var source = possibleSources.length == 0 ? null : possibleSources[0];
     	if (!source) return;
     	
     	var harvestResult = source.structureType ? creep.withdraw(source, RESOURCE_ENERGY) : creep.harvest(source);
@@ -185,10 +165,75 @@ class RolePrototype {
                 info.log(creep.memory.role + ' is harvesting from source ' + source.id);  
             }
         } else {      
-            info.log(creep.memory.role + ' cannot harvest: ' + harvestResult + ' (' + source.id + ')');  
+            this.handleSourceWorkResult(creep, harvestResult);
         }
     }
 
+    /* 
+     * Returns the closest source for the creep, e.g. sources or storages.
+     * 
+     * @param {Creep} creep 
+     */
+    
+    findClosestSource(creep) {
+        var sources = this.findSources(creep.room);
+        if (sources) {
+            sources = this.sortSourceForClosest(sources, creep);
+            return sources.length > 0 ? sources[0] : null;
+        }
+        return null;
+    }
+
+    /* 
+     * Sorts the sources so the closest is first. If there are other
+     * things to take into consideration, this function is overriden.
+     * 
+     * @param {Creep} creep 
+     */
+    
+    sortSourceForClosest(sources, creep) {
+        return sources.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
+    }
+
+    /* 
+     * Returns the primary target for the creep, e.g. energy stores for harvester and 
+     * construction sites for builders. 
+     * 
+     * @param {Room} room 
+     */
+
+    findSources(room) {
+        var storages = this.useStorageAsSource ? room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_STORAGE ||
+                        structure.structureType == STRUCTURE_CONTAINER ||
+                        structure.structureType == STRUCTURE_LINK) && 
+                        structure.store.getCapacity(RESOURCE_ENERGY) > 0;
+            }}) : [];
+            
+        var sources = this.useSourceAsSource ? room.find(FIND_SOURCES_ACTIVE, {
+                filter: (source) => {
+                    if (game.findAllCreeps().filter(creep => creep.memory.homeSource == source.id).length) {
+                        // source was claimed by a miner
+                        return false;
+                    }
+                    return source.energy > 0;
+                }}) : [];
+        
+        return storages.concat(sources);
+    }
+
+    /* 
+     * Handles result of harvest on source.
+     * 
+     * @param {Creep} creep 
+     * @param harvest result
+     */
+
+    handleSourceWorkResult(creep, harvestResult) {
+        info.log(creep.memory.role + ' cannot harvest: ' + harvestResult); 
+    }
+    
     /* 
      * Creep AI gets run. Creep might decide working is not in its best interest. 
      * 
@@ -250,7 +295,7 @@ class RolePrototype {
         if (creep.memory.working) {
             this.moveToClosestTarget(creep, work);
         } else {
-            this.moveToSource(creep);
+            this.moveToClosestSource(creep);
         }
     }
 

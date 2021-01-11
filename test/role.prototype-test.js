@@ -2,21 +2,16 @@ var RolePrototype = require('../src/role.prototype');
 var assert = require('assert');
 
 require('./mock/game-mock');
-require('./mock/creep-mock');
+var info = require('../src/main.info');
+
+var Creep = require('./mock/creep-mock');
+var Room = require('./mock/room-mock');
 var Spawn = require('./mock/spawn-mock');
 
 // TODO: Test these methods
-// - isNecessary()
-// - findTargets()
-// - findClosestTarget()
-// - sortTargetForClosest()
-// - moveToClosestTarget()
-// - moveToLocation()
-// - moveToSource()
-// - run()
-// - work()
-// - commuteBetweenSourceAndTarget()
-// - handleTargetWorkResult()
+//- run()
+//- work()
+//- commuteBetweenSourceAndTarget()
 
 describe('role.protoype', () => {
 	before(() => {
@@ -451,8 +446,6 @@ describe('role.protoype', () => {
 		});
 	});
 	
-	// - spawnCreep()
-
 	describe('#spawnCreep', () => {
 		it('no creep', () => {
 			var spawn = new Spawn();
@@ -481,6 +474,380 @@ describe('role.protoype', () => {
 			var creep = object.spawnCreep(spawn);
 			assert.equal(Game.creeps['XXX 1'], creep);
 			assert.deepEqual([WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE], creep.body);
+		});
+	});
+	
+	describe('#isNecessary', () => {
+		it('target present', () => {
+			var object = new RolePrototype();
+			object.findTargets = room => [ "target" ];
+			
+			assert.equal(true, object.isNecessary("room"));
+		});
+
+		it('no targets', () => {
+			var object = new RolePrototype();
+			object.findTargets = room => [];
+			
+			assert.equal(false, object.isNecessary("room"));
+		});
+
+		it('default', () => {
+			var object = new RolePrototype();
+			object.findTargets = room => [];
+			
+			assert.equal(false, object.isNecessary("room"));
+		});
+	});
+
+	describe('#findTargets', () => {
+		it('default', () => {
+			var object = new RolePrototype();
+			
+			assert.deepEqual([], object.findTargets("room"));
+		});
+	});
+
+	describe('#sortTargetForClosest', () => {
+		it('multiple', () => {
+			var object = new RolePrototype();
+
+			var distances = [];
+			distances["A"] = 4;
+			distances["B"] = 1;
+			distances["C"] = 10;
+			
+			var creep = new Creep("findClosestTarget");
+			creep.pos = {};
+			creep.pos.getRangeTo = target => distances[target];
+			
+			assert.deepEqual([ "B", "A", "C" ], object.sortTargetForClosest([ "A", "B", "C" ], creep));
+		});
+	});
+
+	describe('#findClosestTarget', () => {
+		it('default', () => {
+			var object = new RolePrototype();
+
+			var creep = new Creep("findClosestTarget > default");
+			
+			assert.equal(null, object.findClosestTarget(creep));
+		});
+
+		it('empty', () => {
+			var object = new RolePrototype();
+			object.findTargets = room => [];
+
+			var creep = new Creep("findClosestTarget > empty");
+			
+			assert.equal(null, object.findClosestTarget(creep));
+		});
+
+		it('single', () => {
+			var target = new Spawn();
+			target.pos.x = 4;
+			
+			var object = new RolePrototype();
+			object.findTargets = room => [ target ];
+
+			var creep = new Creep("findClosestTarget > single");
+			
+			assert.equal(target, object.findClosestTarget(creep));
+		});
+
+		it('multiple', () => {
+			var targetA = new Spawn();
+			targetA.pos.x = 4;
+
+			var targetB = new Spawn();
+			targetB.pos.x = 1;
+
+			var targetC = new Spawn();
+			targetC.pos.x = 10;
+			
+			var object = new RolePrototype();
+			object.findTargets = room => [ targetA, targetB, targetC ];
+
+			var creep = new Creep("findClosestTarget > multiple");
+			
+			assert.equal(targetB, object.findClosestTarget(creep));
+		});
+	});
+
+	describe('#moveToClosestTarget', () => {
+		it('multiple', () => {
+			var targetA = new Spawn();
+			targetA.pos.x = 4;
+
+			var targetB = new Spawn();
+			targetB.pos.x = 1;
+
+			var targetC = new Spawn();
+			targetC.pos.x = 10;
+			
+			var object = new RolePrototype();
+			object.findTargets = room => [ targetA, targetB, targetC ];
+
+			var creep = new Creep("moveToClosestTarget");
+			
+			var workWasCalled = false;
+			object.moveToClosestTarget(creep, target => {
+				workWasCalled = true;
+				assert.equal(targetB, target);
+				return OK;
+			});
+			assert.equal(true, workWasCalled);
+		});
+
+		it('move to target if not in range', () => {
+			var creep = new Creep("moveToLocation");
+			var target = new Spawn();
+			target.pos.x = 13;
+			target.pos.y = 42;
+			
+			var object = new RolePrototype();
+			object.findTargets = room => [ target ];
+
+			var workWasCalled = false;
+			object.moveToClosestTarget(creep, t => {
+				workWasCalled = true;
+				assert.equal(target, t);
+				return ERR_NOT_IN_RANGE;
+			});
+			assert.equal(true, workWasCalled);
+			assert.equal(13, creep.pos.x);
+			assert.equal(42, creep.pos.y);
+		});
+		
+		it('diverse error', () => {
+			info.clearLog();
+			var target = new Spawn();
+			
+			var object = new RolePrototype();
+			object.findTargets = room => [ target ];
+
+			var creep = new Creep("moveToClosestTarget");
+			
+			var workWasCalled = false;
+			object.moveToClosestTarget(creep, t => {
+				workWasCalled = true;
+				assert.equal(target, t);
+				return ERR_BUSY;
+			});
+			assert.equal(true, workWasCalled);
+			assert.equal(1, info.console.length);
+		});
+	});
+
+	describe('#moveToLocation', () => {
+		it('default', () => {
+			var creep = new Creep("moveToLocation");
+			var target = new Spawn();
+			target.pos.x = 13;
+			target.pos.y = 42;
+			
+			var object = new RolePrototype();
+			object.moveToLocation(creep, target);
+			
+			assert.equal(13, creep.pos.x);
+			assert.equal(42, creep.pos.y);
+		});
+	});
+
+	describe('#handleTargetWorkResult', () => {
+		it('default', () => {
+			var creep = new Creep("moveToClosestTarget");
+			var target = new Spawn();
+			target.pos.x = 13;
+			target.pos.y = 42;
+			
+			var object = new RolePrototype();
+			object.findTargets = room => [ target ];
+			
+			var workWasCalled = false; 
+			object.handleTargetWorkResult = (workingCreep, result) => {
+				workWasCalled = true;
+				assert.equal(workingCreep, creep);
+				assert.equal(result, 42);
+				return ERR_BUSY;
+			};
+
+			object.moveToClosestTarget(creep, t => 42);
+			assert.equal(true, workWasCalled);
+		});
+	});
+
+	describe('#findSources', () => {
+		it('default', () => {
+			var room = new Room();
+			
+			var object = new RolePrototype();
+			
+			assert.deepEqual([], object.findSources(room));
+		});
+	});
+
+	describe('#sortSourceForClosest', () => {
+		it('multiple', () => {
+			var room = new Room();
+			
+			var object = new RolePrototype();
+
+			var distances = [];
+			distances["A"] = 4;
+			distances["B"] = 1;
+			distances["C"] = 10;
+			
+			var creep = new Creep("findClosestSource");
+			creep.pos = {};
+			creep.pos.getRangeTo = source => distances[source];
+			
+			assert.deepEqual([ "B", "A", "C" ], object.sortSourceForClosest([ "A", "B", "C" ], creep));
+		});
+	});
+
+	describe('#findClosestSource', () => {
+		it('default', () => {
+			var object = new RolePrototype();
+
+			var creep = new Creep("findClosestSource > default");
+			creep.room = new Room();
+			
+			assert.equal(null, object.findClosestSource(creep));
+		});
+
+		it('empty', () => {
+			var object = new RolePrototype();
+			object.findSources = room => [];
+
+			var creep = new Creep("findClosestSource > empty");
+			
+			assert.equal(null, object.findClosestSource(creep));
+		});
+
+		it('single', () => {
+			var source = new Spawn();
+			source.pos.x = 4;
+			
+			var object = new RolePrototype();
+			object.findSources = room => [ source ];
+
+			var creep = new Creep("findClosestSource > single");
+			
+			assert.equal(source, object.findClosestSource(creep));
+		});
+
+		it('multiple', () => {
+			var sourceA = new Spawn();
+			sourceA.pos.x = 4;
+
+			var sourceB = new Spawn();
+			sourceB.pos.x = 1;
+
+			var sourceC = new Spawn();
+			sourceC.pos.x = 10;
+			
+			var object = new RolePrototype();
+			object.findSources = room => [ sourceA, sourceB, sourceC ];
+
+			var creep = new Creep("findClosestSource > multiple");
+			
+			assert.equal(sourceB, object.findClosestSource(creep));
+		});
+	});
+
+	describe('#moveToClosestSource', () => {
+		it('multiple', () => {
+			var sourceA = new Spawn();
+			sourceA.pos.x = 4;
+
+			var sourceB = new Spawn();
+			sourceB.pos.x = 1;
+
+			var sourceC = new Spawn();
+			sourceC.pos.x = 10;
+			
+			var object = new RolePrototype();
+			object.findSources = room => [ sourceA, sourceB, sourceC ];
+
+			var creep = new Creep("moveToClosestSource");
+			creep.harvest = source => {
+				workWasCalled = true;
+				assert.equal(sourceB, source);
+				return OK;
+			};
+			
+			var workWasCalled = false;
+			object.moveToClosestSource(creep);
+			assert.equal(true, workWasCalled);
+		});
+
+		it('move to source if not in range', () => {
+			var creep = new Creep("moveToLocation");
+			var source = new Spawn();
+			source.pos.x = 13;
+			source.pos.y = 42;
+			
+			var object = new RolePrototype();
+			object.findSources = room => [ source ];
+
+			var workWasCalled = false;
+			creep.harvest = t => {
+				workWasCalled = true;
+				assert.equal(source, t);
+				return ERR_NOT_IN_RANGE;
+			};
+			
+			object.moveToClosestSource(creep);
+			assert.equal(true, workWasCalled);
+			assert.equal(13, creep.pos.x);
+			assert.equal(42, creep.pos.y);
+		});
+		
+		it('diverse error', () => {
+			info.clearLog();
+			var source = new Spawn();
+			
+			var object = new RolePrototype();
+			object.findSources = room => [ source ];
+
+			var creep = new Creep("moveToClosestSource");
+			
+			var workWasCalled = false;
+			creep.harvest = t => {
+				workWasCalled = true;
+				assert.equal(source, t);
+				return ERR_BUSY;
+			};
+			
+			object.moveToClosestSource(creep);
+			assert.equal(true, workWasCalled);
+			assert.equal(1, info.console.length);
+		});
+	});
+
+	describe('#handleSourceWorkResult', () => {
+		it('default', () => {
+			var creep = new Creep("moveToClosestSource");
+			creep.harvest = source => 42;
+			
+			var source = new Spawn();
+			source.pos.x = 13;
+			source.pos.y = 42;
+			
+			var object = new RolePrototype();
+			object.findSources = room => [ source ];
+			
+			var workWasCalled = false; 
+			object.handleSourceWorkResult = (workingCreep, result) => {
+				workWasCalled = true;
+				assert.equal(workingCreep, creep);
+				assert.equal(result, 42);
+				return ERR_BUSY;
+			};
+
+			object.moveToClosestSource(creep);
+			assert.equal(true, workWasCalled);
 		});
 	});
 });

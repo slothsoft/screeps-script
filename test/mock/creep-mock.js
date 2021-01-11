@@ -4,6 +4,8 @@
 
 require('./game-mock');
 
+var RoomPosition = require('./room-position-mock.js');
+
 global.MOVE = 'move';
 global.WORK = 'work';
 global.CARRY = 'carry';
@@ -26,14 +28,22 @@ global.BODYPART_COST = {
 
 class Creep {
 
-	constructor(name, body, memory = {}) {
-		require('./game-mock');
-		this.id = name;
+	constructor(id, body, memory = {}) {
+		this.id = id;
 	    Game.creeps[this.id] = this;
 		
 	    this.body = body;
 	    this.memory = Memory.creeps[this.id] = memory;
+		this.pos = new RoomPosition();
 	}
+	
+	moveTo(target) {
+		this.pos.x = target.pos.x;
+		this.pos.y = target.pos.y;
+	}
+
+	harvest(target) {}
+	
 }
 
 module.exports = Creep;

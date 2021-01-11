@@ -1,6 +1,8 @@
 var classUnderTest = require('../src/main.info');
 var assert = require('assert');
 
+//All methods tested.
+
 describe('main.info', () => {
 	it('exists', () => {
 		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
