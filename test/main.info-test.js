@@ -1,7 +1,7 @@
 var classUnderTest = require('../src/main.info');
 var assert = require('assert');
 
-//All methods tested.
+// All methods tested.
 
 describe('main.info', () => {
 	it('exists', () => {
@@ -50,6 +50,22 @@ describe('main.info', () => {
 			assert.equal(classUnderTest.console.length, 2);
 			assert.equal(classUnderTest.console[0].includes('C'), true);
 			assert.equal(classUnderTest.console[1].includes('B'), true);
+		});
+	});
+
+	describe('#error', () => {
+		it('simple', () => {
+			classUnderTest.getMaxHeight = () => 3;
+			classUnderTest.clearLog();
+			
+			classUnderTest.error('A');
+			classUnderTest.error('B');
+			classUnderTest.error('C');
+
+			assert.equal(classUnderTest.console.length, 3);
+			assert.equal(classUnderTest.console[0].includes('🛑 C'), true);
+			assert.equal(classUnderTest.console[1].includes('🛑 B'), true);
+			assert.equal(classUnderTest.console[2].includes('🛑 A'), true);
 		});
 	});
 

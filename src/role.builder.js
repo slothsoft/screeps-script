@@ -4,20 +4,49 @@
  
 var RolePrototype = require('./role.prototype');
  
-var result = Object.create(RolePrototype);
-result.roleName = 'Builder';
-result.requiredNumber = 1;
-result.color = '#ffff00';
-result.symbol = '🔨';
-result.work = creep => result.commuteBetweenSourceAndTarget(creep, target => creep.build(target));
-result.priority = 70;
+class Builder extends RolePrototype {
 
-result.sortTargetForClosest = function(targets, creep) {
-    return _.sortBy(targets, t => (t.progressTotal - t.progress) + creep.pos.getRangeTo(t) * 2);
-};
+	constructor() {
+		super('Builder', 1, '#ffff00', '🔨');
+	    this.priority = 70; 
+	}
+
+	/*
+	 * Just transfer energy between source and and the construction sites.
+	 */
+	
+    work(creep) {
+    	this.commuteBetweenSourceAndTarget(creep, target => creep.build(target));
+    }
     
-result.findTargets = function(room) {
-    return room.find(FIND_CONSTRUCTION_SITES);
-};
+    /*
+     * Valid targets are construction sites. 
+     */
+    
+    findTargets(room) {
+        return room.find(FIND_MY_CONSTRUCTION_SITES);
+    }
 
-module.exports = result;
+	/*
+	 * Takes the closest to creep and closest to completion.
+	 */
+    
+    sortTargetForClosest(targets, creep) {
+        return targets.sort((a, b) => {
+        	var rangeA = creep.pos.getRangeTo(a);
+        	var rangeB = creep.pos.getRangeTo(b);
+        	var compare = Math.floor(rangeA / 5) - Math.floor(rangeB / 5);
+        	if (compare) return compare;
+        	
+        	var progressLeftA = a.progressTotal - a.progress;
+        	var progressLeftB = b.progressTotal - b.progress;
+        	var compare = progressLeftA - progressLeftB;
+        	if (compare) return compare;
+        	
+        	return compare;
+        });
+    }
+        
+}
+
+module.exports = Builder;

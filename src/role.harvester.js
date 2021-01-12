@@ -4,25 +4,38 @@
 
 var RolePrototype = require('./role.prototype');
  
-var result = Object.create(RolePrototype);
-result.roleName = 'Harvester';
-result.requiredNumber = 2;
-result.color = '#ffffff';
-result.symbol = '🧺';
-result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
-result.priority = 100;
-result.useStorageAsSource = false;
+class Harvester extends RolePrototype {
 
-result.findTargets = function(room)  {
-    return room.find(FIND_MY_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_EXTENSION ||
-                        structure.structureType == STRUCTURE_SPAWN ||
-                        structure.structureType == STRUCTURE_TOWER) && 
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            }
-    });
-};
+	constructor() {
+		super('Harvester', 2, '#ffffff', '🧺');
+	    this.priority = 100; 
+	    this.useStorageAsSource = false;
+	    this.useSourceAsSource = true;
+	}
 
-module.exports = result;
+	/*
+	 * Just transfer energy between source and and the targets.
+	 */
+	
+    work(creep) {
+        this.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
+    }
+    
+    /*
+     * Valid targets are everything where energy can be stored. 
+     */
+    
+    findTargets(room) {
+        return room.find(FIND_MY_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_EXTENSION ||
+                            structure.structureType == STRUCTURE_SPAWN ||
+                            structure.structureType == STRUCTURE_TOWER) && 
+                            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }
+        });
+    }
+}
+
+module.exports = Harvester;
 

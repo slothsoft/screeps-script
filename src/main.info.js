@@ -91,7 +91,7 @@ var result = {
      */
     
     getHeight: function(room) {   
-        return room.memory.base.consoleHeight || 5;
+        return (room.memory.base && room.memory.base.consoleHeight) || 5;
     },
 
     /*
@@ -122,6 +122,16 @@ var result = {
         
         this.console.splice(0, 0, newLine);
         this.console = this.console.slice(0, height);
+    },
+
+    /*
+     * Logs the error to the UI console.
+     * 
+     * @param the new line
+     */
+    
+    error: function(newLine) {   
+        this.log('🛑 ' + newLine);
     },
 
     /*

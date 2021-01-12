@@ -34,6 +34,28 @@ global.FIND_HOSTILE_POWER_CREEPS = 121;
 global.FIND_DEPOSITS = 122;
 global.FIND_RUINS = 123;
 
+global.STRUCTURE_SPAWN = "spawn";
+global.STRUCTURE_EXTENSION = "extension";
+global.STRUCTURE_ROAD = "road";
+global.STRUCTURE_WALL = "constructedWall";
+global.STRUCTURE_RAMPART = "rampart";
+global.STRUCTURE_KEEPER_LAIR = "keeperLair";
+global.STRUCTURE_PORTAL = "portal";
+global.STRUCTURE_CONTROLLER = "controller";
+global.STRUCTURE_LINK = "link";
+global.STRUCTURE_STORAGE = "storage";
+global.STRUCTURE_TOWER = "tower";
+global.STRUCTURE_OBSERVER = "observer";
+global.STRUCTURE_POWER_BANK = "powerBank";
+global.STRUCTURE_POWER_SPAWN = "powerSpawn";
+global.STRUCTURE_EXTRACTOR = "extractor";
+global.STRUCTURE_LAB = "lab";
+global.STRUCTURE_TERMINAL = "terminal";
+global.STRUCTURE_CONTAINER = "container";
+global.STRUCTURE_NUKER = "nuker";
+global.STRUCTURE_FACTORY = "factory";
+global.STRUCTURE_INVADER_CORE = "invaderCore";
+
 class Room {
 
 	constructor() {

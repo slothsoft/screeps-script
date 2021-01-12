@@ -4,16 +4,28 @@
  
 var RolePrototype = require('./role.prototype');
  
-var result = Object.create(RolePrototype);
-result.roleName = 'Upgrader';
-result.requiredNumber = 1;
-result.color = '#00ff00';
-result.symbol = '⚡';
-result.work = creep => result.commuteBetweenSourceAndTarget(creep, target => creep.upgradeController(target));
-result.priority = 50;
+class Upgrader extends RolePrototype {
 
-result.findTargets = function(room) {
-    return [ room.controller ];
-};
+	constructor() {
+		super('Upgrader', 1, '#00ff00', '⚡');
+	    this.priority = 50; 
+	}
 
-module.exports = result;
+	/*
+	 * Just transfer energy between source and and the room controllers.
+	 */
+	
+    work(creep) {
+        this.commuteBetweenSourceAndTarget(creep, target => creep.upgradeController(target));
+    }
+    
+    /*
+     * The only valid target is the room controller.
+     */
+    
+    findTargets(room) {
+        return [ room.controller ];
+    }
+}
+
+module.exports = Upgrader;

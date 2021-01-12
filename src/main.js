@@ -2,6 +2,7 @@
  * The main loop of the game. 
  */
 
+var game = require('./main.game');
 var info = require('./main.info');
 
 var baseManager = require('./manager.base');
@@ -73,17 +74,16 @@ module.exports.loop = function () {
  */
 
 global.fetchOldestCreep = function (baseName) {
-    var oldestCreep;
-    for (var creepName in Game.creeps) {
-        var creep = Game.creeps[creepName];
-        if ((!oldestCreep || creep.ticksToLive < oldestCreep.ticksToLive) && (!baseName || creep.room.memory.base.name == baseName)) { 
-            oldestCreep = creep;
-        }
-    }
-    if (oldestCreep) 
-        info.log('Oldest creep: ' + oldestCreep.name + ' (' + oldestCreep.ticksToLive + ' ttl)');
-    else 
-        info.log('No creep found.');
+    var oldestCreep = game.findAllCreeps().
+    	filter(creep => (!baseName || creep.room.memory.base.name == baseName)).
+    	sort((a, b) => { return a.ticksToLive - b.ticksToLive });
+    
+    if (oldestCreep.length > 0) {
+        info.log('Oldest creep: ' + oldestCreep[0].name + ' (' + oldestCreep[0].ticksToLive + ' ttl)');
+        return oldestCreep[0];
+    } 
+    info.error('No creep found.');
+    return null;
 };
 
 /*
@@ -95,12 +95,12 @@ global.fetchOldestCreep = function (baseName) {
 
 global.spawnMiner = function (spawnName, sourceName) { 
     if (!sourceName) {
-        info.log('🛑 The source is mandatory!');
+        info.error('The source is mandatory!');
         return;
     }
     var spawn = Game.spawns[spawnName];
     if (!spawn) {
-        info.log('🛑 Could not find spawn: ' + spawnName);
+        info.error('Could not find spawn: ' + spawnName);
         return;
     }
     var resultingCreep = minerExplorer.spawnCreep(spawn);
@@ -122,7 +122,7 @@ global.spawnMiner = function (spawnName, sourceName) {
 global.selfdestruct = function (creepName) { 
     var creep = Game.creeps[creepName];
     if (!creep) {
-        info.log('🛑 Could not find creep: ' + creepName);
+        info.error('Could not find creep: ' + creepName);
         return;
     }
     creep.memory.selfdestruct = true;

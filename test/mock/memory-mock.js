@@ -2,7 +2,6 @@
  * API for Memory: https://docs.screeps.com/api/#Memory
  */
 
-
 class Memory {
 
 	constructor() {

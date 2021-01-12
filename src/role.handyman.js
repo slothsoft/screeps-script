@@ -4,31 +4,48 @@
  
 var RolePrototype = require('./role.prototype');
  
-var result = Object.create(RolePrototype);
-result.roleName = 'Handyman';
-result.requiredNumber = 0;
-result.color = '#0000ff';
-result.symbol = '🔧';
-result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  creep.repair(target));
+class Handyman extends RolePrototype {
+
+	constructor() {
+		super('Handyman', 0, '#0000ff', '🔧');
+	}
+
+	/*
+	 * Just transfer energy between source and and the broken structures.
+	 */
+	
+    work(creep) {
+    	this.commuteBetweenSourceAndTarget(creep, target => creep.repair(target));
+    }
     
-result.sortTargetForClosest = function(targets, creep) {
-    if (creep.memory.target) {
-        var creepTarget = creep.room.find(FIND_STRUCTURES, { filter: object => ((object.hits < object.hitsMax) && (object.id == creep.memory.target)) });
-        if (creepTarget.length > 0) {
-            return creepTarget;
+    /*
+     * Valid targets are all broken structures. 
+     */
+    
+    findTargets(room) {
+        return room.find(FIND_STRUCTURES, {
+            filter: object => object.hits < object.hitsMax * 0.9
+        });
+    }
+
+	/*
+	 * Takes the closest to creep and closest to completion.
+	 */
+    
+    sortTargetForClosest(targets, creep) {
+        if (creep.memory.target) {
+            var creepTarget = targets.filter(object => (object.hits < object.hitsMax) && (object.id == creep.memory.target));
+            if (creepTarget.length > 0) {
+                return creepTarget;
+            }
         }
+        var result = targets.sort((a, b) => (a.hitsMax - a.hits) - (b.hitsMax - b.hits));
+        if (result.length > 0) {
+            creep.memory.target = result[0].id;
+        }
+        return result;
     }
-    var result = targets.sort((a, b) => a.hits - b.hits);
-    if (result.length > 0) {
-        creep.memory.target = result[0].id;
-    }
-    return result;
-};
+        
+}
 
-result.findTargets = function(room)  {
-    return room.find(FIND_STRUCTURES, {
-        filter: object => object.hits < object.hitsMax * 0.9
-    });
-};
-
-module.exports = result;
+module.exports = Handyman;

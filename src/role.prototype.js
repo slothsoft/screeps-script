@@ -245,24 +245,36 @@ class RolePrototype {
         // self-destructing is more important than working
         
         if (creep.memory.selfdestruct) {
-            var spawn = creep.pos.findClosestByPath(FIND_MY_SPAWNS);
-            if (spawn) {
-                var recycleAnswer = spawn.recycleCreep(creep);
-                if (recycleAnswer == ERR_NOT_IN_RANGE) {
-                    if (creep.memory.debug) {      
-                        info.log(creep.memory.role + ' is moving to spawn ' + spawn.id);  
-                    }
-                    this.moveToLocation(creep, spawn);
-                } else if (recycleAnswer == OK) {  
-                    if (creep.memory.debug) {
-                        info.log(creep.memory.role + ' was recycled.');  
-                    }
-                }
-            }
+            this.selfdestruct(creep);
             return;
         }
         
         this.work(creep);
+    }
+
+    /* 
+     * Creep self-destructs or tries to anyway.
+     * 
+     * @param {Creep} creep 
+     */
+    
+    selfdestruct(creep) {
+        var spawn = creep.pos.findClosestByPath(FIND_MY_SPAWNS);
+        if (spawn) {
+            var recycleAnswer = spawn.recycleCreep(creep);
+            if (recycleAnswer == ERR_NOT_IN_RANGE) {
+                if (creep.memory.debug) {      
+                    info.log(creep.memory.role + ' is moving to spawn ' + spawn.id);  
+                }
+                this.moveToLocation(creep, spawn);
+            } else if (recycleAnswer == OK) {  
+                if (creep.memory.debug) {
+                    info.log(creep.memory.role + ' was recycled.');  
+                }
+            }
+        } else {
+            info.log('🛑 ' + creep.memory.role + ' could not find a spawn.');  
+        }
     }
 
     /* 
@@ -273,7 +285,7 @@ class RolePrototype {
     
     work(creep) {
         // do nothing on default   
-        creep.say('🔔 unimplemented');
+        creep.say('🛑 unimplemented');
     }
     
     /* 
@@ -284,8 +296,7 @@ class RolePrototype {
      */
     
     commuteBetweenSourceAndTarget(creep, work) {
-        
-        if (creep.memory.working && creep.store[RESOURCE_ENERGY] == 0) {
+        if (creep.memory.working && creep.store.getUsedCapacity() == 0) {
             creep.memory.working = false;
         }
         if (!creep.memory.working && creep.store.getFreeCapacity() == 0) {
