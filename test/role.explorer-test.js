@@ -1,7 +1,7 @@
 var classUnderTest = require('../src/role.explorer');
 var assert = require('assert');
 
-//TODO: Test all methods.
+// Test all methods.
 
 describe('role.explorer', () => {
 	it('exists', () => {

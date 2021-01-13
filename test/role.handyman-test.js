@@ -14,7 +14,6 @@ var Store = require('./mock/store-mock.js');
 describe('role.handyman', () => {
 	before(() => {
 	    global.Game = require('./mock/game-mock').Game;
-	    global.Game = require('./mock/game-mock').Game;
 	});
 	
 	it('constructor', () => {

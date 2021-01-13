@@ -13,7 +13,6 @@ var Store = require('./mock/store-mock.js');
 describe('role.harvester', () => {
 	before(() => {
 	    global.Game = require('./mock/game-mock').Game;
-	    global.Game = require('./mock/game-mock').Game;
 	});
 	
 	it('constructor', () => {

@@ -8,7 +8,7 @@ var info = require('./main.info');
 var baseManager = require('./manager.base');
 var linkManager = require('./manager.link');
 
-var minerExplorer = require('./role.miner');
+var Miner = require('./role.miner');
 
 module.exports.loop = function () {
 
@@ -94,23 +94,7 @@ global.fetchOldestCreep = function (baseName) {
  */
 
 global.spawnMiner = function (spawnName, sourceName) { 
-    if (!sourceName) {
-        info.error('The source is mandatory!');
-        return;
-    }
-    var spawn = Game.spawns[spawnName];
-    if (!spawn) {
-        info.error('Could not find spawn: ' + spawnName);
-        return;
-    }
-    var resultingCreep = minerExplorer.spawnCreep(spawn);
-    if (resultingCreep) {
-        info.log(minerExplorer.symbol + ' Spawning new ' + minerExplorer.roleName + ' (' + resultingCreep.body.length + 'p)');
-        resultingCreep.memory.homeSpawn = spawnName;
-        resultingCreep.memory.homeSource = sourceName;
-        return resultingCreep;
-    }
-    return resultingCreep;
+    return new Miner().spawnCreepFromSpawnName(spawnName, sourceName);
 };
 
 /*

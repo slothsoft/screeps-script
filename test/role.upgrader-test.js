@@ -14,7 +14,6 @@ var Store = require('./mock/store-mock.js');
 describe('role.upgrader', () => {
 	before(() => {
 	    global.Game = require('./mock/game-mock').Game;
-	    global.Game = require('./mock/game-mock').Game;
 	});
 	
 	it('constructor', () => {
@@ -36,11 +35,11 @@ describe('role.upgrader', () => {
 		it('find correct structure', () => {
 			
 			var room = new Room();
-			room.controller = "roomController";
+			room.controller = 'roomController';
 
 			var object = new Upgrader();
 			
-			assert.deepEqual([ "roomController" ], object.findTargets(room));
+			assert.deepEqual([ 'roomController' ], object.findTargets(room));
 		});
 	});
 	

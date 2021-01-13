@@ -383,66 +383,6 @@ describe('role.protoype', () => {
 			assert.deepEqual([CLAIM, WORK, MOVE, WORK, MOVE], creep.body);
 		});
 	});
-
-	describe('#spawnCreepWithParts', () => {
-		it('default => no creep', () => {
-			var spawn = new Spawn();
-			spawn.room.energyAvailable = 50;
-			var object = new RolePrototype();
-			
-			var creep = object.spawnCreep(spawn, [WORK, MOVE]);
-			assert.equal(false, creep);
-		});
-
-		it('default => creep with 1 x parts', () => {
-			var spawn = new Spawn();
-			spawn.room.energyAvailable = 150;
-			var object = new RolePrototype();
-			
-			var creep = object.spawnCreepWithParts(spawn, [MOVE, WORK]);
-			assert.equal(Game.creeps['XXX 1'], creep);
-			assert.deepEqual([MOVE, WORK], creep.body);
-		});
-
-		it('default => creep with 2 x parts', () => {
-			var spawn = new Spawn();
-			spawn.room.energyAvailable = 449;
-			var object = new RolePrototype();
-			
-			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE]);
-			assert.equal(Game.creeps['XXX 1'], creep);
-			assert.deepEqual([WORK, MOVE, WORK, MOVE], creep.body);
-		});
-
-		it('plus single => no creep', () => {
-			var spawn = new Spawn();
-			spawn.room.energyAvailable = 650;
-			var object = new RolePrototype();
-			
-			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE, CLAIM], [CLAIM]);
-			assert.equal(false, creep);
-		});
-
-		it('plus single => creep with 1 x parts', () => {
-			var spawn = new Spawn();
-			spawn.room.energyAvailable = 750;
-			var object = new RolePrototype();
-			
-			var creep = object.spawnCreepWithParts(spawn, [MOVE, WORK], [CLAIM]);
-			assert.equal(Game.creeps['XXX 1'], creep);
-			assert.deepEqual([CLAIM, MOVE, WORK], creep.body);
-		});
-
-		it('plus single => creep with 2 x parts', () => {
-			var spawn = new Spawn();
-			spawn.room.energyAvailable = 1049;
-			var object = new RolePrototype();
-			
-			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE], [CLAIM]);
-			assert.equal(Game.creeps['XXX 1'], creep);
-			assert.deepEqual([CLAIM, WORK, MOVE, WORK, MOVE], creep.body);
-		});
-	});
 	
 	describe('#spawnCreep', () => {
 		it('no creep', () => {

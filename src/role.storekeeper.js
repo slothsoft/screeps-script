@@ -7,58 +7,47 @@
 var info = require('./main.info');
 
 var RolePrototype = require('./role.prototype');
- 
-var result = Object.create(RolePrototype);
-result.roleName = 'Storekeeper';
-result.requiredNumber = 1;
-result.color = '#ff9900';
-result.symbol = '🏭';
-result.work = creep => result.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
-result.priority = -1;
-result.isNecessary = room => true;
 
-result.spawnCreep = function(spawn) {
-	return this.spawnCreepWithParts(spawn, [MOVE, MOVE, MOVE, CARRY]);
-};
+class StoreKeeper extends RolePrototype {
 
-result.moveToSource = function(creep) {
-    var sources = creep.room.find(FIND_MY_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_STORAGE ||
-                        structure.structureType == STRUCTURE_CONTAINER) && 
-                        structure.store[RESOURCE_ENERGY] > 0;
-            }
-    });
+	constructor() {
+		super('Storekeeper', 1, '#ff9900', '🏭');
+		this.priority = -1;
+	}
+
+	isNecessary(room) {
+		return true;
+	}
+
+	work(creep) {
+		this.commuteBetweenSourceAndTarget(creep, target => creep.transfer(target, RESOURCE_ENERGY));
+	}
+
+	spawnCreep(spawn) {
+		return this.spawnCreepWithParts(spawn, [MOVE, CARRY], [ MOVE, MOVE ]);
+	}
+
+    findSources(room) {
+	    return room.find(FIND_MY_STRUCTURES, {
+	            filter: (structure) => {
+	                return (structure.structureType == STRUCTURE_STORAGE ||
+	                        structure.structureType == STRUCTURE_CONTAINER) && 
+	                        structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+	            }
+	    });
+    }
     
-	if (sources.length == 0) return;
-	
-	var source = this.sortTargetForClosest(sources, creep)[0];
-	
-	var withdrawResult = creep.withdraw(source, RESOURCE_ENERGY);
-    if (withdrawResult == ERR_NOT_IN_RANGE) {
-        if (creep.memory.debug) {      
-            info.log(creep.memory.role + ' is moving to source ' + source.id);  
-        }
-        this.moveToLocation(creep, source);
-    } else if (withdrawResult == OK) {     
-        if (creep.memory.debug) {
-            info.log(creep.memory.role + ' is withdrawing from source ' + source.id);  
-        }
-    } else {      
-        info.log(creep.memory.role + ' cannot withdraw: ' + withdrawResult);  
+    findTargets(room)  {
+        return room.find(FIND_MY_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_EXTENSION ||
+                            structure.structureType == STRUCTURE_SPAWN ||
+                            structure.structureType == STRUCTURE_TOWER) && 
+                            (structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+                }
+        });
     }
 };
 
-result.findTargets = function(room)  {
-    return room.find(FIND_MY_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_EXTENSION ||
-                        structure.structureType == STRUCTURE_SPAWN ||
-                        structure.structureType == STRUCTURE_TOWER) && 
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            }
-    });
-};
-
-module.exports = result;
+module.exports = StoreKeeper;
 

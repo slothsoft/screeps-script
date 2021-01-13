@@ -167,6 +167,7 @@ class RolePrototype {
         } else {      
             this.handleSourceWorkResult(creep, harvestResult);
         }
+        return harvestResult;
     }
 
     /* 
