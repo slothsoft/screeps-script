@@ -33,13 +33,14 @@ class Miner extends RolePrototype {
 		return false;
 	}
 
-	spawnCreepFromSpawnName(spawnName, sourceName) {
-	    var spawn = Game.spawns[spawnName];
-	    if (!spawn) {
+	spawnCreepFromSpawnName(spawnName, sourceId) {
+	    var spawns = game.findAllSpawns().filter(spawn => spawn.name == spawnName);
+	    if (spawns.length == 0) {
 	        info.error('Could not find spawn: ' + spawnName);
 	        return false;
 	    }
-	    var resultingCreep = this.spawnCreepFromSpawn(spawn, sourceName);
+	    var spawn = spawns[0];
+	    var resultingCreep = this.spawnCreepFromSpawn(spawn, sourceId);
 	    if (resultingCreep) {
 	        info.log(this.symbol + ' Spawning new ' + this.roleName + ' (' + resultingCreep.body.length + 'p)');
 	        return resultingCreep;
@@ -47,15 +48,15 @@ class Miner extends RolePrototype {
 	    return resultingCreep;
 	}
 
-	spawnCreepFromSpawn(spawn, sourceName) {
-	    if (!sourceName) {
+	spawnCreepFromSpawn(spawn, sourceId) {
+	    if (!sourceId) {
 	        info.error('The source is mandatory!');
 	        return false;
 	    }
 	    var resultingCreep = this.spawnCreepWithParts(spawn, [WORK], [MOVE, CARRY]);
 	    if (resultingCreep) {
-	        resultingCreep.memory.homeSpawn = spawn.id;
-	        resultingCreep.memory.homeSource = sourceName;
+	        resultingCreep.memory.homeSpawn = spawn.name;
+	        resultingCreep.memory.homeSource = sourceId;
 	        return resultingCreep;
 	    }
 	    return resultingCreep;

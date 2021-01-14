@@ -148,7 +148,7 @@ var result = {
             var height = this.getHeight(Game.rooms[roomName])
             result = height > result ? height : height;
         }
-        return result;
+        return result ? result : 10;
     },
 };
 

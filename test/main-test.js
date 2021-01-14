@@ -14,17 +14,21 @@ describe('main', () => {
 		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 
+	beforeEach(() => {
+		Game.clearAll();
+		info.clearLog();
+	});
+
 	describe('#selfdestruct', () => {
 		it('with creep', () => {
 			var creep = new Creep();
+			
 			selfdestruct(creep.id);
 
 			assert.equal(true, creep.memory.selfdestruct);
 		});
 
 		it('without creep', () => {
-			info.clearLog();
-			
 			selfdestruct('ID');
 
 			assert.equal(1, info.console.length);
@@ -34,8 +38,6 @@ describe('main', () => {
 
 	describe('#fetchOldestCreep', () => {
 		it('with creeps', () => {
-			info.clearLog();
-			
 			var creep1 = new Creep('A');
 			creep1.ticksToLive = 200;
 			var creep2 = new Creep('B');
@@ -51,8 +53,6 @@ describe('main', () => {
 		});
 
 		it('without creep', () => {
-			info.clearLog();
-			
 			game.findAllCreeps = () => [ ];
 
 			assert.equal(null, fetchOldestCreep());
@@ -63,7 +63,6 @@ describe('main', () => {
 
 	describe('#spawnMiner', () => {
 		it('no spawn', () => {
-
 			var spawn = new Spawn();
 			spawn.room.energyAvailable = 50;
 			
@@ -72,13 +71,13 @@ describe('main', () => {
 		});
 		
 		it('spawn', () => {
-			info.clearLog();
-
 			var spawn = new Spawn();
+			spawn.name = 'Main';
 			spawn.room.energyAvailable = 300;
 			
-			var creep = spawnMiner(spawn.id, 'Source');
-			assert.equal(spawn.id, creep.memory.homeSpawn);
+			var creep = spawnMiner(spawn.name, 'Source');
+			assert.notEqual(false, creep);
+			assert.equal(spawn.name, creep.memory.homeSpawn);
 			assert.equal('Source', creep.memory.homeSource);
 			assert.equal(Game.creeps['Miner 1'], creep);
 			assert.deepEqual([MOVE, CARRY, WORK], creep.body);
@@ -88,8 +87,6 @@ describe('main', () => {
 		});
 
 		it('no spawn', () => {
-			info.clearLog();
-			
 			var spawn = new Spawn();
 			spawn.room.energyAvailable = 77;
 			

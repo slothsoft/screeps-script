@@ -40,6 +40,18 @@ var result = {
         return result;
     },
 
+	/*
+	 * Finds all flags in the game and puts them in an array.
+	 */
+    
+	findAllFlags: function() {
+	    var result = [];
+	    for (var flagName in Game.flags) {
+	        result.push(Game.flags[flagName]);
+	    }
+	    return result;
+	},
+
 };
 
 module.exports = result;

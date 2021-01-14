@@ -25,7 +25,7 @@ module.exports.loop = function () {
             });
             if(closestDamagedStructure) {
                 // takes waaaay too much energy
-                tower.repair(closestDamagedStructure);
+                // tower.repair(closestDamagedStructure);
             }
             
         }
@@ -44,7 +44,7 @@ module.exports.loop = function () {
             });
             if(closestDamagedStructure) {
                 // takes waaaay too much energy
-                tower.repair(closestDamagedStructure);
+                // tower.repair(closestDamagedStructure);
             }
             
         }

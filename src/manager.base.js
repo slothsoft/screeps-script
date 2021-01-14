@@ -37,7 +37,7 @@ class BaseManager {
 	 */	
     
     runBase() {  
-        this.initRoleInfoIfNecessary();
+        this.initRoleInfo();
 
     	if (this.room.memory.base) {
     		this.initBaseRoleConfigIfNecessary();
@@ -269,9 +269,6 @@ BaseManager.init = () => {
 BaseManager.initSpawn = (spawn, baseName) => {  
     spawn.room.memory.base = {
          name : baseName,
-         consoleX: 38,
-         consoleY: 44,
-         consoleHeight: 5,
     };
     info.log('🏠 Created new base: ' + spawn.room.memory.base.name);
 };
