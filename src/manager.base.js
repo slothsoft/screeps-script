@@ -40,6 +40,8 @@ class BaseManager {
         this.initRoleInfoIfNecessary();
 
     	if (this.room.memory.base) {
+    		this.initBaseRoleConfigIfNecessary();
+    		
 	        this.repopulateCreeps();
 	        this.showSpawningAnimation();
 	        this.moveCreeps();
@@ -204,6 +206,30 @@ class BaseManager {
     	return (baseRoleConfig && baseRoleConfig.requiredNumber) || (hasBase && role.requiredNumber) || -1;
     }
 
+    /*
+     * Init role config on room's base, so we can change it.
+     */
+    
+    initBaseRoleConfigIfNecessary(room = this.room) {
+    	if (!this.room.memory.base.roleConfig) {
+    		this.initBaseRoleConfig(room);
+    	}
+    }
+    
+    /*
+     * Init role config on room's base, so we can change it.
+     */
+
+    initBaseRoleConfig() { 
+        var newRoleConfig = { }; 
+        
+        this.allRoles.forEach(role => {
+        	newRoleConfig[role.roleName] = {
+                requiredNumber: role.requiredNumber,
+            };
+        });
+        this.room.memory.base.roleConfig = newRoleConfig;
+    }
 };
 
 /*

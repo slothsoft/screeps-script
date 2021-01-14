@@ -67,7 +67,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 
 ## Memory
 
-Documentation on which memory is used for which information. Mandatory elements are.
+Documentation on which memory is used for which information. Mandatory elements are **bold**.
 
 
 
@@ -76,21 +76,21 @@ Documentation on which memory is used for which information. Mandatory elements 
 | Memory                | Type          | Description  |
 | --------------------- | ------------- | ------------ |
 | base                  | `object`    | used to configure the base that started in this room |
-| - name                | `string`    | display name |
-| - roleConfig          | `object`    | used to configure the creeps in this base |
-| - - <role>            | `object`    | used to configure a specific role in this base |
-| - - - requiredNumber  | `number`    | the required number of creeps for this role |
+| ..name                | `string`    | display name |
+| ..roleConfig          | `object`    | used to configure the creeps in this base |
+| ....<role>            | `object`    | used to configure a specific role in this base |
+| ......requiredNumber  | `number`    | the required number of creeps for this role |
 | console               | `object`    | used to collect config of the console |
-| - height              | `number`    | height of the console in lines |
-| - x                   | `number`    | x coordinate to show the console at |
-| - y                   | `number`    | y coordinate to show the console at |
+| ..height              | `number`    | height of the console in lines |
+| ..x                   | `number`    | x coordinate to show the console at |
+| ..y                   | `number`    | y coordinate to show the console at |
 | roleInfo              | `object`    | used to collect information about creeps on this room |
-| - <role>              | `object`    | used to collect information about the role with the name <role> |
-| - - currentNumber     | `number`    | the current number of the role |
-| - - requiredNumber    | `number`    | the required number of the role |
-| - - symbol            | `number`    | the symbol of the role |
-| - x                   | `number`    | x coordinate to show the role info at |
-| - y                   | `number`    | y coordinate to show the role info at |
+| ..<role>              | `object`    | used to collect information about the role with the name <role> |
+| ....currentNumber     | `number`    | the current number of the role |
+| ....requiredNumber    | `number`    | the required number of the role |
+| ....symbol            | `number`    | the symbol of the role |
+| ..x                   | `number`    | x coordinate to show the role info at |
+| ..y                   | `number`    | y coordinate to show the role info at |
 
 
 
