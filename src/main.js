@@ -5,7 +5,7 @@
 var game = require('./main.game');
 var info = require('./main.info');
 
-var baseManager = require('./manager.base');
+var BaseManager = require('./manager.base');
 var linkManager = require('./manager.link');
 
 var Miner = require('./role.miner');
@@ -59,9 +59,11 @@ module.exports.loop = function () {
             console.log('Clearing non-existing creep memory:', name);
         }
     }
-
+    
+    BaseManager.init();
+    game.findAllRooms().forEach(room => new BaseManager(room).runBase());
+    
     linkManager.manageAll();
-    baseManager.runAll();
     info.print();
 }
 

@@ -209,7 +209,7 @@ class RolePrototype {
                 return (structure.structureType == STRUCTURE_STORAGE ||
                         structure.structureType == STRUCTURE_CONTAINER ||
                         structure.structureType == STRUCTURE_LINK) && 
-                        structure.store.getCapacity(RESOURCE_ENERGY) > 0;
+                        structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }}) : [];
             
         var sources = this.useSourceAsSource ? room.find(FIND_SOURCES_ACTIVE, {

@@ -5,17 +5,17 @@
 var result = {
 
 	/*
-	 * Returns the number of spawns in a specific room. 
-	 * 
-     * @param {Room} room 
+	 * Finds all spawns in the game and puts them in an array.
 	 */
-		
-    getSpawnCount: function(room) {   
-        var result = 0;
-        for (var s in Game.spawns) result++;
+    
+    findAllSpawns: function() {
+        var result = [];
+        for (var spawnName in Game.spawns) {
+            result.push(Game.spawns[spawnName]);
+        }
         return result;
     },
-
+    
 	/*
 	 * Finds all creeps in the game and puts them in an array.
 	 */
@@ -26,7 +26,20 @@ var result = {
             result.push(Game.creeps[creepName]);
         }
         return result;
-    }
+    },
+
+	/*
+	 * Finds all rooms in the game and puts them in an array.
+	 */
+    
+    findAllRooms: function() {
+        var result = [];
+        for (var roomName in Game.rooms) {
+            result.push(Game.rooms[roomName]);
+        }
+        return result;
+    },
+
 };
 
 module.exports = result;

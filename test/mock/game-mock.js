@@ -23,14 +23,14 @@ global.ERR_GCL_NOT_ENOUGH = -15;
 class GameClass {
 
 	constructor() {
+		this.clearAll();
+	}
+
+	clearAll() {
 		this.creeps = [];
 		this.rooms = [];
 	    this.spawns = [];
 	    this.time = 1; 
-	}
-
-	method() {
-		return 'Hello world!';
 	}
 }
 

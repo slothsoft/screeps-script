@@ -53,22 +53,7 @@ My scripts for the game [Screeps](https://screeps.com/).
 
 ## Dev Notes
 
-- tests start real screeps server to run tests against
-- Tests:
-    - [ ] main-test.js
-    - [X] main.constants-test.js
-    - [ ] main.game-test.js
-    - [X] main.info-test.js
-    - [ ] manager.base-test.js
-    - [ ] manager.link-test.js
-    - [ ] role.builder-test.js
-    - [ ] role.explorer-test.js
-    - [ ] role.handyman-test.js
-    - [ ] role.harvester-test.js
-    - [ ] role.miner-test.js
-    - [ ] role.prototype-test.js
-    - [ ] role.storekeeper-test.js
-    - [ ] role.upgrader-test.js
+- Tests run against a mock of the original game: [mock folder](./test/mock)
 
 
 
@@ -81,5 +66,7 @@ My scripts for the game [Screeps](https://screeps.com/).
 - don't switch to roles where you missing parts
 - remove console entries after a while
 - try to refactor to have common methods at central place
-- test is now necessary
 - the role info is for the room, not the base?
+- console is for the room, not the base
+- document memory management
+- document all console commands in one section
