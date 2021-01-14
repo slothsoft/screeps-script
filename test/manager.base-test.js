@@ -162,11 +162,10 @@ describe('manager.base', () => {
 				return new Creep("repopulateCreeps", [ MOVE ]);
 			};
 
-			
 			BaseManager.init();
 			info.clearLog();
 
-			spawn.room.memory.base.roleInfo = { Role :  { requiredNumber : 1 } };
+			spawn.room.memory.base.roleConfig = { Role :  { requiredNumber : 1 } };
 
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [role];
@@ -196,7 +195,7 @@ describe('manager.base', () => {
 			BaseManager.init();
 			info.clearLog();
 
-			spawn.room.memory.base.roleInfo = { Role :  { requiredNumber : 0 } };
+			spawn.room.memory.base.roleConfig = { Role :  { requiredNumber : 0 } };
 
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [role];
@@ -299,12 +298,11 @@ describe('manager.base', () => {
 			manager.allRoles = [ role ];
 			manager.initRoleInfo();
 			
-			assert.equal(true, typeof room.memory.base !== 'undefined');
-			assert.equal(true, typeof room.memory.base.roleInfo !== 'undefined');
-			assert.equal(true, typeof room.memory.base.roleInfo['Role'] !== 'undefined');
-			assert.equal('!', room.memory.base.roleInfo['Role'].symbol);
-			assert.equal(-1, room.memory.base.roleInfo['Role'].requiredNumber);
-			assert.equal(0, room.memory.base.roleInfo['Role'].currentNumber);
+			assert.equal(true, typeof room.memory.roleInfo !== 'undefined');
+			assert.equal(true, typeof room.memory.roleInfo['Role'] !== 'undefined');
+			assert.equal('!', room.memory.roleInfo['Role'].symbol);
+			assert.equal(-1, room.memory.roleInfo['Role'].requiredNumber);
+			assert.equal(0, room.memory.roleInfo['Role'].currentNumber);
 		});
 
 		it('room with base', () => {
@@ -327,11 +325,11 @@ describe('manager.base', () => {
 			manager.allRoles = [ role ];
 			manager.initRoleInfo();
 
-			assert.equal(true, typeof room.memory.base.roleInfo !== 'undefined');
-			assert.equal(true, typeof room.memory.base.roleInfo['Role'] !== 'undefined');
-			assert.equal('!', room.memory.base.roleInfo['Role'].symbol);
-			assert.equal(7, room.memory.base.roleInfo['Role'].requiredNumber);
-			assert.equal(0, room.memory.base.roleInfo['Role'].currentNumber);
+			assert.equal(true, typeof room.memory.roleInfo !== 'undefined');
+			assert.equal(true, typeof room.memory.roleInfo['Role'] !== 'undefined');
+			assert.equal('!', room.memory.roleInfo['Role'].symbol);
+			assert.equal(7, room.memory.roleInfo['Role'].requiredNumber);
+			assert.equal(0, room.memory.roleInfo['Role'].currentNumber);
 		});
 
 		it('room with defined base', () => {
@@ -354,17 +352,153 @@ describe('manager.base', () => {
 			manager.allRoles = [ role ];
 			manager.initRoleInfo();
 
-			room.memory.base.roleInfo['Role'].symbol = '?';
-			room.memory.base.roleInfo['Role'].requiredNumber = 42;
-			room.memory.base.roleInfo['Role'].currentNumber = 5;
+			spawn.room.memory.base.roleConfig = { Role :  { requiredNumber : 42 } };
 			
 			manager.initRoleInfo();
 
-			assert.equal(true, typeof room.memory.base.roleInfo !== 'undefined');
-			assert.equal(true, typeof room.memory.base.roleInfo['Role'] !== 'undefined');
-			assert.equal('!', room.memory.base.roleInfo['Role'].symbol);
-			assert.equal(42, room.memory.base.roleInfo['Role'].requiredNumber);
-			assert.equal(0, room.memory.base.roleInfo['Role'].currentNumber);
+			assert.equal(true, typeof room.memory.roleInfo !== 'undefined');
+			assert.equal(true, typeof room.memory.roleInfo['Role'] !== 'undefined');
+			assert.equal('!', room.memory.roleInfo['Role'].symbol);
+			assert.equal(42, room.memory.roleInfo['Role'].requiredNumber);
+			assert.equal(0, room.memory.roleInfo['Role'].currentNumber);
+		});
+
+		it('room argument', () => {
+			
+			var role = {};
+			role.symbol = '!';
+			role.roleName = 'Role';
+			role.requiredNumber = 7;
+
+			var spawn = new Spawn();
+			var room = spawn.room;
+			
+			BaseManager.init();
+			info.clearLog();
+
+			assert.equal(true, typeof room.memory.base !== 'undefined');
+			assert.equal('Dresden', room.memory.base.name);
+			
+			var manager = new BaseManager(room);
+			manager.allRoles = [ role ];
+			
+			var otherRoom = new Room();
+			manager.initRoleInfo(otherRoom);
+
+			assert.equal(true, typeof otherRoom.memory.roleInfo !== 'undefined');
+			assert.equal(true, typeof otherRoom.memory.roleInfo['Role'] !== 'undefined');
+			assert.equal('!', otherRoom.memory.roleInfo['Role'].symbol);
+			assert.equal(-1, otherRoom.memory.roleInfo['Role'].requiredNumber);
+			assert.equal(0, otherRoom.memory.roleInfo['Role'].currentNumber);
+		});
+	});
+	
+
+	describe('#initRoleInfoIfNecessary', () => {
+		it('room without base', () => {
+			
+			var role = {};
+			role.symbol = '!';
+			role.roleName = 'Role';
+
+			var room = new Room();
+			
+			var manager = new BaseManager(room);
+			manager.allRoles = [ role ];
+			manager.initRoleInfoIfNecessary();
+			
+			assert.equal(true, typeof room.memory.roleInfo !== 'undefined');
+			assert.equal(true, typeof room.memory.roleInfo['Role'] !== 'undefined');
+			assert.equal('!', room.memory.roleInfo['Role'].symbol);
+			assert.equal(-1, room.memory.roleInfo['Role'].requiredNumber);
+			assert.equal(0, room.memory.roleInfo['Role'].currentNumber);
+		});
+
+		it('room with base', () => {
+			
+			var role = {};
+			role.symbol = '!';
+			role.roleName = 'Role';
+			role.requiredNumber = 7;
+
+			var spawn = new Spawn();
+			var room = spawn.room;
+			
+			BaseManager.init();
+			info.clearLog();
+
+			assert.equal(true, typeof room.memory.base !== 'undefined');
+			assert.equal('Dresden', room.memory.base.name);
+			
+			var manager = new BaseManager(room);
+			manager.allRoles = [ role ];
+			manager.initRoleInfoIfNecessary();
+
+			assert.equal(true, typeof room.memory.roleInfo !== 'undefined');
+			assert.equal(true, typeof room.memory.roleInfo['Role'] !== 'undefined');
+			assert.equal('!', room.memory.roleInfo['Role'].symbol);
+			assert.equal(7, room.memory.roleInfo['Role'].requiredNumber);
+			assert.equal(0, room.memory.roleInfo['Role'].currentNumber);
+		});
+
+		it('room with defined base', () => {
+			
+			var role = {};
+			role.symbol = '!';
+			role.roleName = 'Role';
+			role.requiredNumber = 7;
+
+			var spawn = new Spawn();
+			var room = spawn.room;
+			
+			BaseManager.init();
+			info.clearLog();
+
+			assert.equal(true, typeof room.memory.base !== 'undefined');
+			assert.equal('Dresden', room.memory.base.name);
+			
+			var manager = new BaseManager(room);
+			manager.allRoles = [ role ];
+			manager.initRoleInfoIfNecessary();
+
+			spawn.room.memory.base.roleConfig = { Role :  { requiredNumber : 42 } };
+			
+			manager.initRoleInfoIfNecessary();
+
+			assert.equal(true, typeof room.memory.roleInfo !== 'undefined');
+			assert.equal(true, typeof room.memory.roleInfo['Role'] !== 'undefined');
+			assert.equal('!', room.memory.roleInfo['Role'].symbol);
+			assert.equal(7, room.memory.roleInfo['Role'].requiredNumber);
+			assert.equal(0, room.memory.roleInfo['Role'].currentNumber);
+		});
+
+		it('room argument', () => {
+			
+			var role = {};
+			role.symbol = '!';
+			role.roleName = 'Role';
+			role.requiredNumber = 7;
+
+			var spawn = new Spawn();
+			var room = spawn.room;
+			
+			BaseManager.init();
+			info.clearLog();
+
+			assert.equal(true, typeof room.memory.base !== 'undefined');
+			assert.equal('Dresden', room.memory.base.name);
+			
+			var manager = new BaseManager(room);
+			manager.allRoles = [ role ];
+			
+			var otherRoom = new Room();
+			manager.initRoleInfoIfNecessary(otherRoom);
+
+			assert.equal(true, typeof otherRoom.memory.roleInfo !== 'undefined');
+			assert.equal(true, typeof otherRoom.memory.roleInfo['Role'] !== 'undefined');
+			assert.equal('!', otherRoom.memory.roleInfo['Role'].symbol);
+			assert.equal(-1, otherRoom.memory.roleInfo['Role'].requiredNumber);
+			assert.equal(0, otherRoom.memory.roleInfo['Role'].currentNumber);
 		});
 	});
 
@@ -758,6 +892,46 @@ describe('manager.base', () => {
 			manager.moveCreeps();
 
 			assert.equal(false, runCalled);
+		});
+	});
+
+	describe('#getRequiredNumberForRoomAndRole', () => {
+		it('not defined no base', () => {
+			var role = {};
+			role.roleName = 'Role';
+			role.requiredNumber = 7;
+			
+			var room = new Room();
+			
+			var manager = new BaseManager(room);
+			
+			assert.equal(-1, manager.getRequiredNumberForRoomAndRole(room, role));
+		});
+
+		it('not defined but base', () => {
+			var role = {};
+			role.roleName = 'Role';
+			role.requiredNumber = 7;
+			
+			var room = new Room();
+			room.memory.base = {};
+			
+			var manager = new BaseManager(room);
+			
+			assert.equal(7, manager.getRequiredNumberForRoomAndRole(room, role));
+		});
+
+		it('defined in base', () => {
+			var role = {};
+			role.roleName = 'Role';
+			role.requiredNumber = 7;
+			
+			var room = new Room();
+			room.memory.base = { roleConfig : { Role :  { requiredNumber : 1 } } };
+			
+			var manager = new BaseManager(room);
+			
+			assert.equal(1, manager.getRequiredNumberForRoomAndRole(room, role));
 		});
 	});
 });

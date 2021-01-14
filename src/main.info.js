@@ -33,18 +33,19 @@ var result = {
      */
     
     printRolesInfoForRoom: function(room) {   
-        var x = room.memory.base.roleInfoX || 0;
-        var y = room.memory.base.roleInfoY || 0;
-        
-        if (!room.memory.base.roleInfo)
+        if (!room.memory.roleInfo)
             return;
+        
+        var x = room.memory.roleInfo.x || 0;
+        var y = room.memory.roleInfo.y || 0;
+        
         
         room.visual.text(room.memory.base.name, x, y++, {align: 'left', opacity: 0.8});
         
         var unusedRoles = '';
         
-        for (const role in room.memory.base.roleInfo) {
-            var count = room.memory.base.roleInfo[role];
+        for (const role in room.memory.roleInfo) {
+            var count = room.memory.roleInfo[role];
             if (count.currentNumber || count.requiredNumber) {
             	var ofRequired = count.requiredNumber >= 0 ? '/' + count.requiredNumber : '';
                 room.visual.text(count.symbol + ' ' + role + ' ' + count.currentNumber + ofRequired, x, y++, {align: 'left', opacity: 0.8});
@@ -63,9 +64,9 @@ var result = {
      */
     
     printConsole: function(room) {   
-        var x = room.memory.base.consoleX;
+        var x = room.memory.console && room.memory.console.x || 40;
         var xLine = x + 5;
-        var yMin = room.memory.base.consoleY;
+        var yMin = room.memory.console && room.memory.console.y || 0;
         var height = this.getHeight(room);
         var y = yMin + height;
         
@@ -92,7 +93,7 @@ var result = {
      */
     
     getHeight: function(room) {   
-        return (room.memory.base && room.memory.base.consoleHeight) || 5;
+        return (room.memory.console && room.memory.console.height) || 5;
     },
 
     /*

@@ -37,7 +37,7 @@ class BaseManager {
 	 */	
     
     runBase() {  
-        this.initRoleInfo();
+        this.initRoleInfoIfNecessary();
 
     	if (this.room.memory.base) {
 	        this.repopulateCreeps();
@@ -56,7 +56,7 @@ class BaseManager {
         this.allRoles.forEach(role => {
             var foundCreeps = game.findAllCreeps().filter(creep => creep.memory.role == role.roleName && creep.memory.home == baseName);
             
-            if (foundCreeps.length < this.room.memory.base.roleInfo[role.roleName].requiredNumber) {
+            if (foundCreeps.length < this.room.memory.base.roleConfig[role.roleName].requiredNumber) {
                 this.spawnCreepForRole(role);
             }
         });
@@ -114,13 +114,12 @@ class BaseManager {
                 var creepRole = this.findNecessaryMandatoryRole(creep.memory.role);
                 creepRole.run(creep);
 
-                // TODO: the creep's room is not okay, still... is this ok?
-                if (!creep.room.memory.base) creep.room.memory.base = {};
-                if (!creep.room.memory.base.roleInfo) creep.room.memory.base.roleInfo = {};
-                if (!creep.room.memory.base.roleInfo[creepRole.roleName]) creep.room.memory.base.roleInfo[creepRole.roleName] = {};
                 // the creep counts for the room it is currently in, not the base's room
-                var currentNumber = creep.room.memory.base.roleInfo[creepRole.roleName].currentNumber;
-                creep.room.memory.base.roleInfo[creepRole.roleName].currentNumber = currentNumber ? currentNumber + 1 : 1;
+                if (this.room != creep.room) {
+                	this.initRoleInfoIfNecessary(creep.room);
+            	}
+                var currentNumber = creep.room.memory.roleInfo[creepRole.roleName].currentNumber;
+                creep.room.memory.roleInfo[creepRole.roleName].currentNumber = currentNumber ? currentNumber + 1 : 1;
                 
                 if (constants.DEBUG_ROLES) {
                 	this.room.visual.text(creepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
@@ -142,7 +141,8 @@ class BaseManager {
         if (!result.isNecessary(this.room)) {
             // we have creeps in a role that is not necessary - try to find something better to do
             var necessaryRoles = this.allRoles.filter(role => {
-            	return (this.room.memory.base.roleInfo[role.roleName].requiredNumber > 0) && role.isNecessary(this.room)
+            	var requiredNumber = this.getRequiredNumberForRoomAndRole(this.room, role);
+            	return (requiredNumber > 0) && role.isNecessary(this.room)
             });
             if (necessaryRoles.length > 0) {
             	result = necessaryRoles[0];
@@ -165,26 +165,43 @@ class BaseManager {
         info.error('COULD NOT FIND ROLE: ' + roleName + ' 🛑');
         return this.defaultRole;
     }
+
+    initRoleInfoIfNecessary(room = this.room) {
+    	if (!this.room.memory.roleInfo) {
+    		this.initRoleInfo(room);
+    	}
+    }
     
     /*
      * Init role info on room, so we can print it (or do whatever).
+     * 
+     * @param {Room} room
      */
 
-    initRoleInfo() { 
+    initRoleInfo(room = this.room) { 
         var currentRoleInfo = { }; 
         
         this.allRoles.forEach(role => {
-        	var hasBase = this.room.memory.base;
-            var originalRoleInfo = this.room.memory.base && this.room.memory.base.roleInfo && this.room.memory.base.roleInfo[role.roleName];
             currentRoleInfo[role.roleName] = {
                 symbol: role.symbol,
-                requiredNumber: hasBase ? (originalRoleInfo && originalRoleInfo.requiredNumber) || role.requiredNumber : -1,
+                requiredNumber: this.getRequiredNumberForRoomAndRole(room, role),
                 currentNumber: 0,
             };
         });
-        if (!this.room.memory.base) 
-        	this.room.memory.base = {};
-        this.room.memory.base.roleInfo = currentRoleInfo;
+        room.memory.roleInfo = currentRoleInfo;
+    }
+
+    /*
+     * Gets the required number for a room and a role.
+     * 
+     * @param {Room} room
+     * @param role
+     */
+    
+    getRequiredNumberForRoomAndRole(room, role) {
+    	var hasBase = room.memory.base;
+        var baseRoleConfig = room.memory.base && room.memory.base.roleConfig && room.memory.base.roleConfig[role.roleName];
+    	return (baseRoleConfig && baseRoleConfig.requiredNumber) || (hasBase && role.requiredNumber) || -1;
     }
 
 };
@@ -226,8 +243,6 @@ BaseManager.init = () => {
 BaseManager.initSpawn = (spawn, baseName) => {  
     spawn.room.memory.base = {
          name : baseName,
-         roleInfoX: 0,
-         roleInfoY: 0,
          consoleX: 38,
          consoleY: 44,
          consoleHeight: 5,

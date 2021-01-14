@@ -10,9 +10,21 @@ describe('main.info', () => {
 
 	describe('#getHeight', () => {
 		it('simple', () => {
-			var room = { memory: { base: { consoleHeight: 7 } } };
+			var room = { memory: { console : { height: 7 } } };
 			
 			assert.equal(classUnderTest.getHeight(room), 7);
+		});
+
+		it('fallback on no height', () => {
+			var room = { memory: { console : { } } };
+			
+			assert.equal(classUnderTest.getHeight(room), 5);
+		});
+
+		it('fallback on no console', () => {
+			var room = { memory: { } };
+			
+			assert.equal(classUnderTest.getHeight(room), 5);
 		});
 	});
 	

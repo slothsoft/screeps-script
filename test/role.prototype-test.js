@@ -79,7 +79,7 @@ describe('role.protoype', () => {
 
 		it('set', () => {
 			var spawn = new Spawn();
-			spawn.room.memory.base = { partsMinMultiplier : 2 };
+			spawn.room.memory.base = { roleConfig : { partsMinMultiplier : 2 } };
 			
 			var object = new RolePrototype();
 			
@@ -96,7 +96,7 @@ describe('role.protoype', () => {
 
 		it('set', () => {
 			var spawn = new Spawn();
-			spawn.room.memory.base = { partsMaxMultiplier : 7 };
+			spawn.room.memory.base = { roleConfig : { partsMaxMultiplier : 7 } };
 			
 			var object = new RolePrototype();
 			

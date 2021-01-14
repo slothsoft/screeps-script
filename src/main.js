@@ -77,7 +77,7 @@ module.exports.loop = function () {
 
 global.fetchOldestCreep = function (baseName) {
     var oldestCreep = game.findAllCreeps().
-    	filter(creep => (!baseName || creep.room.memory.base.name == baseName)).
+    	filter(creep => (!baseName || creep.room.memory.home == baseName)).
     	sort((a, b) => { return a.ticksToLive - b.ticksToLive });
     
     if (oldestCreep.length > 0) {
@@ -91,12 +91,12 @@ global.fetchOldestCreep = function (baseName) {
 /*
  * Spawns a miner for a specific source.
  * 
- * @param spawnName
- * @param sourceName
+ * @param spawnId
+ * @param sourceId
  */
 
-global.spawnMiner = function (spawnName, sourceName) { 
-    return new Miner().spawnCreepFromSpawnName(spawnName, sourceName);
+global.spawnMiner = function (spawnId, sourceId) { 
+    return new Miner().spawnCreepFromSpawnName(spawnId, sourceId);
 };
 
 /*

@@ -372,7 +372,7 @@ class RolePrototype {
      */
     
     getPartsMinMultiplier(spawn) {
-        return (spawn.room.memory.base && spawn.room.memory.base.partsMinMultiplier) || 0;
+        return (spawn.room.memory.base && spawn.room.memory.base.roleConfig && spawn.room.memory.base.roleConfig.partsMinMultiplier) || 0;
     }
 
     /* 
@@ -382,7 +382,7 @@ class RolePrototype {
      */
     
     getPartsMaxMultiplier(spawn) {
-        return (spawn.room.memory.base && spawn.room.memory.base.partsMaxMultiplier) || 20;
+        return (spawn.room.memory.base && spawn.room.memory.base.roleConfig && spawn.room.memory.base.roleConfig.partsMaxMultiplier) || 20;
     }
 
     /* 
