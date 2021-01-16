@@ -7,6 +7,7 @@ var info = require('./main.info');
 
 var BaseManager = require('./manager.base');
 var linkManager = require('./manager.link');
+var MemoryManager = require('./manager.memory');
 
 var Explorer = require('./role.explorer');
 var Miner = require('./role.miner');
@@ -61,10 +62,18 @@ module.exports.loop = function () {
         }
     }
     
-    BaseManager.init();
-    game.findAllRooms().forEach(room => new BaseManager(room).runBase());
+    // init all necessary information
+
+	var allRoles = BaseManager.fetchAllRoles();
+	MemoryManager.initRound(allRoles);
     
+    // run the entire base
+    
+    game.findAllRooms().forEach(room => new BaseManager(room).runBase());
     linkManager.manageAll();
+    
+    // print GUI on top
+    
     info.print();
 }
 

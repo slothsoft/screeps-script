@@ -20,10 +20,8 @@ var MemoryManager = require('./manager.memory');
 
 class BaseManager {
     
-	constructor(room) {
-	    this.room = room;
-	    this.defaultRole = new Harvester();
-	    this.allRoles = [
+	static fetchAllRoles() {
+		return [
 	    	new Harvester(), 
 	    	new Builder(), 
 	    	new Upgrader(), 
@@ -33,17 +31,20 @@ class BaseManager {
 	    	new StoreKeeper(),
 	    ].sort((a, b) => b.priority - a.priority);
 	}
+	
+	
+	constructor(room) {
+	    this.room = room;
+	    this.defaultRole = new Harvester();
+	    this.allRoles = BaseManager.fetchAllRoles();
+	}
 
 	/*
 	 * Runs this manager for the specific room it belongs too.
 	 */	
     
     runBase() {  
-        this.initRoleInfo();
-
     	if (this.room.memory.base) {
-    		this.initBaseRoleConfig();
-    		
 	        this.repopulateCreeps();
 	        this.showSpawningAnimation();
 	        this.moveCreeps();
@@ -137,9 +138,6 @@ class BaseManager {
                 creepRole.run(creep);
 
                 // the creep counts for the room it is currently in, not the base's room
-                if (this.room != creep.room) {
-                	this.initRoleInfoIfNecessary(creep.room);
-            	}
                 var currentNumber = creep.room.memory.roleInfo[creepRole.roleName].currentNumber;
                 creep.room.memory.roleInfo[creepRole.roleName].currentNumber = currentNumber ? currentNumber + 1 : 1;
                 
@@ -184,92 +182,6 @@ class BaseManager {
         info.error('COULD NOT FIND ROLE: ' + roleName + ' 🛑');
         return this.defaultRole;
     }
-
-    initRoleInfoIfNecessary(room = this.room) {
-    	if (!this.room.memory.roleInfo) {
-    		this.initRoleInfo(room);
-    	}
-    }
-    
-    /*
-     * Init role info on room, so we can print it (or do whatever).
-     * 
-     * @param {Room} room
-     */
-
-    initRoleInfo(room = this.room) { 
-        var currentRoleInfo = { }; 
-        
-        this.allRoles.forEach(role => {
-            currentRoleInfo[role.roleName] = {
-                symbol: role.symbol,
-                requiredNumber: this.getRequiredNumberForRoomAndRole(room, role),
-                currentNumber: 0,
-            };
-        });
-        room.memory.roleInfo = currentRoleInfo;
-    }
-
-    /*
-     * Gets the required number for a room and a role.
-     * 
-     * @param {Room} room
-     * @param role
-     */
-    
-    getRequiredNumberForRoomAndRole(room, role) {
-    	var hasBase = room.memory.base;
-    	return hasBase ? (room.memory.base.roleConfig ? room.memory.base.roleConfig[role.roleName].requiredNumber : 0) : -1;
-    }
-
-    /*
-     * Init role config on room's base, so we can change it.
-     */
-
-    initBaseRoleConfig() { 
-        MemoryManager.fetchRoomRoleConfig(this.room, this.allRoles);
-    }
-};
-
-/*
- * Initializes the very first base.
- */	
-
-BaseManager.init = () => {  
-
-    var allSpawns = game.findAllSpawns();
-    var initialSpawn = allSpawns.length > 0 ? allSpawns[0] : null;
-    
-    if (!initialSpawn) {
-        return; // nothing has happened yet
-    }
-    
-    if (allSpawns.length > 0 && allSpawns.filter(spawn => spawn.memory.home).length == 0) {
-        // Congratz! We just spawned our very first base!
-    	BaseManager.initSpawn(initialSpawn, 'Dresden'); //
-    }
-    
-    // all spawns (and all creeps) have a home, so that we find them again
-    
-    allSpawns.filter(spawn => !spawn.memory.home).forEach(spawn => {
-        spawn.memory.home = initialSpawn.room.memory.base.name;
-        info.log('🏠 Created new spawn in base: ' + spawn.room.memory.home);
-    });
-};
-
-
-/*
- * Initializes the spawn as a base.
- * 
- * @param {Spawn} spawn
- * @param baseName
- */	
-
-BaseManager.initSpawn = (spawn, baseName) => {  
-    spawn.room.memory.base = {
-         name : baseName,
-    };
-    info.log('🏠 Created new base: ' + spawn.room.memory.base.name);
 };
 
 module.exports = BaseManager;

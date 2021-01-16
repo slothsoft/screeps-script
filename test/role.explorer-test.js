@@ -170,7 +170,7 @@ describe('role.explorer', () => {
 			spawn.room.energyAvailable = 50;
 
 			var flag = new Spawn();
-			flag.name = "Flag Name";
+			flag.name = 'Flag Name';
 			game.findAllFlags = () => [ flag ];
 			
 			var object = new Explorer();

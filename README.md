@@ -133,7 +133,6 @@ Documentation on which memory is used for which information. Mandatory elements 
 - make links useful
 - don't switch to roles where you missing parts
 - remove console entries after a while
-- 🛑 refactor init() system as to not run into NPE as much
 - creeps are displayed even if they are not on map
 - finish explorer
 - findTargets() depends on the creep, not the room (then probably findSources() too
