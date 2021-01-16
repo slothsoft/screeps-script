@@ -26,16 +26,14 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 
 			assert.equal('Prototype', object.roleName);
-			assert.equal(0, object.requiredNumber);
 			assert.equal('#ff0000', object.color);
 			assert.equal('❗', object.symbol);
 		});
 
 		it('args', () => {
-			var object = new RolePrototype('Role', 42, 'green', '🎗');
+			var object = new RolePrototype('Role', 'green', '🎗');
 
 			assert.equal('Role', object.roleName);
-			assert.equal(42, object.requiredNumber);
 			assert.equal('green', object.color);
 			assert.equal('🎗', object.symbol);
 		});

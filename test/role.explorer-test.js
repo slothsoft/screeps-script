@@ -31,7 +31,6 @@ describe('role.explorer', () => {
 		
 		var object = new Explorer();
 		assert.equal('Explorer', object.roleName);
-		assert.equal(0, object.requiredNumber);
 		assert.equal('#cccccc', object.color);
 		assert.equal('🏴', object.symbol);
 		assert.equal(0, object.priority);

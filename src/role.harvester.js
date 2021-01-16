@@ -7,7 +7,7 @@ var RolePrototype = require('./role.prototype');
 class Harvester extends RolePrototype {
 
 	constructor() {
-		super('Harvester', 2, '#ffffff', '🧺');
+		super('Harvester', '#ffffff', '🧺');
 	    this.priority = 100; 
 	    this.useStorageAsSource = false;
 	    this.useSourceAsSource = true;

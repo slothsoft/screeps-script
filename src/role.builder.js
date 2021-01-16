@@ -7,7 +7,7 @@ var RolePrototype = require('./role.prototype');
 class Builder extends RolePrototype {
 
 	constructor() {
-		super('Builder', 1, '#ffff00', '🔨');
+		super('Builder', '#ffff00', '🔨');
 	    this.priority = 70; 
 	}
 

@@ -15,7 +15,7 @@ const PHASE_CLAIM_FLAG_ROOM = 'claimFlagRoom';
 class Explorer extends RolePrototype {
 
 	constructor() {
-		super('Explorer', 0, '#cccccc', '🏴');
+		super('Explorer', '#cccccc', '🏴');
 	}
 
 	findTargets(room) {

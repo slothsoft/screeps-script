@@ -162,10 +162,7 @@ class BaseManager {
         
         if (!result.isNecessary(this.room)) {
             // we have creeps in a role that is not necessary - try to find something better to do
-            var necessaryRoles = this.allRoles.filter(role => {
-            	var requiredNumber = this.getRequiredNumberForRoomAndRole(this.room, role);
-            	return (requiredNumber > 0) && role.isNecessary(this.room)
-            });
+            var necessaryRoles = this.allRoles.filter(role => role.isNecessary(this.room));
             if (necessaryRoles.length > 0) {
             	result = necessaryRoles[0];
             }
@@ -222,8 +219,7 @@ class BaseManager {
     
     getRequiredNumberForRoomAndRole(room, role) {
     	var hasBase = room.memory.base;
-        var baseRoleConfig = room.memory.base && room.memory.base.roleConfig && room.memory.base.roleConfig[role.roleName];
-    	return (baseRoleConfig && baseRoleConfig.requiredNumber) || (hasBase && role.requiredNumber) || -1;
+    	return hasBase ? (room.memory.base.roleConfig ? room.memory.base.roleConfig[role.roleName].requiredNumber : 0) : -1;
     }
 
     /*

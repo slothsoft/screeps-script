@@ -7,7 +7,7 @@ var RolePrototype = require('./role.prototype');
 class Handyman extends RolePrototype {
 
 	constructor() {
-		super('Handyman', 0, '#0000ff', '🔧');
+		super('Handyman', '#0000ff', '🔧');
 	}
 
 	/*

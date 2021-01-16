@@ -6,7 +6,7 @@
  * - commuting between an source and a target
  * 
  * You need to implement / set:
- * - roleName, requiredNumber
+ * - roleName
  * - (color, symbol)
  * - findTargets(room)
  * - work(creep)
@@ -24,9 +24,8 @@ var info = require('./main.info');
 
 class RolePrototype {
     
-	constructor(roleName = 'Prototype', requiredNumber = 0, color = '#ff0000', symbol = '❗') {
+	constructor(roleName = 'Prototype', color = '#ff0000', symbol = '❗') {
 	    this.roleName = roleName;
-	    this.requiredNumber = requiredNumber;
 	    this.color = color;
 	    this.symbol = symbol;
 	    this.priority = 0; // the higher the better

@@ -21,7 +21,6 @@ describe('role.harvester', () => {
 		
 		var object = new Harvester();
 		assert.equal('Harvester', object.roleName);
-		assert.equal(2, object.requiredNumber);
 		assert.equal('#ffffff', object.color);
 		assert.equal('🧺', object.symbol);
 		assert.equal(100, object.priority);

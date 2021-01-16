@@ -27,7 +27,6 @@ describe('role.miner', () => {
 		
 		var object = new Miner();
 		assert.equal('Miner', object.roleName);
-		assert.equal(0, object.requiredNumber);
 		assert.equal('#000000', object.color);
 		assert.equal('🛒', object.symbol);
 		assert.equal(-1, object.priority);

@@ -11,7 +11,7 @@ var RolePrototype = require('./role.prototype');
 class Miner extends RolePrototype {
 
 	constructor() {
-		super('Miner', 0, '#000000', '🛒');
+		super('Miner', '#000000', '🛒');
 		this.priority = -1; // we never need more than the defined miners
 		this.range = 7;
 	}

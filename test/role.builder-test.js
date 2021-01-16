@@ -23,7 +23,6 @@ describe('role.builder', () => {
 		
 		var object = new Builder();
 		assert.equal('Builder', object.roleName);
-		assert.equal(1, object.requiredNumber);
 		assert.equal('#ffff00', object.color);
 		assert.equal('🔨', object.symbol);
 		assert.equal(70, object.priority);

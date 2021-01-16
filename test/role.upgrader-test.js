@@ -22,7 +22,6 @@ describe('role.upgrader', () => {
 		
 		var object = new Upgrader();
 		assert.equal('Upgrader', object.roleName);
-		assert.equal(1, object.requiredNumber);
 		assert.equal('#00ff00', object.color);
 		assert.equal('⚡', object.symbol);
 		assert.equal(50, object.priority);

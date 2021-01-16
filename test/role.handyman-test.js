@@ -22,7 +22,6 @@ describe('role.handyman', () => {
 		
 		var object = new Handyman();
 		assert.equal('Handyman', object.roleName);
-		assert.equal(0, object.requiredNumber);
 		assert.equal('#0000ff', object.color);
 		assert.equal('🔧', object.symbol);
 		assert.equal(0, object.priority);

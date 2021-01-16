@@ -7,7 +7,7 @@ var RolePrototype = require('./role.prototype');
 class Upgrader extends RolePrototype {
 
 	constructor() {
-		super('Upgrader', 1, '#00ff00', '⚡');
+		super('Upgrader', '#00ff00', '⚡');
 	    this.priority = 50; 
 	}
 

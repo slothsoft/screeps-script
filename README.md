@@ -81,7 +81,7 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ..roleConfig          | `object`    | used to configure the creeps in this base |
 | ....&lt;role&gt;            | `object`    | used to configure a specific role in this base |
 | ......requiredNumber  | `number`    | the required number of creeps for this role |
-| console               | `object`    | used to collect config of the console |
+| console               | `object`    | used to collect config of the console & other GUI elements |
 | ..height              | `number`    | height of the console in lines |
 | ..x                   | `number`    | x coordinate to show the console at |
 | ..y                   | `number`    | y coordinate to show the console at |
@@ -136,7 +136,4 @@ Documentation on which memory is used for which information. Mandatory elements 
 - 🛑 refactor init() system as to not run into NPE as much
 - creeps are displayed even if they are not on map
 - finish explorer
--  🛑 role info is not correct "x/y" not working
--  🛑 role info x/y is overriden
 - findTargets() depends on the creep, not the room (then probably findSources() too
-- roleInfo.x and roleInfo.y are not at the correct place 
