@@ -8,50 +8,12 @@ var info = require('./main.info');
 var BaseManager = require('./manager.base');
 var linkManager = require('./manager.link');
 var MemoryManager = require('./manager.memory');
+var TowerManager = require('./manager.tower');
 
 var Explorer = require('./role.explorer');
 var Miner = require('./role.miner');
 
 module.exports.loop = function () {
-
-    var tower = Game.getObjectById('5ff55a31a435f9cd0078311a');
-    if(tower) {
-
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(closestHostile) {
-            tower.attack(closestHostile);
-        } else {
-            
-            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hits < structure.hitsMax
-            });
-            if(closestDamagedStructure) {
-                // takes waaaay too much energy
-                // tower.repair(closestDamagedStructure);
-            }
-            
-        }
-        
-    }
-    var tower = Game.getObjectById('5ff8c26eabeae4cd163c0adc');
-    if(tower) {
-
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(closestHostile) {
-            tower.attack(closestHostile);
-        } else {
-            
-            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hits < structure.hitsMax
-            });
-            if(closestDamagedStructure) {
-                // takes waaaay too much energy
-                // tower.repair(closestDamagedStructure);
-            }
-            
-        }
-        
-    }
     
     // init all necessary information
 
@@ -61,6 +23,7 @@ module.exports.loop = function () {
     // run the entire base
     
 	BaseManager.runAll();
+	TowerManager.runAll();
     linkManager.manageAll();
     
     // print GUI on top

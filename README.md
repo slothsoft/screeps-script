@@ -104,7 +104,6 @@ Documentation on which memory is used for which information. Mandatory elements 
 
 ## Open Tasks
 
-- make watchtower useful
 - road builders?
 - make links useful
 - don't switch to roles where you missing parts
@@ -115,3 +114,4 @@ Documentation on which memory is used for which information. Mandatory elements 
 - TODOs in code
 - creeps cannot work on other maps than the base's
 - constants might be better of being base memory variables
+- creeps should pickup close resources
