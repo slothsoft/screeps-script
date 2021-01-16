@@ -64,7 +64,7 @@ var result = {
      */
     
     printConsole: function(room) {   
-        var x = room.memory.console && room.memory.console.x || 40;
+        var x = room.memory.console && room.memory.console.x || 0;
         var xLine = x + 5;
         var yMin = room.memory.console && room.memory.console.y || 0;
         var height = this.getHeight(room);
@@ -93,7 +93,7 @@ var result = {
      */
     
     getHeight: function(room) {   
-        return (room.memory.console && room.memory.console.height) || 5;
+        return (room.memory.console && room.memory.console.height) || 49;
     },
 
     /*

@@ -8,6 +8,7 @@ var info = require('./main.info');
 var BaseManager = require('./manager.base');
 var linkManager = require('./manager.link');
 
+var Explorer = require('./role.explorer');
 var Miner = require('./role.miner');
 
 module.exports.loop = function () {
@@ -98,6 +99,18 @@ global.fetchOldestCreep = function (baseName) {
 global.spawnMiner = function (spawnId, sourceId) { 
     return new Miner().spawnCreepFromSpawnName(spawnId, sourceId);
 };
+
+/*
+ * Spawns a explorer for a specific flag.
+ * 
+ * @param spawnId
+ * @param flagName
+ */
+
+global.spawnExplorer = function (spawnId, flagName) { 
+    return new Explorer().spawnCreepFromSpawnName(spawnId, flagName);
+};
+
 
 /*
  * Moves the creep back to a spawn and self-destructs it.

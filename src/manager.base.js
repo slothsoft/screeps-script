@@ -26,7 +26,7 @@ class BaseManager {
 	    	new Builder(), 
 	    	new Upgrader(), 
 	    	new Handman(), 
-//	    	new Explorer(), 
+	    	new Explorer(), 
 	    	new Miner(),
 	    	new StoreKeeper(),
 	    ].sort((a, b) => b.priority - a.priority);
@@ -39,8 +39,10 @@ class BaseManager {
     runBase() {  
         this.initRoleInfo();
 
+        console.log(this.room);
+        
     	if (this.room.memory.base) {
-    		this.initBaseRoleConfigIfNecessary();
+    		this.initBaseRoleConfig();
     		
 	        this.repopulateCreeps();
 	        this.showSpawningAnimation();
@@ -55,11 +57,17 @@ class BaseManager {
 
     repopulateCreeps() {    
     	var baseName = this.room.memory.base.name;
+    	var alreadySpawned = false;
         this.allRoles.forEach(role => {
+        	
+        	if (alreadySpawned) return;
+        	
             var foundCreeps = game.findAllCreeps().filter(creep => creep.memory.role == role.roleName && creep.memory.home == baseName);
             
             if (foundCreeps.length < this.room.memory.base.roleConfig[role.roleName].requiredNumber) {
-                this.spawnCreepForRole(role);
+                if (this.spawnCreepForRole(role)) {
+                	alreadySpawned = true;
+                }
             }
         });
     }
@@ -78,8 +86,22 @@ class BaseManager {
                 info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
             }
             return resultingCreep;
-        } 
-        return null;
+        } else {
+        	// XXX: overhaul
+        	// take any other free spawn
+//        	var baseName = this.room.memory.base.name;
+//            var freeSpawns = game.findAllSpawns().filter(spawn => spawn.memory.home != baseName && !spawn.spawning);
+//            freeSpawn = freeSpawns.length > 0 ? freeSpawns[0] : null;
+//            if (freeSpawn) {
+//                var resultingCreep = role.spawnCreep(freeSpawn);
+//                if (resultingCreep) {
+//                	resultingCreep.memory.home  = baseName;
+//                    info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
+//                }
+//                return resultingCreep;
+//            }
+        }
+        return false;
     }
 
     /* 

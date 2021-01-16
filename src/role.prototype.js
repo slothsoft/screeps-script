@@ -24,7 +24,7 @@ var info = require('./main.info');
 
 class RolePrototype {
     
-	constructor(roleName = 'XXX', requiredNumber = 0, color = '#ff0000', symbol = '❗') {
+	constructor(roleName = 'Prototype', requiredNumber = 0, color = '#ff0000', symbol = '❗') {
 	    this.roleName = roleName;
 	    this.requiredNumber = requiredNumber;
 	    this.color = color;
@@ -347,9 +347,10 @@ class RolePrototype {
     calculateMaxParts(spawn, parts = [], singleParts = []) {
         var costs = this.calculateCostsForParts(parts);
         
-        if (!costs) return null; // we can't spawn empty parts
-        
         var singleCosts = singleParts ? this.calculateCostsForParts(singleParts) : 0;
+
+        if (!costs && !singleCosts) return null; // we can't spawn empty parts
+        
         var multiplier = this.getPartsMinMultiplier(spawn);
         var partsMaxMultiplier = this.getPartsMaxMultiplier(spawn);
       

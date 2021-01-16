@@ -25,7 +25,7 @@ describe('role.protoype', () => {
 		it('noArgs', () => {
 			var object = new RolePrototype();
 
-			assert.equal('XXX', object.roleName);
+			assert.equal('Prototype', object.roleName);
 			assert.equal(0, object.requiredNumber);
 			assert.equal('#ff0000', object.color);
 			assert.equal('❗', object.symbol);
@@ -340,7 +340,7 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 			
 			var creep = object.spawnCreepWithParts(spawn, [MOVE, WORK]);
-			assert.equal(Game.creeps['XXX 1'], creep);
+			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([MOVE, WORK], creep.body);
 		});
 
@@ -350,7 +350,7 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 			
 			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE]);
-			assert.equal(Game.creeps['XXX 1'], creep);
+			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([WORK, MOVE, WORK, MOVE], creep.body);
 		});
 
@@ -369,7 +369,7 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 			
 			var creep = object.spawnCreepWithParts(spawn, [MOVE, WORK], [CLAIM]);
-			assert.equal(Game.creeps['XXX 1'], creep);
+			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([CLAIM, MOVE, WORK], creep.body);
 		});
 
@@ -379,7 +379,7 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 			
 			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE], [CLAIM]);
-			assert.equal(Game.creeps['XXX 1'], creep);
+			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([CLAIM, WORK, MOVE, WORK, MOVE], creep.body);
 		});
 	});
@@ -400,7 +400,7 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 			
 			var creep = object.spawnCreep(spawn);
-			assert.equal(Game.creeps['XXX 1'], creep);
+			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([WORK, CARRY, MOVE, MOVE], creep.body);
 		});
 
@@ -410,7 +410,7 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 			
 			var creep = object.spawnCreep(spawn);
-			assert.equal(Game.creeps['XXX 1'], creep);
+			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE], creep.body);
 		});
 	});

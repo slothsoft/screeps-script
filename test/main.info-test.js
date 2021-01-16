@@ -18,13 +18,13 @@ describe('main.info', () => {
 		it('fallback on no height', () => {
 			var room = { memory: { console : { } } };
 			
-			assert.equal(classUnderTest.getHeight(room), 5);
+			assert.equal(classUnderTest.getHeight(room), 49);
 		});
 
 		it('fallback on no console', () => {
 			var room = { memory: { } };
 			
-			assert.equal(classUnderTest.getHeight(room), 5);
+			assert.equal(classUnderTest.getHeight(room), 49);
 		});
 	});
 	

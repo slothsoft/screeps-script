@@ -64,9 +64,10 @@ describe('main', () => {
 	describe('#spawnMiner', () => {
 		it('no spawn', () => {
 			var spawn = new Spawn();
+			spawn.name = 'Main';
 			spawn.room.energyAvailable = 50;
 			
-			var creep = spawnMiner(spawn.id, 'Source');
+			var creep = spawnMiner(spawn.name, 'Source');
 			assert.equal(false, creep);
 		});
 		
@@ -91,6 +92,43 @@ describe('main', () => {
 			spawn.room.energyAvailable = 77;
 			
 			var creep = spawnMiner('ABC');
+			assert.equal(false, creep);
+			
+			assert.equal(1, info.console.length);
+			assert.equal('🛑 Could not find spawn: ABC', info.console[0]);
+		});
+	});
+
+	describe('#spawnExplorer', () => {
+		it('no spawn', () => {
+			var spawn = new Spawn();
+			spawn.name = 'Main';
+			spawn.room.energyAvailable = 50;
+			
+			var creep = spawnExplorer(spawn.name, 'Flag');
+			assert.equal(false, creep);
+		});
+		
+		it('spawn', () => {
+			var spawn = new Spawn();
+			spawn.name = 'Main';
+			spawn.room.energyAvailable = 930;
+			
+			var creep = spawnExplorer(spawn.name, 'Flag');
+			assert.notEqual(false, creep);
+			assert.equal('Flag', creep.memory.targetFlag);
+			assert.equal(Game.creeps['Explorer 1'], creep);
+			assert.deepEqual([ CLAIM, MOVE, WORK, MOVE, CARRY, MOVE ], creep.body);
+
+			assert.equal(1, info.console.length);
+			assert.equal('🏴 Spawning new Explorer (6p)', info.console[0]);
+		});
+
+		it('no spawn', () => {
+			var spawn = new Spawn();
+			spawn.room.energyAvailable = 77;
+			
+			var creep = spawnExplorer('ABC');
 			assert.equal(false, creep);
 			
 			assert.equal(1, info.console.length);

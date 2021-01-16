@@ -115,7 +115,7 @@ describe('manager.base', () => {
 			var manager = new BaseManager(room);
 			
 			var spawnedCreep = manager.spawnCreepForRole(role);
-			assert.deepEqual(null, spawnedCreep);
+			assert.equal(false, spawnedCreep);
 
 			assert.equal(0, info.console.length);
 		});
@@ -204,6 +204,44 @@ describe('manager.base', () => {
 			assert.equal(false, spawnCreepCalled);
 			assert.equal(0, info.console.length);
 		});
+
+		it('do not spawn two per round', () => {
+
+			var role1 = {};
+			role1.symbol = '&';
+			role1.roleName = 'Role1';
+
+			var role2 = {};
+			role2.symbol = '$';
+			role2.roleName = 'Role2';
+
+			var spawn = new Spawn();
+			
+			var spawnCreepCalled = 0;
+			role1.spawnCreep = freeSpawn => {
+				spawnCreepCalled++;
+				assert.deepEqual(freeSpawn, spawn);
+				return new Creep('repopulateCreeps', [ MOVE ]);
+			};
+			role2.spawnCreep = role1.spawnCreep;
+
+			BaseManager.init();
+			info.clearLog();
+
+			spawn.room.memory.base.roleConfig = { 
+					Role1 :  { requiredNumber : 1 },   
+					Role2 :  { requiredNumber : 1 }, 
+			};
+
+			var manager = new BaseManager(spawn.room);
+			manager.allRoles = [role1, role2];
+			manager.repopulateCreeps();
+			
+			assert.equal(1, spawnCreepCalled);
+
+			assert.equal(1, info.console.length);
+			assert.equal('& Spawning new Role1 (1p)', info.console[0]);
+		});
 	});
 
 	describe('#spawnCreepForRole', () => {
@@ -251,7 +289,7 @@ describe('manager.base', () => {
 			var manager = new BaseManager(room);
 			
 			var spawnedCreep = manager.spawnCreepForRole(role);
-			assert.deepEqual(null, spawnedCreep);
+			assert.equal(false, spawnedCreep);
 
 			assert.equal(0, info.console.length);
 		});
