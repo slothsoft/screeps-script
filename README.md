@@ -29,7 +29,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 - if they don't find work in their role, they'll take on an arbitrary other role
 - display their role next to their circle (→ `DEBUG_ROLES`)
 - will be respawned with as many parts as possible after their death
-- can self-destruct (console command `selfdestruct(&lt;creepName&gt;)`)
+- can self-destruct (console command `selfdestruct(<creepName>)`)
 
 
 ## Game Phases
@@ -37,7 +37,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 ### Phase 1 - Harvesters
 
 - game starts in this phase
-- all config for base is in memory under `rooms.&lt;A12B3&gt;.base`
+- all config for base is in memory under `rooms.<A12B3>.base`
 - role infos configure which roles are present in which quantity
 - the initial setup is based on Harvesters
 
@@ -48,7 +48,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 	1. Miner puts stuff into storage
 	2. Storekeeper takes it out and distributes it
 - since Miner need only work parts and storekeeper mostly move parts this setup seems to be cheaper
-- spawn miners for each source with console command`spawnMiner(&lt;spawnName&gt;, &lt;sourceName&gt;)`
+- spawn miners for each source with console command `spawnMiner(<spawnName>, <sourceName>)`
 - phase Harvesters out
 - replace Handymen with Towers
 - use Link for Room Controller
@@ -59,9 +59,9 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 
 | Memory                                              | Description  |
 | --------------------------------------------------- | ------------ |
-| `fetchOldestCreep(&lt;baseName&gt;)`             | fetches the oldest creep in the world (the one with the lowest `ticksToLive`); fetches the oldest creep in the base if &lt;baseName&gt; was set |
-| `selfdestruct(&lt;creepName&gt;)`                 | the creep will go to the next spawn and recycle itself |
-| `spawnMiner(&lt;spawnId&gt;, &lt;sourceId&gt;)`       | spawns a new miner for a spawn ID and a source ID |
+| `fetchOldestCreep(<baseName>)`             | fetches the oldest creep in the world (the one with the lowest `ticksToLive`); fetches the oldest creep in the base if &lt;baseName&gt; was set |
+| `selfdestruct(<creepName>)`                 | the creep will go to the next spawn and recycle itself |
+| `spawnMiner(<spawnId>, <sourceId>)`       | spawns a new miner for a spawn ID and a source ID |
 
 
 
@@ -85,13 +85,13 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ..height              | `number`    | height of the console in lines |
 | ..x                   | `number`    | x coordinate to show the console at |
 | ..y                   | `number`    | y coordinate to show the console at |
+| ..roleInfoX           | `number`    | x coordinate to show the role info at |
+| ..roleInfoY           | `number`    | y coordinate to show the role info at |
 | roleInfo              | `object`    | used to collect information about creeps on this room; _overwritten each round_ |
 | ..&lt;role&gt;              | `object`    | used to collect information about the role with the name &lt;role&gt; |
 | ....currentNumber     | `number`    | the current number of the role |
 | ....requiredNumber    | `number`    | the required number of the role |
 | ....symbol            | `number`    | the symbol of the role |
-| ..x                   | `number`    | x coordinate to show the role info at |
-| ..y                   | `number`    | y coordinate to show the role info at |
 
 
 

@@ -16,6 +16,8 @@ var Explorer = require('./role.explorer');
 var Miner = require('./role.miner');
 var StoreKeeper = require('./role.storekeeper');
 
+var MemoryManager = require('./manager.memory');
+
 class BaseManager {
     
 	constructor(room) {
@@ -227,26 +229,9 @@ class BaseManager {
     /*
      * Init role config on room's base, so we can change it.
      */
-    
-    initBaseRoleConfigIfNecessary(room = this.room) {
-    	if (!this.room.memory.base.roleConfig) {
-    		this.initBaseRoleConfig(room);
-    	}
-    }
-    
-    /*
-     * Init role config on room's base, so we can change it.
-     */
 
     initBaseRoleConfig() { 
-        var newRoleConfig = { }; 
-        
-        this.allRoles.forEach(role => {
-        	newRoleConfig[role.roleName] = {
-                requiredNumber: role.requiredNumber,
-            };
-        });
-        this.room.memory.base.roleConfig = newRoleConfig;
+        MemoryManager.fetchRoomRoleConfig(this.room, this.allRoles);
     }
 };
 

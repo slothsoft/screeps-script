@@ -6,6 +6,9 @@
 // TODO: generally make methods more consistent
 
 var constants = require('./main.constants');
+var game = require('./main.game');
+
+var MemoryManager = require('./manager.memory');
 
 var result = {
     
@@ -33,9 +36,10 @@ var result = {
     printRolesInfoForRoom: function(room) {   
         if (!room.memory.roleInfo)
             return;
-        
-        var x = room.memory.roleInfo.x || 0;
-        var y = room.memory.roleInfo.y || 0;
+
+    	var console = MemoryManager.fetchRoomConsole(room);
+        var x = console.roleInfoX;
+        var y = console.roleInfoY;
         
         var roomName = (room.memory.base && room.memory.base.name) || room.name;
         room.visual.text(roomName + ' ' + room.energyAvailable + '/' + room.energyCapacityAvailable + '🟡', x, y++, {align: 'left', opacity: 0.8});
@@ -65,10 +69,11 @@ var result = {
      */
     
     printConsole: function(room) {   
-        var x = room.memory.console && room.memory.console.x || 0;
+    	var console = MemoryManager.fetchRoomConsole(room);
+        var x = console.x;
         var xLine = x + 5;
-        var yMin = room.memory.console && room.memory.console.y || 0;
-        var height = this.getHeight(room);
+        var yMin = console.y;
+        var height = console.height;
         var y = yMin + height;
         
         if (this.console.length == 0) {
@@ -85,16 +90,6 @@ var result = {
                 }
             }
         }
-    },
-
-    /*
-     * Returns the console height for a specific room.
-     * 
-     * @param {Room} room 
-     */
-    
-    getHeight: function(room) {   
-        return (room.memory.console && room.memory.console.height) || 49;
     },
 
     /*
@@ -144,12 +139,8 @@ var result = {
      */
     
     getMaxHeight: function() {   
-        var result = 0;
-        for (var roomName in Game.rooms) {
-            var height = this.getHeight(Game.rooms[roomName])
-            result = height > result ? height : height;
-        }
-        return result ? result : 10;
+        var result = Math.max(game.findAllRooms().map(room => (room.memory.console && room.memory.console.height)));
+        return result || 10;
     },
 };
 

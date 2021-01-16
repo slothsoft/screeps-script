@@ -1,6 +1,7 @@
 var classUnderTest = require('../src/main.info');
 var assert = require('assert');
 
+var MemoryManager = require('../src/manager.memory');
 var Room = require('./mock/room-mock.js');
 
 // All methods tested.
@@ -10,31 +11,16 @@ describe('main.info', () => {
 		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 
-	describe('#getHeight', () => {
-		it('simple', () => {
-			var room = { memory: { console : { height: 7 } } };
-			
-			assert.equal(classUnderTest.getHeight(room), 7);
-		});
-
-		it('fallback on no height', () => {
-			var room = { memory: { console : { } } };
-			
-			assert.equal(classUnderTest.getHeight(room), 49);
-		});
-
-		it('fallback on no console', () => {
-			var room = { memory: { } };
-			
-			assert.equal(classUnderTest.getHeight(room), 49);
-		});
-	});
-	
 	describe('#getMaxHeight', () => {
 		it('simple', () => {
-			global.Game = { rooms : [ 'A', 'B', 'C' ] };
-			var heights = [ 123, 456, 789 ];
-			classUnderTest.getHeight = room => heights[Game.rooms.indexOf(room)]; 
+			var room1 = new Room();
+			MemoryManager.fetchRoomConsole(room1).height = 123;
+			
+			var room2 = new Room();
+			MemoryManager.fetchRoomConsole(room2).height = 456;
+			
+			var room3 = new Room();
+			MemoryManager.fetchRoomConsole(room3).height = 789;
 			
 			assert.equal(classUnderTest.getMaxHeight(), 789);
 		});
