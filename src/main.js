@@ -53,15 +53,6 @@ module.exports.loop = function () {
         
     }
     
-    // delete the memory of deceased creeps 
-
-    for(var name in Memory.creeps) {
-        if(!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-        }
-    }
-    
     // init all necessary information
 
 	var allRoles = BaseManager.fetchAllRoles();
@@ -69,7 +60,7 @@ module.exports.loop = function () {
     
     // run the entire base
     
-    game.findAllRooms().forEach(room => new BaseManager(room).runBase());
+	BaseManager.runAll();
     linkManager.manageAll();
     
     // print GUI on top

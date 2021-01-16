@@ -138,6 +138,8 @@ class MemoryManager {
 
     	this.fetchAllRoomRoleConfigs(allRoles);
     	this.clearAllRoomRoleInfos(allRoles);
+    	
+    	this.deleteUnusedMemory();
 	}
 
 	/*
@@ -159,6 +161,21 @@ class MemoryManager {
 	    		spawn.memory.home = spawn.room.memory.base.name;
 	    	}
 	    });
+	}
+	
+
+    /*
+     * Delete the memory of deceased creeps.
+     */ 
+
+	static deleteUnusedMemory() {  
+	    for (var name in Memory.creeps) {
+	        if (!Game.creeps[name]) {
+	            delete Memory.creeps[name];
+	    		// TODO: why doesn't variable work here?
+	            require('./main.info').log('🚮 Clearing non-existing creep memory:', name);
+	        }
+	    }
 	}
 
 };

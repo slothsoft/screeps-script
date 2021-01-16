@@ -19,6 +19,16 @@ var StoreKeeper = require('./role.storekeeper');
 var MemoryManager = require('./manager.memory');
 
 class BaseManager {
+	
+	/*
+	 * Performs "runBase()" on an instance of BaseManager for each room. 
+	 * 
+	 * @param allRoles
+	 */
+	
+	static runAll(allRoles = BaseManager.fetchAllRoles()) {
+	    game.findAllRooms().forEach(room => new BaseManager(room, allRoles).runBase());
+	}
     
 	static fetchAllRoles() {
 		return [
@@ -33,10 +43,10 @@ class BaseManager {
 	}
 	
 	
-	constructor(room) {
+	constructor(room, allRoles = BaseManager.fetchAllRoles()) {
 	    this.room = room;
 	    this.defaultRole = new Harvester();
-	    this.allRoles = BaseManager.fetchAllRoles();
+	    this.allRoles = allRoles;
 	}
 
 	/*

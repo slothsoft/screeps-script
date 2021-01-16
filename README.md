@@ -6,7 +6,6 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 
 - [Features](#features)
     - [Creeps](#creeps)
-- [Game Phases](#game-phases)
 - [Console Commands](#console-commands)
 - [Memory](#memory)
     - [Room Memory](#room-memory)
@@ -17,7 +16,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 
 ## Features
 
-<img align="right" width="170" height="160" src="readme/fancy-gui.png">
+<img align="right" width="202" height="236" src="readme/fancy-gui.png">
 
 - each room has a fancy overview GUI
 - each room has a console which prints most info
@@ -30,28 +29,6 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 - display their role next to their circle (→ `DEBUG_ROLES`)
 - will be respawned with as many parts as possible after their death
 - can self-destruct (console command `selfdestruct(<creepName>)`)
-
-
-## Game Phases
-
-### Phase 1 - Harvesters
-
-- game starts in this phase
-- all config for base is in memory under `rooms.<A12B3>.base`
-- role infos configure which roles are present in which quantity
-- the initial setup is based on Harvesters
-
-
-### Phase 2 - Miner & Storekeeper
-
-- after the storage is available the setup should be 
-	1. Miner puts stuff into storage
-	2. Storekeeper takes it out and distributes it
-- since Miner need only work parts and storekeeper mostly move parts this setup seems to be cheaper
-- spawn miners for each source with console command `spawnMiner(<spawnName>, <sourceName>)`
-- phase Harvesters out
-- replace Handymen with Towers
-- use Link for Room Controller
 
 
 
@@ -129,10 +106,12 @@ Documentation on which memory is used for which information. Mandatory elements 
 
 - make watchtower useful
 - road builders?
-- test if we can skip phase 1 with the use of containers
 - make links useful
 - don't switch to roles where you missing parts
 - remove console entries after a while
 - creeps are displayed even if they are not on map
 - finish explorer
 - findTargets() depends on the creep, not the room (then probably findSources() too
+- TODOs in code
+- creeps cannot work on other maps than the base's
+- constants might be better of being base memory variables

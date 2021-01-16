@@ -44,7 +44,7 @@ class MainInfo {
         var y = console.roleInfoY;
         
         var roomName = (room.memory.base && room.memory.base.name) || room.name;
-        room.visual.text(roomName + ' ' + room.energyAvailable + '/' + room.energyCapacityAvailable + '🟡', x, y++, {align: 'left', opacity: 0.8});
+        room.visual.text(roomName + '    ' + room.energyAvailable + '/' + room.energyCapacityAvailable + '🟡', x, y++, {align: 'left', opacity: 0.8});
         
         var unusedRoles = '';
         
