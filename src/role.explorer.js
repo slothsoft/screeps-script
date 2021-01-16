@@ -116,7 +116,7 @@ class Explorer extends RolePrototype {
       		creep.moveTo(targetFlag.room.controller);
       		creep.memory.role = 'Builder';
       	} else if (answer == ERR_GCL_NOT_ENOUGH) {
-      		creep.memory.role = 'Builder'; // TODO: this is not correct
+      		creep.memory.role = 'Builder'; // TODO: this is not correct or is it?
       	} else (info.log(this.symbol + ' ' + this.roleName + ' cannot claim: ' + answer));
       	// if claimed... create spawn (if possible) on flag
       	// construct spawn (need 15K energy, so others build it) (2 builders at least needed)

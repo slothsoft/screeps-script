@@ -27,19 +27,24 @@ describe('manager.base', () => {
 	describe('#fetchFreeSpawn', () => {
 		it('exists', () => {
 			
-			var spawn1 = new Spawn();
+			var room = new Room();
+			room.memory.base = { name : 'Dresden' };
+			
+			var spawn1 = new Spawn(room);
 			spawn1.spawning = true;
+			spawn1.memory.home = 'Dresden';
 			
-			var spawn2 = new Spawn(spawn1.room);
+			var spawn2 = new Spawn(room);
 			spawn2.spawning = false;
+			spawn2.memory.home = 'Dresden';
 			
-			var spawn3 = new Spawn(spawn1.room);
+			var spawn3 = new Spawn(room);
 			spawn3.spawning = true;
+			spawn3.memory.home = 'Dresden';
 
-			BaseManager.init();
-			var manager = new BaseManager(spawn1.room);
+			var manager = new BaseManager(room);
 			
-			assert.deepEqual(spawn2, manager.fetchFreeSpawn());
+			assert.deepEqual(spawn2, manager.fetchFreeSpawn('Dresden'));
 		});
 
 		it('empty list', () => {
@@ -49,24 +54,71 @@ describe('manager.base', () => {
 			BaseManager.init();
 			var manager = new BaseManager(room);
 			
-			assert.deepEqual(null, manager.fetchFreeSpawn());
+			assert.deepEqual(null, manager.fetchFreeSpawn('Dresden'));
 		});
 
-		it('none exists', () => {
+		it('none free exists', () => {
+
+			var room = new Room();
+			room.memory.base = { name : 'Dresden' };
 			
-			var spawn1 = new Spawn();
+			var spawn1 = new Spawn(room);
 			spawn1.spawning = true;
 			
-			var spawn2 = new Spawn(spawn1.room);
+			var spawn2 = new Spawn(room);
 			spawn2.spawning = true;
 			
-			var spawn3 = new Spawn(spawn1.room);
+			var spawn3 = new Spawn(room);
 			spawn3.spawning = true;
 
 			BaseManager.init();
 			var manager = new BaseManager(spawn1.room);
 			
-			assert.deepEqual(null, manager.fetchFreeSpawn());
+			assert.deepEqual(null, manager.fetchFreeSpawn('Dresden'));
+		});
+
+		it('only specific base', () => {
+			
+			var room = new Room();
+			room.memory.base = { name : 'Dresden' };
+			
+			var spawn1 = new Spawn(room);
+			spawn1.spawning = true;
+			spawn1.memory.home = 'Chemnitz';
+			
+			var spawn2 = new Spawn(room);
+			spawn2.spawning = true;
+			spawn2.memory.home = 'Dresden';
+			
+			var spawn3 = new Spawn(room);
+			spawn3.spawning = false;
+			spawn3.memory.home = 'Dresden';
+
+			var manager = new BaseManager(room);
+			
+			assert.deepEqual(spawn3, manager.fetchFreeSpawn('Dresden'));
+		});
+
+		it('all bases', () => {
+			
+			var room = new Room();
+			room.memory.base = { name : 'Dresden' };
+			
+			var spawn1 = new Spawn(room);
+			spawn1.spawning = false;
+			spawn1.memory.home = 'Chemnitz';
+			
+			var spawn2 = new Spawn(room);
+			spawn2.spawning = true;
+			spawn2.memory.home = 'Dresden';
+			
+			var spawn3 = new Spawn(room);
+			spawn3.spawning = false;
+			spawn3.memory.home = 'Dresden';
+
+			var manager = new BaseManager(room);
+			
+			assert.deepEqual(spawn1, manager.fetchFreeSpawn(null));
 		});
 	});
 
@@ -142,6 +194,36 @@ describe('manager.base', () => {
 			assert.equal(false, spawnedCreep);
 
 			assert.equal(0, info.console.length);
+		});
+
+		it('no free spawn use other base', () => {
+			var role = {};
+			role.symbol = '!';
+			role.roleName = 'Role';
+
+			var spawn = new Spawn();
+			spawn.room.memory.base = { name : 'A' };
+			
+			var creep = new Creep('spawnCreepForRole', [ MOVE ]);
+			
+			role.spawnCreep = freeSpawn => {
+				assert.deepEqual(freeSpawn, spawn);
+				return creep;
+			};
+			
+			var otherRoom = new Room();
+			otherRoom.memory.base = { 
+					name : 'B', 
+					outsourceSpawn : true,
+			};
+			
+			var manager = new BaseManager(otherRoom);
+			
+			var spawnedCreep = manager.spawnCreepForRole(role);
+			assert.deepEqual(creep, spawnedCreep);
+
+			assert.equal(1, info.console.length);
+			assert.equal('! Spawning new Role (1p)', info.console[0]);
 		});
 	});
 

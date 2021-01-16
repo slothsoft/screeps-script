@@ -79,38 +79,36 @@ class BaseManager {
      */
 
     spawnCreepForRole(role) {    
-        var freeSpawn = this.fetchFreeSpawn(this.room);
+        var freeSpawn = this.fetchFreeSpawn(this.room.memory.base.name);
         if (freeSpawn) {
             var resultingCreep = role.spawnCreep(freeSpawn);
             if (resultingCreep) {
                 info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
             }
             return resultingCreep;
-        } else {
-        	// XXX: overhaul
+        } else if (this.room.memory.base.outsourceSpawn) {
         	// take any other free spawn
-//        	var baseName = this.room.memory.base.name;
-//            var freeSpawns = game.findAllSpawns().filter(spawn => spawn.memory.home != baseName && !spawn.spawning);
-//            freeSpawn = freeSpawns.length > 0 ? freeSpawns[0] : null;
-//            if (freeSpawn) {
-//                var resultingCreep = role.spawnCreep(freeSpawn);
-//                if (resultingCreep) {
-//                	resultingCreep.memory.home  = baseName;
-//                    info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
-//                }
-//                return resultingCreep;
-//            }
+            var freeSpawn = this.fetchFreeSpawn();
+            if (freeSpawn) {
+                var resultingCreep = role.spawnCreep(freeSpawn);
+                if (resultingCreep) {
+                	resultingCreep.memory.home  = this.room.memory.base.name;
+                    info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
+                }
+                return resultingCreep;
+            }
         }
         return false;
     }
 
     /* 
      * Fetches a free spawn for this particular room.
+     * 
+     * @param baseName the name of the base to search; null for any
      */
     
-    fetchFreeSpawn() {  
-    	var baseName = this.room.memory.base.name;
-        var freeSpawns = game.findAllSpawns().filter(spawn => spawn.memory.home == baseName && !spawn.spawning);
+    fetchFreeSpawn(baseName) {  
+        var freeSpawns = game.findAllSpawns().filter(spawn => (!baseName || (spawn.memory.home == baseName)) && !spawn.spawning);
         return freeSpawns.length > 0 ? freeSpawns[0] : null;
     }  
         
