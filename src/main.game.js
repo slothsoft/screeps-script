@@ -2,56 +2,56 @@
  * These methods _really_ should be game methods, but oh well ¯\_(ツ)_/¯
  */
 
-var result = {
+class MainGame {
 
 	/*
 	 * Finds all spawns in the game and puts them in an array.
 	 */
     
-    findAllSpawns: function() {
+    static findAllSpawns() {
         var result = [];
         for (var spawnName in Game.spawns) {
             result.push(Game.spawns[spawnName]);
         }
         return result;
-    },
+    }
     
 	/*
 	 * Finds all creeps in the game and puts them in an array.
 	 */
     
-    findAllCreeps: function() {
+    static findAllCreeps() {
         var result = [];
         for (var creepName in Game.creeps) {
             result.push(Game.creeps[creepName]);
         }
         return result;
-    },
+    }
 
 	/*
 	 * Finds all rooms in the game and puts them in an array.
 	 */
     
-    findAllRooms: function() {
+    static findAllRooms() {
         var result = [];
         for (var roomName in Game.rooms) {
             result.push(Game.rooms[roomName]);
         }
         return result;
-    },
+    }
 
 	/*
 	 * Finds all flags in the game and puts them in an array.
 	 */
     
-	findAllFlags: function() {
+	static findAllFlags() {
 	    var result = [];
 	    for (var flagName in Game.flags) {
 	        result.push(Game.flags[flagName]);
 	    }
 	    return result;
-	},
+	}
 
-};
+}
 
-module.exports = result;
+module.exports = MainGame;

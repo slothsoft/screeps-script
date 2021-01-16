@@ -10,30 +10,32 @@ var game = require('./main.game');
 
 var MemoryManager = require('./manager.memory');
 
-var result = {
+class MainInfo {
     
-    consoleTime: [],
-    console: [],
+	constructor() {
+		this.consoleTime = [];
+		this.console = [];
+	}
     
     /*
-     * Displays the collected information on the screen.
-     */
+	 * Displays the collected information on the screen.
+	 */
     
-    print: function() {   
+    print() {   
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
             this.printRolesInfoForRoom(room);
             this.printConsole(room);
         }
-    },
+    }
 
     /*
-     * Displays the role infos for a specific room on the screen.
-     * 
-     * @param {Room} room 
-     */
+	 * Displays the role infos for a specific room on the screen.
+	 * 
+	 * @param {Room} room
+	 */
     
-    printRolesInfoForRoom: function(room) {   
+    printRolesInfoForRoom(room) {   
         if (!room.memory.roleInfo)
             return;
 
@@ -60,15 +62,15 @@ var result = {
         	var ofRequired = room.memory.base ? '/0' : '';
         	room.visual.text(unusedRoles + ' 0' + ofRequired, x, y++, {align: 'left', opacity: 0.8});
         }
-    }, 
+    }
 
     /*
-     * Displays the console for a specific room on the screen.
-     * 
-     * @param {Room} room 
-     */
+	 * Displays the console for a specific room on the screen.
+	 * 
+	 * @param {Room} room
+	 */
     
-    printConsole: function(room) {   
+    printConsole(room) {   
     	var console = MemoryManager.fetchRoomConsole(room);
         var x = console.x;
         var xLine = x + 5;
@@ -90,24 +92,24 @@ var result = {
                 }
             }
         }
-    },
+    }
 
     /*
-     * Clears the UI console.
-     */
+	 * Clears the UI console.
+	 */
     
-    clearLog: function() {   
+    clearLog() {   
         this.consoleTime = [];
         this.console = [];
-    },
+    }
     
     /*
-     * Logs the string to the UI console.
-     * 
-     * @param the new line
-     */
+	 * Logs the string to the UI console.
+	 * 
+	 * @param the new line
+	 */
     
-    log: function(newLine) {   
+    log(newLine) {   
         if (newLine === 'object' && newLine !== null) {
             console.log(JSON.stringify(newLine));
         } else {
@@ -120,28 +122,28 @@ var result = {
         
         this.console.splice(0, 0, newLine);
         this.console = this.console.slice(0, height);
-    },
+    }
 
     /*
-     * Logs the error to the UI console.
-     * 
-     * @param the new line
-     */
+	 * Logs the error to the UI console.
+	 * 
+	 * @param the new line
+	 */
     
-    error: function(newLine) {   
+    error(newLine) {   
         this.log('🛑 ' + newLine);
-    },
+    }
 
     /*
-     * Returns the max console height for all rooms.
-     * 
-     * @param the new line
-     */
+	 * Returns the max console height for all rooms.
+	 * 
+	 * @param the new line
+	 */
     
-    getMaxHeight: function() {   
+    getMaxHeight() {   
         var result = Math.max(game.findAllRooms().map(room => (room.memory.console && room.memory.console.height)));
         return result || 10;
-    },
+    }
 };
 
-module.exports = result;
+module.exports = new MainInfo();
