@@ -19,10 +19,8 @@ var result = {
     print: function() {   
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
-            if (room.memory.base) {
-                this.printRolesInfoForRoom(room);
-                this.printConsole(room);
-            }
+            this.printRolesInfoForRoom(room);
+            this.printConsole(room);
         }
     },
 
@@ -39,14 +37,14 @@ var result = {
         var x = room.memory.roleInfo.x || 0;
         var y = room.memory.roleInfo.y || 0;
         
-        
-        room.visual.text(room.memory.base.name, x, y++, {align: 'left', opacity: 0.8});
+        var roomName = (room.memory.base && room.memory.base.name) || room.name;
+        room.visual.text(roomName + ' ' + room.energyAvailable + '/' + room.energyCapacityAvailable + '🟡', x, y++, {align: 'left', opacity: 0.8});
         
         var unusedRoles = '';
         
         for (const role in room.memory.roleInfo) {
             var count = room.memory.roleInfo[role];
-            if (count.currentNumber || count.requiredNumber) {
+            if (count.currentNumber || (count.requiredNumber > 0)) {
             	var ofRequired = count.requiredNumber >= 0 ? '/' + count.requiredNumber : '';
                 room.visual.text(count.symbol + ' ' + role + ' ' + count.currentNumber + ofRequired, x, y++, {align: 'left', opacity: 0.8});
             } else {
@@ -54,7 +52,10 @@ var result = {
             }
         }
         
-        room.visual.text(unusedRoles + ' 0/0', x, y++, {align: 'left', opacity: 0.8});
+        if (unusedRoles) {
+        	var ofRequired = room.memory.base ? '/0' : '';
+        	room.visual.text(unusedRoles + ' 0' + ofRequired, x, y++, {align: 'left', opacity: 0.8});
+        }
     }, 
 
     /*

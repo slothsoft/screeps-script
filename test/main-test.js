@@ -7,7 +7,7 @@ var game = require('../src/main.game');
 var Creep = require('./mock/creep-mock');
 var Spawn = require('./mock/spawn-mock');
 
-//All methods tested.
+// All methods tested.
 
 describe('main', () => {
 	it('exists', () => {

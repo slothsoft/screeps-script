@@ -1,6 +1,8 @@
 var classUnderTest = require('../src/main.info');
 var assert = require('assert');
 
+var Room = require('./mock/room-mock.js');
+
 // All methods tested.
 
 describe('main.info', () => {
@@ -90,6 +92,181 @@ describe('main.info', () => {
 			classUnderTest.clearLog();
 
 			assert.equal(classUnderTest.console.length, 0);
+		});
+	});
+
+	describe('#printRolesInfoForRoom', () => {
+		it('no roleInfo coordinates', () => {
+			
+			var room = new Room();
+			
+			classUnderTest.printRolesInfoForRoom(room);
+			
+			assert.equal(undefined, room.visual.elements);
+		});
+		it('no roleInfo roles', () => {
+
+			var room = new Room();
+			room.energyAvailable = 4;
+			room.energyCapacityAvailable = 10;
+			room.memory.base = {
+				name: 'Hello World',
+			};
+			room.memory.roleInfo = {
+					
+			};
+			
+			classUnderTest.printRolesInfoForRoom(room);
+
+			assert.notEqual(undefined, room.visual.elements);
+			assert.equal("Hello World 4/10🟡", room.visual.elements[0][0]);
+			assert.equal(null, room.visual.elements[0][1]);
+		});
+		it('current and required', () => {
+
+			var room = new Room();
+			room.energyAvailable = 4;
+			room.energyCapacityAvailable = 10;
+			room.memory.base = {
+				name: 'Hello World',
+			};
+			room.memory.roleInfo = {
+				Role: {
+					symbol: '!',
+					currentNumber: 1,
+					requiredNumber: 2,
+				}
+			};
+			classUnderTest.printRolesInfoForRoom(room);
+
+			assert.notEqual(undefined, room.visual.elements);
+			assert.equal("Hello World 4/10🟡", room.visual.elements[0][0]);
+			assert.equal("! Role 1/2", room.visual.elements[0][1]);
+			assert.equal(null, room.visual.elements[0][2]);
+		});
+		it('current and no required', () => {
+
+			var room = new Room();
+			room.energyAvailable = 4;
+			room.energyCapacityAvailable = 10;
+			room.memory.base = {
+				name: 'Hello World',
+			};
+			room.memory.roleInfo = {
+				Role: {
+					symbol: '!',
+					currentNumber: 1,
+					requiredNumber: 0,
+				}
+			};
+			classUnderTest.printRolesInfoForRoom(room);
+
+			assert.notEqual(undefined, room.visual.elements);
+			assert.equal("Hello World 4/10🟡", room.visual.elements[0][0]);
+			assert.equal("! Role 1/0", room.visual.elements[0][1]);
+			assert.equal(null, room.visual.elements[0][2]);
+		});
+		it('no current and required', () => {
+
+			var room = new Room();
+			room.energyAvailable = 4;
+			room.energyCapacityAvailable = 10;
+			room.memory.base = {
+				name: 'Hello World',
+			};
+			room.memory.roleInfo = {
+				Role: {
+					symbol: '!',
+					currentNumber: 0,
+					requiredNumber: 2,
+				}
+			};
+			classUnderTest.printRolesInfoForRoom(room);
+
+			assert.notEqual(undefined, room.visual.elements);
+			assert.equal("Hello World 4/10🟡", room.visual.elements[0][0]);
+			assert.equal("! Role 0/2", room.visual.elements[0][1]);
+			assert.equal(null, room.visual.elements[0][2]);
+		});
+		it('no current and no required', () => {
+
+			var room = new Room();
+			room.energyAvailable = 4;
+			room.energyCapacityAvailable = 10;
+			room.memory.base = {
+				name: 'Hello World',
+			};
+			room.memory.roleInfo = {
+				Role: {
+					symbol: '!',
+					currentNumber: 0,
+					requiredNumber: 0,
+				}
+			};
+			classUnderTest.printRolesInfoForRoom(room);
+
+			assert.notEqual(undefined, room.visual.elements);
+			assert.equal("Hello World 4/10🟡", room.visual.elements[0][0]);
+			assert.equal("! 0/0", room.visual.elements[0][1]);
+			assert.equal(null, room.visual.elements[0][2]);
+		});
+		it('current and no required because no base', () => {
+
+			var room = new Room();
+			room.energyAvailable = 4;
+			room.energyCapacityAvailable = 10;
+			room.memory.base = {
+				name: 'Hello World',
+			};
+			room.memory.roleInfo = {
+				Role: {
+					symbol: '!',
+					currentNumber: 1,
+					requiredNumber: -1, // <--
+				}
+			};
+			classUnderTest.printRolesInfoForRoom(room);
+
+			assert.notEqual(undefined, room.visual.elements);
+			assert.equal("Hello World 4/10🟡", room.visual.elements[0][0]);
+			assert.equal("! Role 1", room.visual.elements[0][1]);
+			assert.equal(null, room.visual.elements[0][2]);
+		});
+		it('no current and no required because no base', () => {
+
+			var room = new Room();
+			room.energyAvailable = 4;
+			room.energyCapacityAvailable = 10;
+			room.name = 'Hello World';
+			room.memory.roleInfo = {
+				Role: {
+					symbol: '!',
+					currentNumber: 0,
+					requiredNumber: -1, 
+				}
+			};
+			classUnderTest.printRolesInfoForRoom(room);
+
+			assert.notEqual(undefined, room.visual.elements);
+			assert.equal("Hello World 4/10🟡", room.visual.elements[0][0]);
+			assert.equal("! 0", room.visual.elements[0][1]);
+			assert.equal(null, room.visual.elements[0][2]);
+		});
+		it('no base name', () => {
+
+			var room = new Room();
+			room.energyAvailable = 4;
+			room.energyCapacityAvailable = 10;
+			room.name = 'Hello World';
+			room.memory.roleInfo = {
+					
+			};
+			
+			classUnderTest.printRolesInfoForRoom(room);
+
+			assert.notEqual(undefined, room.visual.elements);
+			assert.equal("Hello World 4/10🟡", room.visual.elements[0][0]);
+			assert.equal(null, room.visual.elements[0][1]);
 		});
 	});
 });

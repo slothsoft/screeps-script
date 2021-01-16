@@ -85,7 +85,7 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ..height              | `number`    | height of the console in lines |
 | ..x                   | `number`    | x coordinate to show the console at |
 | ..y                   | `number`    | y coordinate to show the console at |
-| roleInfo              | `object`    | used to collect information about creeps on this room |
+| roleInfo              | `object`    | used to collect information about creeps on this room; _overwritten each round_ |
 | ..&lt;role&gt;              | `object`    | used to collect information about the role with the name &lt;role&gt; |
 | ....currentNumber     | `number`    | the current number of the role |
 | ....requiredNumber    | `number`    | the required number of the role |
@@ -138,4 +138,5 @@ Documentation on which memory is used for which information. Mandatory elements 
 - finish explorer
 -  🛑 role info is not correct "x/y" not working
 -  🛑 role info x/y is overriden
-- if there is no spawn in base, use different base
+- findTargets() depends on the creep, not the room (then probably findSources() too
+- roleInfo.x and roleInfo.y are not at the correct place 

@@ -54,6 +54,7 @@ class Explorer extends RolePrototype {
 	    var resultingCreep = this.spawnCreepWithParts(spawn, [WORK, MOVE, CARRY, MOVE], [ CLAIM, MOVE ]);
 	    if (resultingCreep) {
 	        resultingCreep.memory.targetFlag = flagName;
+	        resultingCreep.memory.home = flagName;
 	        return resultingCreep;
 	    }
 	    return resultingCreep;
@@ -93,6 +94,7 @@ class Explorer extends RolePrototype {
 	        targetFlag = this.findClosestTarget(creep);
 	        creep.memory.targetFlag = targetFlag.name;
     	    info.log(this.symbol + ' ' + this.roleName + ' travels to ' + targetFlag.name);
+      		creep.memory.home = targetFlag.name;
 	    }
 	    
 	    // walk towards my flag
@@ -114,9 +116,10 @@ class Explorer extends RolePrototype {
       	var answer = creep.claimController(targetFlag.room.controller);
       	if (answer == ERR_NOT_IN_RANGE) {
       		creep.moveTo(targetFlag.room.controller);
-      		creep.memory.role = 'Builder';
-      	} else if (answer == ERR_GCL_NOT_ENOUGH) {
-      		creep.memory.role = 'Builder'; // TODO: this is not correct or is it?
+      	} else if (answer == OK) {
+      		creep.memory.role = 'Builder';  
+      	} else if (answer == ERR_GCL_NOT_ENOUGH) { 
+      		creep.memory.role = 'Builder'; // TODO: this is not correct or is it? just use controller.my to prevent
       	} else (info.log(this.symbol + ' ' + this.roleName + ' cannot claim: ' + answer));
       	// if claimed... create spawn (if possible) on flag
       	// construct spawn (need 15K energy, so others build it) (2 builders at least needed)

@@ -39,8 +39,6 @@ class BaseManager {
     runBase() {  
         this.initRoleInfo();
 
-        console.log(this.room);
-        
     	if (this.room.memory.base) {
     		this.initBaseRoleConfig();
     		

@@ -5,6 +5,8 @@
 require('./game-mock');
 require('./memory-mock');
 
+var RoomVisual = require('./room-visual-mock.js');
+
 global.FIND_EXIT_TOP = 1;
 global.FIND_EXIT_RIGHT = 3;
 global.FIND_EXIT_BOTTOM = 5;
@@ -63,6 +65,7 @@ class Room {
 	    Game.rooms[this.id] = this;
 			
 	    this.memory = Memory.rooms[this.id] = {};
+	    this.visual = new RoomVisual();
 	    this.energyAvailable = 0;
 	}
 	
