@@ -6,7 +6,7 @@ var game = require('./main.game');
 var info = require('./main.info');
 
 var BaseManager = require('./manager.base');
-var linkManager = require('./manager.link');
+var LinkManager = require('./manager.link');
 var MemoryManager = require('./manager.memory');
 var TowerManager = require('./manager.tower');
 
@@ -24,7 +24,7 @@ module.exports.loop = function () {
     
 	BaseManager.runAll();
 	TowerManager.runAll();
-    linkManager.manageAll();
+    LinkManager.runAll();
     
     // print GUI on top
     
@@ -60,6 +60,7 @@ global.fetchOldestCreep = function (baseName) {
  */
 
 global.spawnMiner = function (spawnId, sourceId) { 
+	// TODO should increase necessaryNumber by one.
     return new Miner().spawnCreepFromSpawnName(spawnId, sourceId);
 };
 
@@ -74,6 +75,13 @@ global.spawnExplorer = function (spawnId, flagName) {
     return new Explorer().spawnCreepFromSpawnName(spawnId, flagName);
 };
 
+global.makeLinkTarget = function (linkId) {
+	LinkManager.makeLinkTarget(linkId);
+};
+
+global.makeLinkSource = function (linkId) {
+	LinkManager.makeLinkSource(linkId);
+};
 
 /*
  * Moves the creep back to a spawn and self-destructs it.

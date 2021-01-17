@@ -30,6 +30,7 @@ class Harvester extends RolePrototype {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                             structure.structureType == STRUCTURE_SPAWN ||
+                            (structure.structureType == STRUCTURE_LINK && structure.memory && structure.memory.type == 'source') ||
                             structure.structureType == STRUCTURE_TOWER) && 
                             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }

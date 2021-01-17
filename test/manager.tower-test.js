@@ -1,7 +1,7 @@
 var TowerManager = require('../src/manager.tower');
 var assert = require('assert');
 
-//TODO: Test all methods.
+// TODO: Test all methods.
 
 describe('manager.base', () => {
 	it('exists', () => {

@@ -11,7 +11,7 @@ var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock');
 var Spawn = require('./mock/spawn-mock');
 
-//All methods tested.
+// All methods tested.
 
 describe('manager.base', () => {
 	before(() => {

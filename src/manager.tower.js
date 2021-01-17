@@ -1,6 +1,3 @@
-
-var game = require('./main.game');
-
 /*
  * This manager handles the watchtower and when and how they do what.
  * 
@@ -9,6 +6,8 @@ var game = require('./main.game');
  * - heal friendly creeps any chance they get
  * - TODO: heal other structures ...?
  */
+
+var game = require('./main.game');
  
 class TowerManager {
 

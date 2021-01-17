@@ -9,6 +9,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 - [Console Commands](#console-commands)
 - [Memory](#memory)
     - [Room Memory](#room-memory)
+    - [Link Memory](#link-memory)
     - [Creep Memory](#creep-memory)
 - [Dev Notes](#dev-notes)
 - [Open Tasks](#open-tasks)
@@ -37,6 +38,8 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 | Memory                                              | Description  |
 | --------------------------------------------------- | ------------ |
 | `fetchOldestCreep(<baseName>)`             | fetches the oldest creep in the world (the one with the lowest `ticksToLive`); fetches the oldest creep in the base if &lt;baseName&gt; was set |
+| `makeLinkSource(<id>)`                       | makes a link with a specific ID an source |
+| `makeLinkTarget(<id>)`                       | makes a link with a specific ID an target |
 | `selfdestruct(<creepName>)`                 | the creep will go to the next spawn and recycle itself |
 | `spawnMiner(<spawnId>, <sourceId>)`       | spawns a new miner for a spawn ID and a source ID |
 
@@ -70,6 +73,13 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ....requiredNumber    | `number`    | the required number of the role |
 | ....symbol            | `number`    | the symbol of the role |
 
+
+### Link Memory
+
+| Memory                | Type          | Description  |
+| --------------------- | ------------- | ------------ |
+| type                  | `string`    | `source` if link is a source, `target` if it is a target |
+| transferId            | `string`    | sources and targets of a specific `transferId` are matched, so you can have multiple source→target pairs per room  |
 
 
 ### Creep Memory
@@ -105,7 +115,6 @@ Documentation on which memory is used for which information. Mandatory elements 
 ## Open Tasks
 
 - road builders?
-- make links useful
 - don't switch to roles where you missing parts
 - remove console entries after a while
 - creeps are displayed even if they are not on map

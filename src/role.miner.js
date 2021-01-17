@@ -68,7 +68,7 @@ class Miner extends RolePrototype {
 	 */
 
 	getPartsMaxMultiplier(spawn) {
-		return 5;
+		return 6; // fixes some rounding errors
 	}
 
 	work(creep) {
@@ -130,7 +130,7 @@ class Miner extends RolePrototype {
 	            filter: (structure) => {
 	                return (structure.structureType == STRUCTURE_STORAGE ||
 	                        structure.structureType == STRUCTURE_CONTAINER ||
-	                        structure.structureType == STRUCTURE_LINK) && 
+                            (structure.structureType == STRUCTURE_LINK && structure.memory && structure.memory.type == 'source')) &&
 	                       (!testCreepPosition || this.creep.pos.inRangeTo(structure, this.range)) &&
 	                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
 	            }

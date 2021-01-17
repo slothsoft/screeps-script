@@ -1,10 +1,11 @@
-var classUnderTest = require('../src/manager.link');
+var LinkManager = require('../src/manager.link');
 var assert = require('assert');
 
-// Test all methods.
+// TODO: Test all methods.
 
 describe('manager.link', () => {
 	it('exists', () => {
-		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
+		var startsWith = 'class LinkManager';
+		assert.equal(startsWith, LinkManager.toString().substring(0, startsWith.length));
 	});
 });

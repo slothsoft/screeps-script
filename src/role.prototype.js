@@ -149,6 +149,7 @@ class RolePrototype {
      */
 
     moveToClosestSource(creep) {
+    	// TODO: if source is empty, just go back to working
         var source = this.findClosestSource(creep);
         
     	if (!source) return;
@@ -207,7 +208,7 @@ class RolePrototype {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_STORAGE ||
                         structure.structureType == STRUCTURE_CONTAINER ||
-                        structure.structureType == STRUCTURE_LINK) && 
+                        (structure.structureType == STRUCTURE_LINK && structure.memory && structure.memory.type == 'target')) && 
                         structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }}) : [];
             
