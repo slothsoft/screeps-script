@@ -8,4 +8,7 @@ module.exports = {
    
    SOURCE_USE_STORAGE: true, // lets every creep use storages as potential source of energy
    SOURCE_USE_SOURCE: true, // lets every creep use sources as potential source of energy
+
+   LINK_TYPE_SOURCE: 'source',
+   LINK_TYPE_TARGET: 'target',
 };

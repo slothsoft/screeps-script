@@ -21,7 +21,7 @@ var MemoryManager = require('./manager.memory');
 class BaseManager {
 	
 	/*
-	 * Performs "runBase()" on an instance of BaseManager for each room. 
+	 * Performs 'runBase()' on an instance of BaseManager for each room. 
 	 * 
 	 * @param allRoles
 	 */

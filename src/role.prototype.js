@@ -208,7 +208,7 @@ class RolePrototype {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_STORAGE ||
                         structure.structureType == STRUCTURE_CONTAINER ||
-                        (structure.structureType == STRUCTURE_LINK && structure.memory && structure.memory.type == 'target')) && 
+                        (structure.structureType == STRUCTURE_LINK && structure.memory && structure.memory.type == constants.LINK_TYPE_TARGET)) && 
                         structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }}) : [];
             

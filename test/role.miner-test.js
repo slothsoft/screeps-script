@@ -173,7 +173,7 @@ describe('role.miner', () => {
 				assert.equal(false, filter(structure));
 				
 				structure.structureType = STRUCTURE_LINK;
-				MemoryManager.fetchStructureMemory(structure).type = 'target';
+				MemoryManager.fetchStructureMemory(structure).type = constants.LINK_TYPE_TARGET;
 				assert.equal(false, filter(structure));
 			};
 

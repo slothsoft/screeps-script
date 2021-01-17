@@ -9,11 +9,12 @@ var game = require('./main.game');
 
 var RolePrototype = require('./role.prototype');
 
+// TODO document phases in readme
 const PHASE_GOTO_FLAG_ROOM = 'gotoFlagRoom';
 const PHASE_CLAIM_FLAG_ROOM = 'claimFlagRoom';
 
 class Explorer extends RolePrototype {
-
+	
 	constructor() {
 		super('Explorer', '#cccccc', '🏴');
 	}
@@ -65,6 +66,8 @@ class Explorer extends RolePrototype {
 			creep.memory.phase = PHASE_GOTO_FLAG_ROOM;
 	    }
     
+		// TODO: before that fill up and energy and renew
+		
 	    switch (creep.memory.phase) {
 	        case PHASE_GOTO_FLAG_ROOM:
 	            this.goToFlagRoom(creep);
@@ -121,7 +124,7 @@ class Explorer extends RolePrototype {
       	} else if (answer == ERR_GCL_NOT_ENOUGH) { 
       		creep.memory.role = 'Builder'; // TODO: this is not correct or is it? just use controller.my to prevent
       	} else (info.log(this.symbol + ' ' + this.roleName + ' cannot claim: ' + answer));
-      	// if claimed... create spawn (if possible) on flag
+      	// TODOif claimed... create spawn (if possible) on flag
       	// construct spawn (need 15K energy, so others build it) (2 builders at least needed)
       	// spawn and room should have new base's name
 	}

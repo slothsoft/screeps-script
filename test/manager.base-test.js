@@ -459,7 +459,7 @@ describe('manager.base', () => {
 		});
 	});
 
-	describe('#runBase', () => {
+	describe('#findMandatoryRole', () => {
 		it('find', () => {
 			var role = {};
 			role.symbol = '!';

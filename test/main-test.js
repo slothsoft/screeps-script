@@ -1,6 +1,7 @@
 var classUnderTest = require('../src/main');
 var assert = require('assert');
 
+var constants = require('../src/main.constants');
 var info = require('../src/main.info');
 var game = require('../src/main.game');
 
@@ -133,6 +134,64 @@ describe('main', () => {
 			
 			assert.equal(1, info.console.length);
 			assert.equal('🛑 Could not find spawn: ABC', info.console[0]);
+		});
+	});
+
+	describe('#makeLinkTarget', () => {
+		it('no type present', () => {
+			var structure = structure = {
+				id: 'ID',
+			};
+			Game.getObjectById = id => structure;
+			
+			makeLinkTarget('ID');
+			
+			assert.equal(constants.LINK_TYPE_TARGET, structure.memory.type);
+			assert.equal(constants.LINK_TYPE_TARGET, Memory.structures.ID.type);
+		});
+
+		it('type already present', () => {
+			var structure = structure = {
+				id: 'ID',
+				memory: {
+					type: constants.LINK_TYPE_SOURCE,
+				},
+			};
+			Game.getObjectById = id => structure;
+			
+			makeLinkTarget('ID');
+			
+			assert.equal(constants.LINK_TYPE_TARGET, structure.memory.type);
+			assert.equal(constants.LINK_TYPE_TARGET, Memory.structures.ID.type);
+		});
+	});
+
+	describe('#makeLinkSource', () => {
+		it('no type present', () => {
+			var structure = structure = {
+				id: 'ID',
+			};
+			Game.getObjectById = id => structure;
+			
+			makeLinkSource('ID');
+			
+			assert.equal(constants.LINK_TYPE_SOURCE, structure.memory.type);
+			assert.equal(constants.LINK_TYPE_SOURCE, Memory.structures.ID.type);
+		});
+
+		it('type already present', () => {
+			var structure = structure = {
+				id: 'ID',
+				memory: {
+					type: constants.LINK_TYPE_TARGET,
+				},
+			};
+			Game.getObjectById = id => structure;
+			
+			makeLinkSource('ID');
+			
+			assert.equal(constants.LINK_TYPE_SOURCE, structure.memory.type);
+			assert.equal(constants.LINK_TYPE_SOURCE, Memory.structures.ID.type);
 		});
 	});
 });

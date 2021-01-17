@@ -7,11 +7,11 @@ var game = require('../src/main.game');
 
 var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock.js');
+var RoomPosition = require('./mock/room-position-mock.js');
 var Spawn = require('./mock/spawn-mock');
 
-// TODO: Test all methods.
-//work()
-//goToFlagRoom()
+// Almost all methods tested.
+// TODO: test #claimFlagRoom
 
 const PHASE_GOTO_FLAG_ROOM = 'gotoFlagRoom';
 const PHASE_CLAIM_FLAG_ROOM = 'claimFlagRoom';
@@ -23,6 +23,7 @@ describe('role.explorer', () => {
 
 	beforeEach(() => {
 		Game.clearAll();
+		info.clearLog();
 	});
 	
 	it('exists', () => {
@@ -206,17 +207,84 @@ describe('role.explorer', () => {
 		});
 	});
 	
-	describe('#findTargets', () => {
-		it('find correct structures', () => {
+	describe('#goToFlagRoom', () => {
+		var test = function(work) {
+			var creep = new Creep();
 
-			var flag = new Spawn();
-			flag.name = 'My Flag';
+			var flag1 = {
+				id: 'flag-id-1',
+				name: 'Flag Name 1',
+				pos: new RoomPosition(),
+			};
+			flag1.pos.x = 1;
+			flag1.pos.y = 2;
+
+			var flag2 = {
+				id: 'flag-id-2',
+				name: 'Flag Name 2',
+				pos: new RoomPosition(),
+			};
+			flag2.pos.x = 3;
+			flag2.pos.y = 4;
 			
-			game.findAllFlags = () => [ flag ];
-
 			var object = new Explorer();
-			assert.deepEqual([ flag ], object.findTargets(flag.room));
+
+			assert.equal(null, creep.memory.targetFlag);
+			
+			// first time this is called find flag and store it in memory 
+			game.findAllFlags = () => [ flag1, flag2 ];
+			
+			work(object, creep);
+			
+			assert.equal('Flag Name 1', creep.memory.targetFlag);
+			assert.equal(1, creep.pos.x);
+			assert.equal(2, creep.pos.y);
+			assert.equal(1, info.console.length);
+			assert.equal('🏴 Explorer travels to Flag Name 1', info.console[0]);
+
+			// second time this is called find flag and store it in memory 
+			info.clearLog();
+			creep.memory.targetFlag = 'Flag Name 2';
+			
+			work(object, creep);
+			
+			assert.equal('Flag Name 2', creep.memory.targetFlag);
+			assert.equal(3, creep.pos.x);
+			assert.equal(4, creep.pos.y);
+			assert.equal(0, info.console.length);
+			
+			// third time the creep is in the same room, so switch phases
+			flag2.pos.x = 5;
+			flag2.pos.y = 6;
+			flag2.room = creep.room;
+
+			work(object, creep);
+
+			assert.equal('Flag Name 2', creep.memory.targetFlag);
+			assert.equal(5, creep.pos.x);
+			assert.equal(6, creep.pos.y);
+			assert.equal(1, info.console.length);
+			assert.equal('🏴 Explorer claims the room of Flag Name 2', info.console[0]);
+			assert.equal('claimFlagRoom', creep.memory.phase);
+		};
+		it('function', () => {
+			test((explorer, creep) => explorer.goToFlagRoom(creep));
+		});
+		it('with #work', () => {
+			test((explorer, creep) => explorer.work(creep));
 		});
 	});
 	
+	describe('#claimFlagRoom', () => {
+		var test = function(work) {
+			var creep = new Creep();
+
+		};
+		it('function', () => {
+			test((explorer, creep) => explorer.goToFlagRoom(creep));
+		});
+		it('with #work', () => {
+			test((explorer, creep) => explorer.work(creep));
+		});
+	});
 });
