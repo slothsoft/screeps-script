@@ -2,6 +2,7 @@ var MemoryManager = require('../src/manager.memory');
 var assert = require('assert');
 
 var game = require('../src/main.game');
+var memory = require('./mock/memory-mock.js');
 
 var Room = require('./mock/room-mock.js');
 var Spawn = require('./mock/spawn-mock.js');
@@ -525,6 +526,63 @@ describe('manager.memory', () => {
 			assert.equal('Chemnitz', spawn.memory.home);
 			assert.deepEqual(expecting, spawn.room.memory.base);
 			assert.deepEqual(expecting, room.memory.base);
+		});
+	});
+	
+	describe('#fetchStructureMemory', () => {
+		beforeEach(() => {
+		    delete Memory.structures;
+		});
+		
+		it('create everything entirely', () => {
+			var structure = {
+				id: 'ABCDEFG1234567',
+			};
+			
+			var result = MemoryManager.fetchStructureMemory(structure);
+
+			assert.deepEqual({}, result);
+			assert.deepEqual({}, structure.memory);
+			assert.deepEqual({}, Memory.structures.ABCDEFG1234567);
+		});
+
+		it('structures memory present, but not for this ID', () => {
+			var structure = {
+				id: 'ABCDEFG1234567',
+			};
+			
+			Memory.structures = {};
+			var result = MemoryManager.fetchStructureMemory(structure);
+
+			assert.deepEqual({}, result);
+			assert.deepEqual({}, structure.memory);
+			assert.deepEqual({}, Memory.structures.ABCDEFG1234567);
+		});
+
+		it('link existing memory', () => {
+			var structure = {
+				id: 'ABCDEFG1234567'
+			};
+			
+			Memory.structures = {};
+			Memory.structures.ABCDEFG1234567 = { a: 'n' };
+			
+			var result = MemoryManager.fetchStructureMemory(structure);
+
+			assert.deepEqual({ a: 'n' }, result);
+			assert.deepEqual({ a: 'n' }, structure.memory);
+			assert.deepEqual({ a: 'n' }, Memory.structures.ABCDEFG1234567);
+		});
+		
+		it('use existing memory', () => {
+			var structure = {
+				id: 'ABCDEFG1234567',
+				memory: { a: 'b' },
+			};
+			
+			var result = MemoryManager.fetchStructureMemory(structure);
+
+			assert.deepEqual({ a: 'b' }, result);
 		});
 	});
 });

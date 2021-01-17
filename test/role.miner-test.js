@@ -5,6 +5,8 @@ var constants = require('../src/main.constants');
 var info = require('../src/main.info');
 var game = require('../src/main.game');
 
+var MemoryManager = require('../src/manager.memory');
+
 var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock.js');
 var Spawn = require('./mock/spawn-mock');
@@ -69,6 +71,7 @@ describe('role.miner', () => {
 				assert.equal(true, filter(structure));
 
 				structure.structureType = STRUCTURE_LINK;
+				MemoryManager.fetchStructureMemory(structure).type = 'source';
 				assert.equal(true, filter(structure));
 			};
 
@@ -97,6 +100,7 @@ describe('role.miner', () => {
 				assert.equal(true, filter(structure));
 
 				structure.structureType = STRUCTURE_LINK;
+				MemoryManager.fetchStructureMemory(structure).type = 'source';
 				assert.equal(true, filter(structure));
 			};
 
@@ -131,6 +135,7 @@ describe('role.miner', () => {
 				assert.equal(false, filter(structure));
 
 				structure.structureType = STRUCTURE_LINK;
+				MemoryManager.fetchStructureMemory(structure).type = 'source';
 				assert.equal(false, filter(structure));
 			};
 
@@ -165,6 +170,10 @@ describe('role.miner', () => {
 				assert.equal(false, filter(structure));
 
 				structure.structureType = STRUCTURE_RAMPART;
+				assert.equal(false, filter(structure));
+				
+				structure.structureType = STRUCTURE_LINK;
+				MemoryManager.fetchStructureMemory(structure).type = 'target';
 				assert.equal(false, filter(structure));
 			};
 

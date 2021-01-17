@@ -162,7 +162,6 @@ class MemoryManager {
 	    	}
 	    });
 	}
-	
 
     /*
      * Delete the memory of deceased creeps.
@@ -178,8 +177,11 @@ class MemoryManager {
 	    }
 	}
 
+	/*
+	 * Creates a custom node in the Memory for this structure.
+	 */
+	
 	static fetchStructureMemory(structure) {
-		// TODO: test & document
 		if (structure.memory) {
 			return structure.memory;
 		}
@@ -188,8 +190,8 @@ class MemoryManager {
 		}
 		if (!Memory.structures[structure.id]) {
 			Memory.structures[structure.id] = {};
-			structure.memory = Memory.structures[structure.id];
 		}
+		structure.memory = Memory.structures[structure.id];
 		return Memory.structures[structure.id];
 	}
 };
