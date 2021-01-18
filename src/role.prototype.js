@@ -128,7 +128,7 @@ class RolePrototype {
      */
 
     handleTargetWorkResult(creep, workResult) {
-    	info.log(creep.memory.role + ' cannot work: ' + workResult);  
+    	info.warning(game.getDisplayName(creep) + ' cannot work: ' + workResult);  
     }
     
     /* 
@@ -232,7 +232,7 @@ class RolePrototype {
      */
 
     handleSourceWorkResult(creep, harvestResult) {
-        info.log(creep.memory.role + ' cannot harvest: ' + harvestResult); 
+        info.warning(game.getDisplayName(creep) + ' cannot harvest: ' + harvestResult); 
     }
     
     /* 
@@ -265,16 +265,16 @@ class RolePrototype {
             var recycleAnswer = spawn.recycleCreep(creep);
             if (recycleAnswer == ERR_NOT_IN_RANGE) {
                 if (creep.memory.debug) {      
-                    info.log(creep.memory.role + ' is moving to spawn ' + spawn.id);  
+                    info.log('🔙 ' + game.getDisplayName(creep) + ' is moving to spawn ' + spawn.id);  
                 }
                 this.moveToLocation(creep, spawn);
             } else if (recycleAnswer == OK) {  
                 if (creep.memory.debug) {
-                    info.log(creep.memory.role + ' was recycled.');  
+                    info.log('🗑 ' + game.getDisplayName(creep) + ' was recycled.');  
                 }
             }
         } else {
-            info.log('🛑 ' + creep.memory.role + ' could not find a spawn.');  
+            info.error(game.getDisplayName(creep) + ' could not find a spawn.');  
         }
     }
 
@@ -286,7 +286,7 @@ class RolePrototype {
     
     work(creep) {
         // do nothing on default   
-        creep.say('🛑 unimplemented');
+        creep.say('🛑 unimplemented 🛑');
     }
     
     /* 

@@ -10,6 +10,7 @@ var info = require('./main.info');
 
 var Harvester = require('./role.harvester');
 var Builder = require('./role.builder');
+var Courier = require('./role.courier');
 var Upgrader = require('./role.upgrader');
 var Handman = require('./role.handyman');
 var Explorer = require('./role.explorer');
@@ -39,6 +40,7 @@ class BaseManager {
 	    	new Explorer(), 
 	    	new Miner(),
 	    	new StoreKeeper(),
+	    	new Courier(),
 	    ].sort((a, b) => b.priority - a.priority);
 	}
 	

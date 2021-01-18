@@ -59,6 +59,8 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ..name                | `string`    | display name |
 | ..outsourceSpawn      | `boolean`   | if `true`, another base will spawn creeps if this base has no free spawns |
 | ..roleConfig          | `object`    | used to configure the creeps in this base |
+| ....partsMinMultiplier| `number`    | used to configure how many parts new creeps have at least |
+| ....partsMaxMultiplier| `number`    | used to configure how many parts new creeps have at most |
 | ....&lt;role&gt;            | `object`    | used to configure a specific role in this base |
 | ......requiredNumber  | `number`    | the required number of creeps for this role |
 | console               | `object`    | used to collect config of the console & other GUI elements |
@@ -111,16 +113,28 @@ Documentation on which memory is used for which information. Mandatory elements 
 - Tests run against a mock of the original game: [mock folder](./test/mock)
 
 
+## Courier Implementation
+
+For the question how to implement couriers, two option present itself: routes stored for each room / base, or for each creep.
+
+| Room                  | Creep Based           |
+| --------------------- | --------------------- |
+| ➕ the number of routes and couriers must not be identical | ➖ the number of couriers and routes should be identical |
+| ➕ better option for respawning - especially if creeps get killed before spawning their replacement | ➖ creeps need to spawn their replacement before dying |
+| ➕ information stays even if all creepy die  | ➖ information gets lost if creeps die unexpectedly |
+
+
 
 ## Open Tasks
 
-- road builders?
+- road builders
 - don't switch to roles where you missing parts
 - remove console entries after a while
 - creeps are displayed even if they are not on map
-- finish explorer
-- findTargets() depends on the creep, not the room (then probably findSources() too
+- finish Explorer
+- findTargets() sometimes depends on the creep, not the room (then probably findSources() too)
 - TODOs in code
 - creeps cannot work on other maps than the base's
 - constants might be better of being base memory variables
 - creeps should pickup close resources
+- make Courier more universal

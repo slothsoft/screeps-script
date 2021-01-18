@@ -135,6 +135,17 @@ class MainInfo {
     }
 
     /*
+	 * Logs the warning to the UI console.
+	 * 
+	 * @param the new line
+	 */
+    
+
+    warning(newLine) {   
+        this.log('⚠ ' + newLine);
+    }
+
+    /*
 	 * Returns the max console height for all rooms.
 	 * 
 	 * @param the new line

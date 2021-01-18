@@ -858,7 +858,7 @@ describe('role.protoype', () => {
 			var workWasCalled = false; 
 			creep.say = (line) => {
 				workWasCalled = true;
-				assert.equal('🛑 unimplemented', line);
+				assert.equal('🛑 unimplemented 🛑', line);
 			};
 
 			var object = new RolePrototype();

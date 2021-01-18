@@ -105,7 +105,7 @@ class Miner extends RolePrototype {
 	        }
 	    });
 		if (sources.length == 0) {
-	        info.log('🛑 Could not find source: ' + this.creep.memory.homeSource);
+	        info.error('Could not find source: ' + this.creep.memory.homeSource);
 		}
 		return sources;
 	}

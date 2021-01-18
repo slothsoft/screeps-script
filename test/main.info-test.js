@@ -69,6 +69,22 @@ describe('main.info', () => {
 		});
 	});
 
+	describe('#warning', () => {
+		it('simple', () => {
+			classUnderTest.getMaxHeight = () => 3;
+			classUnderTest.clearLog();
+			
+			classUnderTest.warning('A');
+			classUnderTest.warning('B');
+			classUnderTest.warning('C');
+
+			assert.equal(classUnderTest.console.length, 3);
+			assert.equal(classUnderTest.console[0].includes('⚠ C'), true);
+			assert.equal(classUnderTest.console[1].includes('⚠ B'), true);
+			assert.equal(classUnderTest.console[2].includes('⚠ A'), true);
+		});
+	});
+
 	describe('#clearLog', () => {
 		it('simple', () => {
 			classUnderTest.log('A');
