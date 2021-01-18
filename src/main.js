@@ -75,9 +75,37 @@ global.spawnExplorer = function (spawnId, flagName) {
     return new Explorer().spawnCreepFromSpawnName(spawnId, flagName);
 };
 
+/*
+ * Spawns a specific role for a room
+ * 
+ * @param roomName
+ * @param roleName
+ */
+
+global.spawnCreepForRoom = function (roomName, roleName) { 
+	var room = Game.rooms[roomName];
+    if (room) {
+        return new BaseManager(room).spawnCreepForRoleName(roleName);
+    } 
+    info.error('Could not find room: ' + roomName);
+    return false;
+};
+
+/*
+ * Adds the type 'target' to the game object with the specified ID.
+ * 
+ * @param linkId
+ */
+
 global.makeLinkTarget = function (linkId) {
 	LinkManager.makeLinkTarget(linkId);
 };
+
+/*
+ * Adds the type 'source' to the game object with the specified ID.
+ * 
+ * @param linkId
+ */
 
 global.makeLinkSource = function (linkId) {
 	LinkManager.makeLinkSource(linkId);
@@ -97,3 +125,4 @@ global.selfdestruct = function (creepName) {
     }
     creep.memory.selfdestruct = true;
 };
+

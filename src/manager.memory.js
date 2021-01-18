@@ -1,10 +1,11 @@
-
-var game = require('./main.game');
-
 /*
  * This manager initializes and manages the memory of all kinds of different objects.
+ * 
+ * TODO: maybe memory could be stored closer to where it is used?
  */
  
+var game = require('./main.game');
+
 class MemoryManager {
 
 	/*
@@ -17,7 +18,7 @@ class MemoryManager {
 		var defaultArray = {
 			x: 30,
 			y: 0,
-			height: 50,
+			height: 49,
 			roleInfoX: 0,
 			roleInfoY: 0,
 		};
@@ -173,9 +174,12 @@ class MemoryManager {
 	static deleteUnusedMemory() {  
 	    for (var name in Memory.creeps) {
 	        if (!Game.creeps[name]) {
+	        	var debug = Memory.creeps[name].debug;
 	            delete Memory.creeps[name];
-	    		// TODO: why doesn't variable work here?
-	            require('./main.info').log('🚮 Clearing non-existing creep memory:', name);
+	            if (debug) {
+		    		// TODO: why doesn't variable work here?
+		            require('./main.info').log('🚮 Clearing non-existing creep memory:', name);
+	        	}
 	        }
 	    }
 	}

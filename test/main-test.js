@@ -6,6 +6,7 @@ var info = require('../src/main.info');
 var game = require('../src/main.game');
 
 var Creep = require('./mock/creep-mock');
+var Room = require('./mock/room-mock');
 var Spawn = require('./mock/spawn-mock');
 
 // All methods tested.
@@ -192,6 +193,57 @@ describe('main', () => {
 			
 			assert.equal(constants.LINK_TYPE_SOURCE, structure.memory.type);
 			assert.equal(constants.LINK_TYPE_SOURCE, Memory.structures.ID.type);
+		});
+	});
+
+	describe('#spawnCreepForRoom', () => {
+		it('spawn', () => {
+			
+			var room = new Room();
+			room.memory.base = { name: 'A23D56' };
+			room.energyAvailable = 1000;
+			
+			var spawn = new Spawn(room);
+			spawn.memory.home = 'A23D56';
+			
+			var spawnedCreep = spawnCreepForRoom(room.name, 'Harvester');
+			assert.notEqual(false, spawnedCreep);
+			assert.equal('Harvester 1', spawnedCreep.name);
+
+			assert.equal(1, info.console.length);
+			assert.equal('🧺 Spawning new Harvester (12p)', info.console[0]);
+		});
+
+		it('no room found', () => {
+
+			var room = new Room();
+			room.memory.base = { name: 'A23D56' };
+			room.energyAvailable = 1000;
+			
+			var spawn = new Spawn(room);
+			spawn.memory.home = 'A23D56';
+			
+			var spawnedCreep = spawnCreepForRoom('other', 'Harvester');
+			assert.equal(false, spawnedCreep);
+
+			assert.equal(1, info.console.length);
+			assert.equal('🛑 Could not find room: other', info.console[0]);
+		});
+
+		it('no role found', () => {
+			
+			var room = new Room();
+			room.memory.base = { name: 'A23D56' };
+			room.energyAvailable = 1000;
+			
+			var spawn = new Spawn(room);
+			spawn.memory.home = 'A23D56';
+			
+			var spawnedCreep = spawnCreepForRoom(room.name, '1234567890');
+			assert.equal(false, spawnedCreep);
+
+			assert.equal(1, info.console.length);
+			assert.equal('🛑 Could not find role: 1234567890', info.console[0]);
 		});
 	});
 });

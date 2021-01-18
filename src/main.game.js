@@ -59,6 +59,9 @@ class MainGame {
 	 */
     
 	static getDisplayName(gameObject) {
+		if (!gameObject) {
+			return 'undefined';
+		}
 	    if (gameObject.name) {
 	    	return gameObject.name;
 	    }

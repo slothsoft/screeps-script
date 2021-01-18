@@ -28,7 +28,7 @@ describe('manager.memory', () => {
 			var expecting = {
 				x: 30,
 				y: 0,
-				height: 50,
+				height: 49,
 				roleInfoX: 0,
 				roleInfoY: 0,
 			};

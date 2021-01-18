@@ -230,7 +230,6 @@ describe('manager.base', () => {
 			assert.equal('! Spawning new Role (1p)', info.console[0]);
 		});
 	});
-
 	
 	describe('#repopulateCreeps', () => {
 		it('spawn', () => {
@@ -330,16 +329,16 @@ describe('manager.base', () => {
 		});
 	});
 
-	describe('#spawnCreepForRole', () => {
+	describe('#spawnCreepForRoleName', () => {
 		it('spawn', () => {
 			
 			var role = {};
 			role.symbol = '!';
-			role.roleName = 'Role';
+			role.roleName = 'RoleName';
 
 			var spawn = new Spawn();
 			
-			var creep = new Creep('spawnCreepForRole', [ MOVE ]);
+			var creep = new Creep('spawnCreepForRoleName', [ MOVE ]);
 			
 			role.spawnCreep = freeSpawn => {
 				assert.deepEqual(freeSpawn, spawn);
@@ -350,19 +349,20 @@ describe('manager.base', () => {
 			info.clearLog();
 			
 			var manager = new BaseManager(spawn.room);
+			manager.allRoles = [ role ];
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.deepEqual(creep, spawnedCreep);
 
 			assert.equal(1, info.console.length);
-			assert.equal('! Spawning new Role (1p)', info.console[0]);
+			assert.equal('! Spawning new RoleName (1p)', info.console[0]);
 		});
 
 		it('no free spawn', () => {
 			
 			var role = {};
 
-			var creep = new Creep('spawnCreepForRole', [ MOVE ]);
+			var creep = new Creep('spawnCreepForRoleName', [ MOVE ]);
 			
 			role.spawnCreep = freeSpawn =>  assert.fail('Where did the spawn come from: ' + freeSpawn);
 
@@ -373,8 +373,9 @@ describe('manager.base', () => {
 			info.clearLog();
 			
 			var manager = new BaseManager(room);
+			manager.allRoles = [ role ];
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.equal(false, spawnedCreep);
 
 			assert.equal(0, info.console.length);
@@ -384,7 +385,7 @@ describe('manager.base', () => {
 			
 			var role = {};
 			role.symbol = '!';
-			role.roleName = 'Role';
+			role.roleName = 'RoleName';
 
 			var spawn = new Spawn();
 			
@@ -397,11 +398,60 @@ describe('manager.base', () => {
 			info.clearLog();
 			
 			var manager = new BaseManager(spawn.room);
+			manager.allRoles = [ role ];
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.equal(false, spawnedCreep);
 
 			assert.equal(0, info.console.length);
+		});
+
+		it('no free spawn use other base', () => {
+			var role = {};
+			role.symbol = '!';
+			role.roleName = 'RoleName';
+
+			var spawn = new Spawn();
+			spawn.room.memory.base = { name : 'A' };
+			
+			var creep = new Creep('spawnCreepForRoleName', [ MOVE ]);
+			
+			role.spawnCreep = freeSpawn => {
+				assert.deepEqual(freeSpawn, spawn);
+				return creep;
+			};
+			
+			var otherRoom = new Room();
+			otherRoom.memory.base = { 
+					name : 'B', 
+					outsourceSpawn : true,
+			};
+			
+			var manager = new BaseManager(otherRoom);
+			manager.allRoles = [ role ];
+			
+			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
+			assert.deepEqual(creep, spawnedCreep);
+
+			assert.equal(1, info.console.length);
+			assert.equal('! Spawning new RoleName (1p)', info.console[0]);
+		});
+
+		it('no role found', () => {
+
+			var spawn = new Spawn();
+			
+			MemoryManager.initSpawns();
+			info.clearLog();
+			
+			var manager = new BaseManager(spawn.room);
+			manager.allRoles = [ ];
+			
+			var spawnedCreep = manager.spawnCreepForRoleName('Other');
+			assert.deepEqual(false, spawnedCreep);
+
+			assert.equal(1, info.console.length);
+			assert.equal('🛑 Could not find role: Other', info.console[0]);
 		});
 	});
 

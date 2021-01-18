@@ -4,6 +4,7 @@
  * Right now only Mineral => Lab for RESOURCE_OXYGEN is supported. 
  */
 
+var game = require('./main.game');
 var info = require('./main.info');
 
 var RolePrototype = require('./role.prototype');
@@ -13,6 +14,13 @@ class Courier extends RolePrototype {
 	constructor() {
 		super('Courier', '#ff8800', '📯');
 	    this.priority = -1; 
+	}
+
+	isNecessary(room) {
+		if (room.memory.source && room.memory.target) {
+			return super.isNecessary(room);
+		}
+		return false;
 	}
 	
     work(creep) {
@@ -28,11 +36,11 @@ class Courier extends RolePrototype {
     }
 
     findSources(room) {
-        return this.findById(room.memory.source);
+        return this.findById(room, room.memory.source);
     }
 
     findTargets(room) {
-        return this.findById(room.memory.target);
+        return this.findById(room, room.memory.target);
     }
     
     /*
@@ -41,10 +49,10 @@ class Courier extends RolePrototype {
      * @param ID
      */
 
-    findById(id) {
+    findById(room, id) {
     	var object = Game.getObjectById(id);
     	if (!object) {
-    		info.error('Could not find game object with ID: ' + id);
+    		info.error(game.getDisplayName(room) + ' could not find game object with ID: ' + id);
     		return [];
     	}
         return  [ object ];

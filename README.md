@@ -41,6 +41,8 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 | `makeLinkSource(<id>)`                       | makes a link with a specific ID an source |
 | `makeLinkTarget(<id>)`                       | makes a link with a specific ID an target |
 | `selfdestruct(<creepName>)`                 | the creep will go to the next spawn and recycle itself |
+| `spawnCreepForRoom(<roomName>, <roleName>)` | spawns a new creep in a room with a specific role |
+| `spawnExplorer(<spawnId>, <flagName>)`   | spawns a new explorer for a spawn ID and a flag name|
 | `spawnMiner(<spawnId>, <sourceId>)`       | spawns a new miner for a spawn ID and a source ID |
 
 

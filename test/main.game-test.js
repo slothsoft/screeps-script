@@ -10,6 +10,10 @@ describe('main.game', () => {
 	});
 
 	describe('main.game', () => {
+		it('undefined', () => {
+			assert.equal('undefined', MainGame.getDisplayName());
+		});
+		
 		it('by name', () => {
 			assert.equal('Name', MainGame.getDisplayName({ id : 'ID', name : 'Name' }));
 		});

@@ -55,13 +55,14 @@ describe('role.courier', () => {
 		
 		it('no structure found', () => {
 			var room = new Room();
+			room.name = 'R2';
 			
 			Game.getObjectById = (id) => null;
 
 			var object = new Courier();
 			assert.deepEqual([], object.findTargets(room));
 			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find game object with ID: undefined', info.console[0]);
+			assert.equal('🛑 R2 could not find game object with ID: undefined', info.console[0]);
 		});
 	});
 
@@ -86,6 +87,7 @@ describe('role.courier', () => {
 		
 		it('no structure found', () => {
 			var room = new Room();
+			room.name = 'R1';
 			room.memory.source = '67890';
 			
 			Game.getObjectById = (id) => null;
@@ -93,7 +95,7 @@ describe('role.courier', () => {
 			var object = new Courier();
 			assert.deepEqual([], object.findSources(room));
 			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find game object with ID: 67890', info.console[0]);
+			assert.equal('🛑 R1 could not find game object with ID: 67890', info.console[0]);
 		});
 	});
 
@@ -109,19 +111,20 @@ describe('role.courier', () => {
 			};
 
 			var object = new Courier();
-			assert.deepEqual(['result'], object.findById('74102'));
+			assert.deepEqual(['result'], object.findById(room, '74102'));
 			assert.equal(true, findWasCalled);
 		});
 		
 		it('no structure found', () => {
 			var room = new Room();
+			room.name = 'R3';
 			
 			Game.getObjectById = (id) => null;
 
 			var object = new Courier();
-			assert.deepEqual([], object.findById('74102'));
+			assert.deepEqual([], object.findById(room, '74102'));
 			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find game object with ID: 74102', info.console[0]);
+			assert.equal('🛑 R3 could not find game object with ID: 74102', info.console[0]);
 		});
 	});
 
@@ -173,7 +176,7 @@ describe('role.courier', () => {
 			lab.pos.y = 6;
 			
 			var object = new Courier();
-			object.findById = id => (id == 'target') ? [ lab ] : [ mineral ];
+			object.findById = (room, id) => (id == 'target') ? [ lab ] : [ mineral ];
 			
 			// store is half full, so first travel to source
 			object.run(creep);
@@ -244,6 +247,50 @@ describe('role.courier', () => {
 			assert.equal(spawn.pos.x, creep.pos.x);
 			assert.equal(spawn.pos.y, creep.pos.y);
 			assert.equal(null, Game.creeps['run']);
+		});
+	});
+
+	describe('#isNecessary', () => {
+		it('target present', () => {
+			var room = new Room();
+			room.memory.target = 'target';
+			room.memory.source = 'source';
+			
+			var object = new Courier();	
+			Game.getObjectById = (id) => id == 'target' ? new Spawn() : null;
+			
+			assert.equal(true, object.isNecessary(room));
+		});
+
+		it('no targets', () => {
+			var room = new Room();
+			room.memory.target = 'target';
+			room.memory.source = 'source';
+			
+			var object = new Courier();	
+			Game.getObjectById = (id) => null;
+			
+			assert.equal(false, object.isNecessary(room));
+		});
+
+		it('no source defined', () => {
+			var room = new Room();
+			room.memory.target = 'target';
+			
+			var object = new Courier();	
+			Game.getObjectById = (id) => new Spawn();
+			
+			assert.equal(false, object.isNecessary(room));
+		});
+
+		it('no target defined', () => {
+			var room = new Room();
+			room.memory.source = 'source';
+			
+			var object = new Courier();	
+			Game.getObjectById = (id) => new Spawn();
+			
+			assert.equal(false, object.isNecessary(room));
 		});
 	});
 });

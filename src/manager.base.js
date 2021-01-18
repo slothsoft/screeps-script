@@ -115,6 +115,21 @@ class BaseManager {
     }
 
     /* 
+     * Spawns a creep in a room for a specific role name.
+     * 
+	 * @param roleName
+     */
+
+    spawnCreepForRoleName(roleName) {
+	    var roles = this.allRoles.filter(role => role.roleName == roleName);
+	    if (roles.length > 0) {
+	    	return this.spawnCreepForRole(roles[0]);
+	    }
+        info.error('Could not find role: ' + roleName);
+        return false;
+    }
+
+    /* 
      * Fetches a free spawn for this particular room.
      * 
      * @param baseName the name of the base to search; null for any

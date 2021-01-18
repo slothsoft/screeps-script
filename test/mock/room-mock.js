@@ -61,8 +61,8 @@ global.STRUCTURE_INVADER_CORE = 'invaderCore';
 class Room {
 
 	constructor() {
-		this.id = 'Room' + Game.rooms.length;
-	    Game.rooms[this.id] = this;
+		this.name = 'Room' + Game.rooms.length;
+	    Game.rooms[this.name] = this;
 			
 	    this.memory = Memory.rooms[this.id] = {};
 	    this.visual = new RoomVisual();
