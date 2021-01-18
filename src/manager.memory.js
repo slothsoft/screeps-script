@@ -15,7 +15,7 @@ class MemoryManager {
 	
 	static fetchRoomConsole(room) {
 		var defaultArray = {
-			x: 40,
+			x: 30,
 			y: 0,
 			height: 50,
 			roleInfoX: 0,
@@ -47,7 +47,10 @@ class MemoryManager {
 	 */
 
 	static fetchRoomRoleConfig(room, allRoles) {
-		var defaultArray = {};
+		var defaultArray = {
+			partsMinMultiplier: 0,
+			partsMaxMultiplier: 20,
+		};
         allRoles.forEach(role => {
         	defaultArray[role.roleName] = { requiredNumber: 0 };
         });

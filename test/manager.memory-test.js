@@ -26,7 +26,7 @@ describe('manager.memory', () => {
 			var result = MemoryManager.fetchRoomConsole(room);
 			
 			var expecting = {
-				x: 40,
+				x: 30,
 				y: 0,
 				height: 50,
 				roleInfoX: 0,
@@ -93,6 +93,8 @@ describe('manager.memory', () => {
 			var result = MemoryManager.fetchRoomRoleConfig(room, [ role ]);
 			
 			var expecting = {
+				partsMinMultiplier: 0,
+				partsMaxMultiplier: 20,
 				Role: {
 					requiredNumber: 0,
 				}
@@ -117,6 +119,8 @@ describe('manager.memory', () => {
 			var result = MemoryManager.fetchRoomRoleConfig(room, [ role1, role2 ]);
 			
 			var expecting = {
+				partsMinMultiplier: 0,
+				partsMaxMultiplier: 20,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -147,6 +151,8 @@ describe('manager.memory', () => {
 			var result = MemoryManager.fetchRoomRoleConfig(room, [ role1, role2 ]);
 			
 			var expecting = {
+				partsMinMultiplier: 0,
+				partsMaxMultiplier: 20,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -175,6 +181,8 @@ describe('manager.memory', () => {
 			MemoryManager.fetchAllRoomRoleConfigs([ role ]);
 			
 			var expecting = {
+				partsMinMultiplier: 0,
+				partsMaxMultiplier: 20,
 				Role: {
 					requiredNumber: 0,
 				}
@@ -211,6 +219,8 @@ describe('manager.memory', () => {
 			MemoryManager.fetchAllRoomRoleConfigs([ role1, role2 ]);
 			
 			var expecting = {
+				partsMinMultiplier: 0,
+				partsMaxMultiplier: 20,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -253,6 +263,8 @@ describe('manager.memory', () => {
 			MemoryManager.fetchAllRoomRoleConfigs([ role1, role2 ]);
 			
 			var expecting = {
+				partsMinMultiplier: 0,
+				partsMaxMultiplier: 20,
 				Role1: {
 					requiredNumber: 1,
 				},

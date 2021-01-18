@@ -52,6 +52,25 @@ class MainGame {
 	    return result;
 	}
 
+	/*
+	 * Returns the display name of a game object.
+	 * 
+	 * @param game object
+	 */
+    
+	static getDisplayName(gameObject) {
+	    if (gameObject.name) {
+	    	return gameObject.name;
+	    }
+	    if (gameObject.memory && gameObject.memory.name) {
+	    	return gameObject.memory.name;
+	    }
+	    if (gameObject.id) {
+	    	return gameObject.id;
+	    }
+	    return JSON.stringify(gameObject);
+	}
+
 }
 
 module.exports = MainGame;
