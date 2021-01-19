@@ -140,3 +140,4 @@ For the question how to implement couriers, two option present itself: routes st
 - constants might be better of being base memory variables
 - creeps should pickup close resources
 - make Courier more universal
+- Creep#dismantle !!!

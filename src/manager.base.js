@@ -95,8 +95,8 @@ class BaseManager {
         var freeSpawn = this.fetchFreeSpawn(this.room.memory.base.name);
         if (freeSpawn) {
             var resultingCreep = role.spawnCreep(freeSpawn);
-            if (resultingCreep) {
-                info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
+            if (resultingCreep && freeSpawn.memory.debug) {
+            	info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
             }
             return resultingCreep;
         } else if (this.room.memory.base.outsourceSpawn) {
@@ -106,7 +106,9 @@ class BaseManager {
                 var resultingCreep = role.spawnCreep(freeSpawn);
                 if (resultingCreep) {
                 	resultingCreep.memory.home  = this.room.memory.base.name;
-                    info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
+                	if (freeSpawn.memory.debug) {
+                		info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
+                	}
                 }
                 return resultingCreep;
             }

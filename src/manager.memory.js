@@ -184,23 +184,6 @@ class MemoryManager {
 	    }
 	}
 
-	/*
-	 * Creates a custom node in the Memory for this structure.
-	 */
-	
-	static fetchStructureMemory(structure) {
-		if (structure.memory) {
-			return structure.memory;
-		}
-		if (!Memory.structures) {
-			Memory.structures = {};
-		}
-		if (!Memory.structures[structure.id]) {
-			Memory.structures[structure.id] = {};
-		}
-		structure.memory = Memory.structures[structure.id];
-		return Memory.structures[structure.id];
-	}
 };
 
 module.exports = MemoryManager;

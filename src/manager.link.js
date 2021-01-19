@@ -52,7 +52,8 @@ class LinkManager {
 
 	static makeLinkType(linkId, type) {
 		var object = Game.getObjectById(linkId);
-		var memory = MemoryManager.fetchStructureMemory(object);
+		// TODO: why doesn't variable work here?
+		var memory = require('./main.game').fetchMemoryOfStructure(object);
 		memory.type = type; 
 	}
 	
@@ -81,7 +82,7 @@ class LinkManager {
             	if (structure.structureType != STRUCTURE_LINK) {
             		return false;
             	}
-        		var memory = MemoryManager.fetchStructureMemory(structure);
+        		var memory = game.fetchMemoryOfStructure(structure);
             	if (!memory.type) {
             		memory.type = TYPE_SOURCE;
             	}
@@ -120,7 +121,7 @@ class LinkManager {
 	        	if (structure.structureType != STRUCTURE_LINK) {
 	        		return false;
 	        	}
-	            return MemoryManager.fetchStructureMemory(structure).type == TYPE_TARGET
+	            return game.fetchMemoryOfStructure(structure).type == TYPE_TARGET
 	            	&& structure.store.getFreeCapacity(RESOURCE_ENERGY) >  0;
 	        }
 		});

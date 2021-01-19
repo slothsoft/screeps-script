@@ -9,6 +9,7 @@ var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock.js');
 var RoomPosition = require('./mock/room-position-mock.js');
 var Spawn = require('./mock/spawn-mock');
+var Store = require('./mock/store-mock');
 
 // Almost all methods tested.
 // TODO: test #claimFlagRoom
@@ -206,6 +207,73 @@ describe('role.explorer', () => {
 			assert.equal(false, spawnWasCalled);
 		});
 	});
+
+	describe('#work (via run)', () => {
+		it('self-destruct', () => {
+			info.clearLog();
+			
+			var creep = new Creep('run');
+			creep.memory.selfdestruct = true;
+
+			var spawn = new Spawn();
+			spawn.pos.x = 13;
+			spawn.pos.y = 42;
+			creep.pos.findClosestByPath = type => spawn;
+			
+			var object = new Explorer();
+			
+			// spawn is far away, so go there
+			object.run(creep);
+
+			assert.equal(spawn.pos.x, creep.pos.x);
+			assert.equal(spawn.pos.y, creep.pos.y);
+			assert.equal(creep, Game.creeps['run']);
+
+			// spawn is now close, so self-destruct
+			object.run(creep);
+
+			assert.equal(spawn.pos.x, creep.pos.x);
+			assert.equal(spawn.pos.y, creep.pos.y);
+			assert.equal(null, Game.creeps['run']);
+		});
+
+		it('pickup energy', () => {
+			info.clearLog();
+
+			var droppedEnergy = new Spawn();
+			droppedEnergy.pos.x = 12;
+			droppedEnergy.pos.y = 13;
+			
+			var creep = new Creep('run');
+			creep.store = new Store(100);
+			creep.pos.findInRange = (type) => (type == FIND_DROPPED_RESOURCES) ? [ droppedEnergy ] : [];
+			
+			var object = new Explorer();
+			
+			// dropped energy is far away, so go there
+			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
+			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			
+			object.run(creep);
+
+			assert.equal(12, creep.pos.x);
+			assert.equal(13, creep.pos.y);
+			
+			// dropped energy is close, so pickup
+			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
+			
+			var workCalled = false; 
+			object.work = (workingCreep) => workCalled = true;
+			
+			object.run(creep);
+
+			assert.equal(12, creep.pos.x);
+			assert.equal(13, creep.pos.y);
+			assert.equal(true, workCalled);
+
+		});
+	});
+
 	
 	describe('#goToFlagRoom', () => {
 		var test = function(work) {

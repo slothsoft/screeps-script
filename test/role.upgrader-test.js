@@ -131,5 +131,41 @@ describe('role.upgrader', () => {
 			assert.equal(spawn.pos.y, creep.pos.y);
 			assert.equal(null, Game.creeps['run']);
 		});
+
+		it('pickup energy', () => {
+			info.clearLog();
+
+			var droppedEnergy = new Spawn();
+			droppedEnergy.pos.x = 12;
+			droppedEnergy.pos.y = 13;
+			
+			var creep = new Creep('run');
+			creep.store = new Store(100);
+			creep.pos.findInRange = (type) => (type == FIND_DROPPED_RESOURCES) ? [ droppedEnergy ] : [];
+			
+			var object = new Upgrader();
+			
+			// dropped energy is far away, so go there
+			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
+			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			
+			object.run(creep);
+
+			assert.equal(12, creep.pos.x);
+			assert.equal(13, creep.pos.y);
+			
+			// dropped energy is close, so pickup
+			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
+			
+			var workCalled = false; 
+			object.work = (workingCreep) => workCalled = true;
+			
+			object.run(creep);
+
+			assert.equal(12, creep.pos.x);
+			assert.equal(13, creep.pos.y);
+			assert.equal(true, workCalled);
+
+		});
 	});
 });

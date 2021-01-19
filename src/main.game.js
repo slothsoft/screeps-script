@@ -68,10 +68,34 @@ class MainGame {
 	    if (gameObject.memory && gameObject.memory.name) {
 	    	return gameObject.memory.name;
 	    }
+	    if (gameObject.structureType) {
+	    	var memory = this.fetchMemoryOfStructure(gameObject);
+	    	if (memory.name) {
+	    		return memory.name;
+	    	}
+	    }
 	    if (gameObject.id) {
 	    	return gameObject.id;
 	    }
 	    return JSON.stringify(gameObject);
+	}
+
+	/*
+	 * Creates a custom node in the Memory for this structure.
+	 */
+	
+	static fetchMemoryOfStructure(structure) {
+		if (structure.memory) {
+			return structure.memory;
+		}
+		if (!Memory.structures) {
+			Memory.structures = {};
+		}
+		if (!Memory.structures[structure.id]) {
+			Memory.structures[structure.id] = {};
+		}
+		structure.memory = Memory.structures[structure.id];
+		return Memory.structures[structure.id];
 	}
 
 }

@@ -23,9 +23,32 @@ class Handyman extends RolePrototype {
      */
     
     findTargets(room) {
-        return room.find(FIND_STRUCTURES, {
-            filter: object => object.hits < object.hitsMax * 0.9
+    	
+    	var necessaryDamageInPercent = 0.95;
+    	
+    	// 1st priority: roads (max hits: 5000) & containers (max hits: 250K)
+
+        var results = room.find(FIND_STRUCTURES, {
+            filter: structure => {
+            	return (structure.structureType == STRUCTURE_ROAD ||
+                        structure.structureType == STRUCTURE_CONTAINER) &&
+                        structure.hits / structure.hitsMax < necessaryDamageInPercent;
+            }
         });
+        if (results.length > 0) {
+        	return results;
+        }
+
+    	// last priority: walls (max hits: 300M) & ramparts (max hits: 30M)
+        
+        var results =  room.find(FIND_STRUCTURES, {
+            filter: structure => {
+            	return (structure.structureType == STRUCTURE_WALL ||
+                        structure.structureType == STRUCTURE_RAMPART) &&
+                        structure.hits / structure.hitsMax < necessaryDamageInPercent;
+            }
+        });
+        return results;
     }
 
 	/*
@@ -33,13 +56,14 @@ class Handyman extends RolePrototype {
 	 */
     
     sortTargetForClosest(targets, creep) {
+    	
         if (creep.memory.target) {
-            var creepTarget = targets.filter(object => (object.hits < object.hitsMax) && (object.id == creep.memory.target));
+            var creepTarget = targets.filter(object => object.id == creep.memory.target);
             if (creepTarget.length > 0) {
                 return creepTarget;
             }
         }
-        var result = targets.sort((a, b) => (a.hitsMax - a.hits) - (b.hitsMax - b.hits));
+        var result = targets.sort((a, b) => (b.hits / b.hitsMax) - (a.hits / a.hitsMax));
         if (result.length > 0) {
             creep.memory.target = result[0].id;
         }

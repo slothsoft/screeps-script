@@ -14,6 +14,10 @@ class RoomPosition {
 		var targetY = target.pos.y - this.y;
 		return Math.pow(targetX * targetX + targetY * targetY, 1/2);
 	}
+	
+	findInRange() {
+		return [];
+	}
 }
 
 module.exports = RoomPosition;

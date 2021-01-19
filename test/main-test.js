@@ -210,6 +210,23 @@ describe('main', () => {
 			assert.notEqual(false, spawnedCreep);
 			assert.equal('Harvester 1', spawnedCreep.name);
 
+			assert.equal(0, info.console.length);
+		});
+
+		it('spawn with debug', () => {
+			
+			var room = new Room();
+			room.memory.base = { name: 'A23D56' };
+			room.energyAvailable = 1000;
+			
+			var spawn = new Spawn(room);
+			spawn.memory.home = 'A23D56';
+			spawn.memory.debug = true;
+			
+			var spawnedCreep = spawnCreepForRoom(room.name, 'Harvester');
+			assert.notEqual(false, spawnedCreep);
+			assert.equal('Harvester 1', spawnedCreep.name);
+
 			assert.equal(1, info.console.length);
 			assert.equal('🧺 Spawning new Harvester (12p)', info.console[0]);
 		});
