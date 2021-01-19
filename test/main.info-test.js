@@ -11,16 +11,80 @@ describe('main.info', () => {
 		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 
+	describe('#fetchMemoryOfRoomConsole', () => {
+		it('no memory', () => {
+			var room = new Room();
+	
+			var result = classUnderTest.fetchMemoryOfRoomConsole(room);
+			
+			var expecting = {
+				x: 30,
+				y: 0,
+				height: 49,
+				roleInfoX: 0,
+				roleInfoY: 0,
+			};
+			
+			assert.deepEqual(expecting, result);
+			assert.deepEqual(expecting, room.memory.console);
+		});
+
+		it('some memory', () => {
+			var room = new Room();
+			room.memory.console = {
+				x: 13,
+				height: 0,
+			};
+	
+			var result = classUnderTest.fetchMemoryOfRoomConsole(room);
+			
+			var expecting = {
+				x: 13,
+				y: 0,
+				height: 0,
+				roleInfoX: 0,
+				roleInfoY: 0,
+			};
+			
+			assert.deepEqual(expecting, result);
+			assert.deepEqual(expecting, room.memory.console);
+		});
+
+		it('memory present', () => {
+			var room = new Room();
+			room.memory.console = {
+				x: 13,
+				y: 42,
+				height: 10,
+				roleInfoX: 99,
+				roleInfoY: 10,
+			};
+	
+			var result = classUnderTest.fetchMemoryOfRoomConsole(room);
+			
+			var expecting = {
+				x: 13,
+				y: 42,
+				height: 10,
+				roleInfoX: 99,
+				roleInfoY: 10,
+			};
+			
+			assert.deepEqual(expecting, result);
+			assert.deepEqual(expecting, room.memory.console);
+		});
+	});
+
 	describe('#getMaxHeight', () => {
 		it('simple', () => {
 			var room1 = new Room();
-			MemoryManager.fetchRoomConsole(room1).height = 123;
+			classUnderTest.fetchMemoryOfRoomConsole(room1).height = 123;
 			
 			var room2 = new Room();
-			MemoryManager.fetchRoomConsole(room2).height = 456;
+			classUnderTest.fetchMemoryOfRoomConsole(room2).height = 456;
 			
 			var room3 = new Room();
-			MemoryManager.fetchRoomConsole(room3).height = 789;
+			classUnderTest.fetchMemoryOfRoomConsole(room3).height = 789;
 			
 			assert.equal(classUnderTest.getMaxHeight(), 789);
 		});

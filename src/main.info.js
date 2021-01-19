@@ -4,14 +4,36 @@
  
 // TODO: print -> visualize ?
 // TODO: generally make methods more consistent
+// TODO: this class is not really a class - it's a singleton of sorts?
 
 var constants = require('./main.constants');
 var game = require('./main.game');
 
-var MemoryManager = require('./manager.memory');
-
 class MainInfo {
-    
+
+	/*
+	 * Fetches the memory of the room's console.
+	 * 
+	 * @param {Room} room
+	 */
+	
+	/* static */ fetchMemoryOfRoomConsole(room) {
+		var defaultArray = {
+			x: 30,
+			y: 0,
+			height: 49,
+			roleInfoX: 0,
+			roleInfoY: 0,
+			opacity: 0.8,
+		};
+		if (room.memory.console) {
+			room.memory.console = Object.assign(defaultArray, room.memory.console);
+		} else {
+			room.memory.console = defaultArray;
+		}
+		return room.memory.console;
+	}
+	
 	constructor() {
 		this.consoleTime = [];
 		this.console = [];
@@ -39,12 +61,12 @@ class MainInfo {
         if (!room.memory.roleInfo)
             return;
 
-    	var console = MemoryManager.fetchRoomConsole(room);
+    	var console = this.fetchMemoryOfRoomConsole(room);
         var x = console.roleInfoX;
         var y = console.roleInfoY;
         
         var roomName = (room.memory.base && room.memory.base.name) || room.name;
-        room.visual.text(roomName + '    ' + room.energyAvailable + '/' + room.energyCapacityAvailable + '🟡', x, y++, {align: 'left', opacity: 0.8});
+        room.visual.text(roomName + '    ' + room.energyAvailable + '/' + room.energyCapacityAvailable + '🟡', x, y++, {align: 'left', opacity: console.opacity});
         
         var unusedRoles = '';
         
@@ -52,7 +74,7 @@ class MainInfo {
             var count = room.memory.roleInfo[role];
             if (count.currentNumber || (count.requiredNumber > 0)) {
             	var ofRequired = count.requiredNumber >= 0 ? '/' + count.requiredNumber : '';
-                room.visual.text(count.symbol + ' ' + role + ' ' + count.currentNumber + ofRequired, x, y++, {align: 'left', opacity: 0.8});
+                room.visual.text(count.symbol + ' ' + role + ' ' + count.currentNumber + ofRequired, x, y++, {align: 'left', opacity: console.opacity});
             } else {
                 unusedRoles += count.symbol;
             }
@@ -60,7 +82,7 @@ class MainInfo {
         
         if (unusedRoles) {
         	var ofRequired = room.memory.base ? '/0' : '';
-        	room.visual.text(unusedRoles + ' 0' + ofRequired, x, y++, {align: 'left', opacity: 0.8});
+        	room.visual.text(unusedRoles + ' 0' + ofRequired, x, y++, {align: 'left', opacity: console.opacity});
         }
     }
 
@@ -71,7 +93,7 @@ class MainInfo {
 	 */
     
     printConsole(room) {   
-    	var console = MemoryManager.fetchRoomConsole(room);
+    	var console = this.fetchMemoryOfRoomConsole(room);
         var x = console.x;
         var xLine = x + 5;
         var yMin = console.y;
@@ -79,7 +101,7 @@ class MainInfo {
         var y = yMin + height;
         
         if (this.console.length == 0) {
-            room.visual.text('<no console entries>', x, y, {align: 'left', opacity: 0.8});
+            room.visual.text('<no console entries>', x, y, {align: 'left', opacity: console.opacity});
         } else {
             for (const lineIndex in this.console) {
                 var time = this.consoleTime[lineIndex];

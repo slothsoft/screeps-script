@@ -9,28 +9,6 @@ var game = require('./main.game');
 class MemoryManager {
 
 	/*
-	 * Fetches the memory of the room's console.
-	 * 
-	 * @param {Room} room
-	 */
-	
-	static fetchRoomConsole(room) {
-		var defaultArray = {
-			x: 30,
-			y: 0,
-			height: 49,
-			roleInfoX: 0,
-			roleInfoY: 0,
-		};
-		if (room.memory.console) {
-			room.memory.console = Object.assign(defaultArray, room.memory.console);
-		} else {
-			room.memory.console = defaultArray;
-		}
-		return room.memory.console;
-	}
-
-	/*
 	 * Fetches the memory of all the room's role configs.
 	 * 
 	 * @param allRoles

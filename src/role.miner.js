@@ -6,6 +6,8 @@
 var info = require('./main.info');
 var game = require('./main.game');
 
+var MemoryManager = require('./manager.memory');
+
 var RolePrototype = require('./role.prototype');
 
 class Miner extends RolePrototype {
@@ -28,8 +30,9 @@ class Miner extends RolePrototype {
 	spawnCreep(spawn) {
 		var claimedSources = game.findAllCreeps().filter(creep => creep.memory.homeSource).map(creep => creep.memory.homeSource);
 		var allSources = spawn.room.find(FIND_SOURCES).filter(source => !claimedSources.includes(source.id));
-		if (allSources.length > 0)
+		if (allSources.length > 0) {
 			return this.spawnCreepFromSpawn(spawn, allSources[0].id);
+		}
 		return false;
 	}
 
@@ -96,7 +99,7 @@ class Miner extends RolePrototype {
 	            }
 	        }
 	    }
-	}
+	} 
 	
 	findSources(room) {
 	    var sources = room.find(FIND_SOURCES, {
