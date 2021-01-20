@@ -23,6 +23,7 @@ describe('main.info', () => {
 				height: 49,
 				roleInfoX: 0,
 				roleInfoY: 0,
+				opacity: 0.8,
 			};
 			
 			assert.deepEqual(expecting, result);
@@ -44,6 +45,7 @@ describe('main.info', () => {
 				height: 0,
 				roleInfoX: 0,
 				roleInfoY: 0,
+				opacity: 0.8,
 			};
 			
 			assert.deepEqual(expecting, result);
@@ -68,6 +70,7 @@ describe('main.info', () => {
 				height: 10,
 				roleInfoX: 99,
 				roleInfoY: 10,
+				opacity: 0.8,
 			};
 			
 			assert.deepEqual(expecting, result);
