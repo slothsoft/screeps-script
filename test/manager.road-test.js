@@ -87,6 +87,7 @@ describe('manager.road', () => {
 				var creep = new Creep(room);
 				creep.pos.x = 12;
 				creep.pos.y = 34;
+				creep.memory.moving = true;
 				return [ creep ];
 			};
 	

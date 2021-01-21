@@ -11,6 +11,8 @@ var Builder = require('./role.builder');
 var RolePrototype = require('./role.prototype');
 
 // TODO document phases in readme
+// TODO: remove flag and init base correctly
+// TODO: also spawn name
 const PHASE_GOTO_FLAG_ROOM = 'gotoFlagRoom';
 const PHASE_CLAIM_FLAG_ROOM = 'claimFlagRoom';
 const PHASE_CREATE_SPAWN = 'createSpawn';
@@ -128,6 +130,7 @@ class Explorer extends RolePrototype {
       	var answer = creep.claimController(targetFlag.room.controller);
       	if (answer == ERR_NOT_IN_RANGE) {
       		creep.moveTo(targetFlag.room.controller);
+      		creep.memory.moving = true;
       	} else if (answer == OK) {
       		creep.memory.role = 'Builder';  
       		creep.memory.phase = PHASE_CREATE_SPAWN;

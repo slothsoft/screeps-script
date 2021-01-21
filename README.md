@@ -54,7 +54,14 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 
 | Warning            | Auto Mode            | Description  |
 | ------------------ | -------------------- | -------------------- |
+| Builder is missing. | Spawning Builder.  | If there is at least one construction site, the base needs at least one Builder to work correctly. |
+| Handyman is missing. | Spawning Handyman.  | If there is at least one structure that needs repairing, the base needs a Handyman to work correctly. |
+| Harvester is missing. | Spawning Harvester.  | The base needs at least one Harvester to work correctly. |
 | Roads are missing. | I'm building roads.  | There are some well-traveled tiles without roads (set `room.memory.roadManager.visualize` to `true` to see which) |
+| Upgrader is missing. | Spawning Upgrader.  | The base needs at least one Upgrader to work correctly. |
+
+				text: 'Handyman is missing.' , 
+				solution: 'Spawning Handyman.',
 
 
 

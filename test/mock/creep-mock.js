@@ -90,6 +90,10 @@ class Creep {
 		}
 		return ERR_NOT_IN_RANGE;
 	}
+
+	withdraw(target) {
+		return this.harvest(target);
+	}
 	
 	upgradeController(target) {
 		return this.transfer(target, RESOURCE_ENERGY);

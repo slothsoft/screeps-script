@@ -137,6 +137,7 @@ class RolePrototype {
     
     moveToLocation(creep, location) {
     	creep.moveTo(location, {visualizePathStyle: {stroke: this.color}});
+    	creep.memory.moving = true;
     }
 
     /*
@@ -239,6 +240,8 @@ class RolePrototype {
 	 */
     
     run(creep) {
+    	// we want to keep track when a creep is actually moving
+    	creep.memory.moving = false;
         
         // self-destructing is more important than working
         
@@ -256,7 +259,7 @@ class RolePrototype {
             	info.log('🟡 ' + game.getDisplayName(creep) + ' is picking up resource ' + game.getDisplayName(dropenergy[0]));
             }
         	if (creep.pickup(dropenergy[0]) == ERR_NOT_IN_RANGE) {
-        		creep.moveTo(dropenergy[0])
+        		this.moveToLocation(creep, dropenergy[0]);
         		return;
         	}
         	// here is no return because creeps can pickup energy an work afterwards
@@ -264,7 +267,7 @@ class RolePrototype {
 
         // looting a tombstone is more important than working
     	
-        var tombstones = creep.pos.findInRange(FIND_TOMBSTONES, 3);
+        var tombstones = creep.pos.findInRange(FIND_TOMBSTONES, 3).filter(t => t.store.getUsedCapacity() > 0);
 		if (tombstones.length > 0 && creep.store.getFreeCapacity() > 0) {
         	this.lootTombstone(creep, tombstones[0]);
         	return;
@@ -320,11 +323,18 @@ class RolePrototype {
 	 */
     
     lootTombstone(creep, tombstone) {
-	    if (creep.memory.debug) {
-	    	info.log('⚰ ' + game.getDisplayName(creep) + ' is looting the tombstone ' + game.getDisplayName(tombstone));
-	    }
-		if (creep.pickup(tombstone) == ERR_NOT_IN_RANGE) {
-			creep.moveTo(tombstone)
+	    var withdrawResult = creep.withdraw(tombstone, RESOURCE_ENERGY);
+		if (withdrawResult == ERR_NOT_IN_RANGE) {
+            if (creep.memory.debug) {      
+    	    	info.log('⚰ ' + game.getDisplayName(creep) + ' is moving to tombstone ' + game.getDisplayName(tombstone));
+            }
+    		this.moveToLocation(creep, tombstone);
+		} else if (withdrawResult == OK) {
+            if (creep.memory.debug) {      
+    	    	info.log('⚰ ' + game.getDisplayName(creep) + ' is looting the tombstone ' + game.getDisplayName(tombstone));
+            }
+		} else {
+	    	info.log('⚰ ' + game.getDisplayName(creep) + ' cannot loot the tombstone: ' + withdrawResult);
 		}
 	}
 

@@ -31,12 +31,13 @@ describe('manager.mayor', () => {
 		it('no memory', () => {
 			var room = new Room();
 	
-			var result = MayorManager.fetchMemoryOfMayor(room);
+			var result = new MayorManager(room).fetchMemoryOfMayor();
 			
 			var expecting = {
 				x: 10,
 				y: 0,
 				mode: MayorManager.MODE_DEFAULT,
+				temp: {},
 			};
 			
 			assert.deepEqual(expecting, result);
@@ -50,12 +51,13 @@ describe('manager.mayor', () => {
 				mode: 'warn',
 			};
 	
-			var result = MayorManager.fetchMemoryOfMayor(room);
+			var result = new MayorManager(room).fetchMemoryOfMayor();
 			
 			var expecting = {
 				x: 10,
 				y: 10,
 				mode: 'warn',
+				temp: {},
 			};
 			
 			assert.deepEqual(expecting, result);
@@ -70,12 +72,13 @@ describe('manager.mayor', () => {
 				mode: '3',
 			};
 	
-			var result = MayorManager.fetchMemoryOfMayor(room);
+			var result = new MayorManager(room).fetchMemoryOfMayor();
 			
 			var expecting = {
 				x: 1,
 				y: 2,
 				mode: '3',
+				temp: {},
 			};
 			
 			assert.deepEqual(expecting, result);

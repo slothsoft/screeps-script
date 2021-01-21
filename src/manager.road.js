@@ -50,8 +50,10 @@ class RoadManager extends TileWatcher {
 
 	watchRoomTiles(array) {
 		this.room.find(FIND_MY_CREEPS).forEach(creep => {
-			var value = array.get(creep.pos.x, creep.pos.y);
-			array.set(creep.pos.x, creep.pos.y, value ? (parseInt(value) + 1) : 1);
+			if (creep.memory.moving) {
+				var value = array.get(creep.pos.x, creep.pos.y);
+				array.set(creep.pos.x, creep.pos.y, value ? (parseInt(value) + 1) : 1);
+			}
 		});
 	}
 	

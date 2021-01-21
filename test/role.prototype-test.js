@@ -962,6 +962,8 @@ describe('role.protoype', () => {
 			};
 			tombstone.pos.x = 12;
 			tombstone.pos.y = 13;
+			tombstone.store = new Store(100);
+			tombstone.store.usedCapacity = 50;
 			
 			var creep = new Creep('run');
 			creep.store = new Store(100);
