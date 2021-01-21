@@ -6,22 +6,23 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 
 - [Features](#features)
     - [Creeps](#creeps)
+    - [Roads](#roads)
 - [Console Commands](#console-commands)
 - [Memory](#memory)
     - [Room Memory](#room-memory)
     - [Link Memory](#link-memory)
+    - [Spawn Memory](#spawn-memory)
     - [Creep Memory](#creep-memory)
 - [Dev Notes](#dev-notes)
 - [Open Tasks](#open-tasks)
 
 
-## Features
-
 <img align="right" width="202" height="236" src="readme/fancy-gui.png">
+
+## Features
 
 - each room has a fancy overview GUI
 - each room has a console which prints most info
-
 
 ### Creeps
 
@@ -30,6 +31,17 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 - display their role next to their circle (→ `DEBUG_ROLES`)
 - will be respawned with as many parts as possible after their death
 - can self-destruct (console command `selfdestruct(<creepName>)`)
+
+<p style="clear: both;" ></p>
+<img align="right" width="202" height="236" src="readme/road-counter.png">
+
+### Roads
+
+- the game will remember which tiles are heavily traveled by creeps
+- this can be used to build roads, either automatically or manually
+- to enable the view on the right, check the `roadManager` memory of a room
+
+<p style="clear: both;" ></p>
 
 
 
@@ -63,7 +75,7 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ..roleConfig          | `object`    | used to configure the creeps in this base |
 | ....partsMinMultiplier| `number`    | used to configure how many parts new creeps have at least |
 | ....partsMaxMultiplier| `number`    | used to configure how many parts new creeps have at most |
-| ....&lt;role&gt;            | `object`    | used to configure a specific role in this base |
+| ....&lt;role&gt;      | `object`    | used to configure a specific role in this base |
 | ......requiredNumber  | `number`    | the required number of creeps for this role |
 | console               | `object`    | used to collect config of the console & other GUI elements |
 | ..height              | `number`    | height of the console in lines |
@@ -71,11 +83,20 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ..y                   | `number`    | y coordinate to show the console at |
 | ..roleInfoX           | `number`    | x coordinate to show the role info at |
 | ..roleInfoY           | `number`    | y coordinate to show the role info at |
-| roleInfo              | `object`    | used to collect information about creeps on this room; _overwritten each round_ |
-| ..&lt;role&gt;              | `object`    | used to collect information about the role with the name &lt;role&gt; |
+| roleInfo              | `object`    | **[Not for user!]** used to collect information about creeps on this room; _overwritten each round_ |
+| ..&lt;role&gt;        | `object`    | used to collect information about the role with the name &lt;role&gt; |
 | ....currentNumber     | `number`    | the current number of the role |
 | ....requiredNumber    | `number`    | the required number of the role |
 | ....symbol            | `number`    | the symbol of the role |
+| roadManager           | `object`    | the configuration for the road manager |
+| ..enabled             | `boolean`   | `false` to disable the road manager for this room |
+| ..watchTime           | `number`    | number of ticks the road manager watches the room before deciding what to do |
+| ..visualize           | `boolean`   | `true` to overlay the map with the count of used tiles (see [Roads](#roads)) |
+| ..threshold           | `number `   | the threshold for how much a tile has to be used to validate a road |
+| ..tick                | `number `   | **[Not for user!]** if _tick_ gets to _watchTime_ the tile information is stored for future use |
+| ..currentTiles        | `string `   | **[Not for user!]** the used information for each tile that gets updated each tick |
+| ..tick                | `number `   | **[Not for user!]** the information for each tile for the last _watchTime_ ticks |
+
 
 
 ### Link Memory
@@ -84,6 +105,13 @@ Documentation on which memory is used for which information. Mandatory elements 
 | --------------------- | ------------- | ------------ |
 | type                  | `string`    | `source` if link is a source, `target` if it is a target |
 | transferId            | `string`    | sources and targets of a specific `transferId` are matched, so you can have multiple source→target pairs per room  |
+
+
+### Spawn Memory
+
+| Memory                | Type          | Description  |
+| --------------------- | ------------- | ------------ |
+| debug                 | `boolean`   | if `true`, the spawn will print each time a creep is spawned |
 
 
 ### Creep Memory
@@ -129,15 +157,14 @@ For the question how to implement couriers, two option present itself: routes st
 
 ## Open Tasks
 
-- road builders
 - don't switch to roles where you missing parts
 - remove console entries after a while
 - creeps are displayed even if they are not on map
 - finish Explorer
-- findTargets() sometimes depends on the creep, not the room (then probably findSources() too)
+- findTargets() sometimes depends on the creep, not the room (then probably findSources() too) ???
 - TODOs in code
 - creeps cannot work on other maps than the base's
 - constants might be better of being base memory variables
-- creeps should pickup close resources
 - make Courier more universal
 - Creep#dismantle !!!
+- spawn on new world and see what happens and what needs fixing, then document

@@ -8,6 +8,7 @@ var info = require('./main.info');
 var BaseManager = require('./manager.base');
 var LinkManager = require('./manager.link');
 var MemoryManager = require('./manager.memory');
+var RoadManager = require('./manager.road');
 var TowerManager = require('./manager.tower');
 
 var Explorer = require('./role.explorer');
@@ -25,6 +26,7 @@ module.exports.loop = function () {
 	BaseManager.runAll();
 	TowerManager.runAll();
     LinkManager.runAll();
+	RoadManager.watchAllRooms();
     
     // print GUI on top
     
@@ -60,7 +62,6 @@ global.fetchOldestCreep = function (baseName) {
  */
 
 global.spawnMiner = function (spawnId, sourceId) { 
-	// TODO should increase necessaryNumber by one.
     return new Miner().spawnCreepFromSpawnName(spawnId, sourceId);
 };
 

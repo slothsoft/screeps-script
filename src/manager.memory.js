@@ -156,7 +156,7 @@ class MemoryManager {
 	            delete Memory.creeps[name];
 	            if (debug) {
 		    		// TODO: why doesn't variable work here?
-		            require('./main.info').log('🚮 Clearing non-existing creep memory:', name);
+		            require('./main.info').log('🚮 Clearing non-existing creep memory: ' + name);
 	        	}
 	        }
 	    }
