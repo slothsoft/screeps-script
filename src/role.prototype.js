@@ -247,7 +247,7 @@ class RolePrototype {
             return;
         }
         
-        // picking up energy is important than working
+        // picking up energy is more important than working
         
         // TODO: make sure this is a resource creep can use
         var dropenergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3);
@@ -260,7 +260,16 @@ class RolePrototype {
         		return;
         	}
         	// here is no return because creeps can pickup energy an work afterwards
-    	} else {
+    	} 
+
+        // looting a tombstone is more important than working
+    	
+        var tombstones = creep.pos.findInRange(FIND_TOMBSTONES, 3);
+		if (tombstones.length > 0 && creep.store.getFreeCapacity() > 0) {
+        	this.lootTombstone(creep, tombstones[0]);
+        	return;
+    	}
+    		
     		// TOOD: looting ruins and graves (if they have the resource) might be a good idea, too
 //	        var ruin = creep.pos.findInRange(FIND_RUINS, 3);
 //	    	if (ruin.length > 0 && creep.store.getFreeCapacity() > 0) {
@@ -275,7 +284,6 @@ class RolePrototype {
 //	        	console.log(withdrawAnswer);
 //        		return;
 //	    	}
-    	}
         
         this.work(creep);
     }
@@ -304,6 +312,21 @@ class RolePrototype {
             info.error(game.getDisplayName(creep) + ' could not find a spawn.');  
         }
     }
+
+    /*
+	 * Creep loots the tombstone.
+	 * 
+	 * @param {Creep} creep
+	 */
+    
+    lootTombstone(creep, tombstone) {
+	    if (creep.memory.debug) {
+	    	info.log('⚰ ' + game.getDisplayName(creep) + ' is looting the tombstone ' + game.getDisplayName(tombstone));
+	    }
+		if (creep.pickup(tombstone) == ERR_NOT_IN_RANGE) {
+			creep.moveTo(tombstone)
+		}
+	}
 
     /*
 	 * Creep works.

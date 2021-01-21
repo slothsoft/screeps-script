@@ -11,8 +11,9 @@ var RoomPosition = require('./mock/room-position-mock.js');
 var Spawn = require('./mock/spawn-mock');
 var Store = require('./mock/store-mock');
 
-// Almost all methods tested.
-// TODO: test #claimFlagRoom
+// TODO: Test other methods
+// - createSpawn
+// - claimFlagRoom
 
 const PHASE_GOTO_FLAG_ROOM = 'gotoFlagRoom';
 const PHASE_CLAIM_FLAG_ROOM = 'claimFlagRoom';
@@ -274,10 +275,11 @@ describe('role.explorer', () => {
 		});
 	});
 
-	
 	describe('#goToFlagRoom', () => {
 		var test = function(work) {
 			var creep = new Creep();
+			creep.name = 'CreepX';
+			creep.room.controller = {};
 
 			var flag1 = {
 				id: 'flag-id-1',
@@ -308,7 +310,7 @@ describe('role.explorer', () => {
 			assert.equal(1, creep.pos.x);
 			assert.equal(2, creep.pos.y);
 			assert.equal(1, info.console.length);
-			assert.equal('🏴 Explorer travels to Flag Name 1', info.console[0]);
+			assert.equal('🏴 CreepX travels to Flag Name 1', info.console[0]);
 
 			// second time this is called find flag and store it in memory 
 			info.clearLog();
@@ -332,7 +334,7 @@ describe('role.explorer', () => {
 			assert.equal(5, creep.pos.x);
 			assert.equal(6, creep.pos.y);
 			assert.equal(1, info.console.length);
-			assert.equal('🏴 Explorer claims the room of Flag Name 2', info.console[0]);
+			assert.equal('🏴 CreepX claims the room of Flag Name 2', info.console[0]);
 			assert.equal('claimFlagRoom', creep.memory.phase);
 		};
 		it('function', () => {

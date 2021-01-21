@@ -7,11 +7,14 @@ var constants = require('./main.constants');
 var info = require('./main.info');
 var game = require('./main.game');
 
+var Builder = require('./role.builder');
 var RolePrototype = require('./role.prototype');
 
 // TODO document phases in readme
 const PHASE_GOTO_FLAG_ROOM = 'gotoFlagRoom';
 const PHASE_CLAIM_FLAG_ROOM = 'claimFlagRoom';
+const PHASE_CREATE_SPAWN = 'createSpawn';
+const PHASE_BUILD_SPAWN = 'buildSpawn';
 
 class Explorer extends RolePrototype {
 	
@@ -55,7 +58,6 @@ class Explorer extends RolePrototype {
 	    var resultingCreep = this.spawnCreepWithParts(spawn, [WORK, MOVE, CARRY, MOVE], [ CLAIM, MOVE ]);
 	    if (resultingCreep) {
 	        resultingCreep.memory.targetFlag = flagName;
-	        resultingCreep.memory.home = flagName;
 	        return resultingCreep;
 	    }
 	    return resultingCreep;
@@ -75,8 +77,14 @@ class Explorer extends RolePrototype {
 	        case PHASE_CLAIM_FLAG_ROOM:
 	            this.claimFlagRoom(creep);
 	            break;
+	        case PHASE_CREATE_SPAWN:
+	            this.createSpawn(creep);
+	            break;
+	        case PHASE_BUILD_SPAWN:
+	            new Builder().work(creep);
+	            break;
 	        default:
-	    	    info.log(this.roleName + ' travels to ' + targetFlag.name);
+	    	    info.log(game.getDisplayName(creep) + ' travels to ' + targetFlag.name);
 	            break;
 	    }
 	}
@@ -96,7 +104,7 @@ class Explorer extends RolePrototype {
 	    if (!targetFlag) {
 	        targetFlag = this.findClosestTarget(creep);
 	        creep.memory.targetFlag = targetFlag.name;
-    	    info.log(this.symbol + ' ' + this.roleName + ' travels to ' + targetFlag.name);
+    	    info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' travels to ' + targetFlag.name);
       		creep.memory.home = targetFlag.name;
 	    }
 	    
@@ -105,8 +113,9 @@ class Explorer extends RolePrototype {
 	    this.moveToLocation(creep, targetFlag);
 	    
 	    if (creep.room == targetFlag.room) {
-	        creep.memory.phase = PHASE_CLAIM_FLAG_ROOM;
-	        info.log(this.symbol + ' ' + this.roleName + ' claims the room of ' + targetFlag.name);
+	    	var hasRoomAlready = creep.room.controller.my;
+	        creep.memory.phase = hasRoomAlready ? PHASE_CREATE_SPAWN : PHASE_CLAIM_FLAG_ROOM;
+	        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' claims the room of ' + targetFlag.name);
 	    }
 	}
 
@@ -121,12 +130,30 @@ class Explorer extends RolePrototype {
       		creep.moveTo(targetFlag.room.controller);
       	} else if (answer == OK) {
       		creep.memory.role = 'Builder';  
-      	} else if (answer == ERR_GCL_NOT_ENOUGH) { 
-      		creep.memory.role = 'Builder'; // TODO: this is not correct or is it? just use controller.my to prevent
-      	} else (info.log(this.symbol + ' ' + this.roleName + ' cannot claim: ' + answer));
-      	// TODOif claimed... create spawn (if possible) on flag
-      	// construct spawn (need 15K energy, so others build it) (2 builders at least needed)
-      	// spawn and room should have new base's name
+      		creep.memory.phase = PHASE_CREATE_SPAWN;
+      	} else {
+      		info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' cannot claim: ' + answer);
+      	}
+
+	    if (creep.room.controller.my) {
+	    	var hasSpawnAlready = creep.room.find(FIND_SOURCES).length > 0;
+	        creep.memory.phase = hasSpawnAlready ? PHASE_BUILD_SPAWN : PHASE_CREATE_SPAWN;
+	        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' builds a spawn on ' + targetFlag.name);
+	    }
+	}
+	
+	createSpawn(creep) {
+    	var hasSpawnAlready = creep.room.find(FIND_SOURCES).length > 0;
+    	if (hasSpawnAlready) {
+	        creep.memory.phase = PHASE_BUILD_SPAWN;
+	        return;
+    	}
+    	
+        var targetFlag = this.findTargets(creep.room).filter(target => target.name == creep.memory.targetFlag)[0];
+        if (targetFlag.pos.createConstructionSite(STRUCTURE_SPAWN) == OK) {
+	        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is a Builder now.');
+	        creep.memory.phase = PHASE_BUILD_SPAWN;
+        }
 	}
 }
 
