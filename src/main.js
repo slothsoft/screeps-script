@@ -7,6 +7,7 @@ var info = require('./main.info');
 
 var BaseManager = require('./manager.base');
 var LinkManager = require('./manager.link');
+var MayorManager = require('./manager.mayor');
 var MemoryManager = require('./manager.memory');
 var RoadManager = require('./manager.road');
 var TowerManager = require('./manager.tower');
@@ -27,6 +28,7 @@ module.exports.loop = function () {
 	TowerManager.runAll();
     LinkManager.runAll();
 	RoadManager.watchAllRooms();
+	MayorManager.runAll();
     
     // print GUI on top
     

@@ -3,10 +3,15 @@ var assert = require('assert');
 
 var Creep = require('./mock/creep-mock.js');
 var Room = require('./mock/room-mock.js');
+var RoomPosition = require('./mock/room-position-mock.js');
 
 // All methods tested.
 
 describe('manager.road', () => {
+	before(() => {
+	    global.RoomPosition = RoomPosition;
+	});
+	
 	it('constructor', () => {
 		var startsWith = 'class RoadManager';
 		assert.equal(startsWith, RoadManager.toString().substring(0, startsWith.length));
@@ -212,6 +217,7 @@ describe('manager.road', () => {
 		
 		it('single', () => {
 			var room = new Room();
+			room.name = 'Example';
 	
 			var watcher = new RoadManager(room);
 			var memory = watcher.fetchMemoryOfWatcher();
@@ -221,15 +227,13 @@ describe('manager.road', () => {
 			memory.lastTiles = array.toCompactString();
 
 			var positions = watcher.fetchPositionsOverThreshold();
-			assert.deepEqual([ {
-				x: 12,
-				y: 34,
-				value: 567,
-			}], positions);
+			var expected = new RoomPosition(12, 34, room.name);
+			assert.deepEqual([ expected ], positions);
 		});
 
 		it('multiple', () => {
 			var room = new Room();
+			room.name = 'Room';
 	
 			var watcher = new RoadManager(room);
 			var memory = watcher.fetchMemoryOfWatcher();
@@ -241,19 +245,10 @@ describe('manager.road', () => {
 			memory.lastTiles = array.toCompactString();
 
 			var positions = watcher.fetchPositionsOverThreshold();
-			assert.deepEqual([ {
-				x: 23,
-				y: 45,
-				value: 678,
-			}, {
-				x: 12,
-				y: 34,
-				value: 567,
-			}, {
-				x: 1,
-				y: 2,
-				value: 300,
-			}], positions);
+			var expected1 = new RoomPosition(1, 2, room.name);
+			var expected2 = new RoomPosition(12, 34, room.name);
+			var expected3 = new RoomPosition(23, 45, room.name);
+			assert.deepEqual([ expected3, expected2, expected1 ], positions);
 		});
 
 
@@ -270,39 +265,19 @@ describe('manager.road', () => {
 			memory.lastTiles = array.toCompactString();
 
 			var positions = watcher.fetchPositionsOverThreshold();
-			assert.deepEqual([ {
-				x: 23,
-				y: 45,
-				value: 678,
-			}, {
-				x: 12,
-				y: 34,
-				value: 567,
-			}], positions);
+			var expected1 = new RoomPosition(1, 2, room.name);
+			var expected2 = new RoomPosition(12, 34, room.name);
+			var expected3 = new RoomPosition(23, 45, room.name);
+			
+			assert.deepEqual([ expected3, expected2 ], positions);
 
 			room.memory.roadManager.threshold = 0;
 			positions = watcher.fetchPositionsOverThreshold();
-			assert.deepEqual([ {
-				x: 23,
-				y: 45,
-				value: 678,
-			}, {
-				x: 12,
-				y: 34,
-				value: 567,
-			}, {
-				x: 1,
-				y: 2,
-				value: 3,
-			}], positions);
+			assert.deepEqual([ expected3, expected2, expected3 ], positions);
 
 			room.memory.roadManager.threshold = 678;
 			positions = watcher.fetchPositionsOverThreshold();
-			assert.deepEqual([ {
-				x: 23,
-				y: 45,
-				value: 678,
-			}], positions);
+			assert.deepEqual([ expected3 ], positions);
 		});
 	});
 });

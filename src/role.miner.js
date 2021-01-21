@@ -126,6 +126,17 @@ class Miner extends RolePrototype {
 		return harvestResult;
 	}
 
+    handleSourceWorkResult(creep, workResult) {
+    	if (workResult == ERR_NOT_ENOUGH_RESOURCES) {
+    		var source = this.findSources(creep.room)[0];
+    		if (source.ticksToRegeneration && (source.ticksToRegeneration < 10)) {
+    			// we mined the source completely slightly ahead of time - ignore
+    			return;
+    		}
+    	}
+    	super.handleSourceWorkResult(creep, workResult);
+    }
+
 	findTargets(room) {
 		// creep must be defined and have reached the source to check the range
 	    var testCreepPosition = this.creep && this.creep.memory.ticksToSource;

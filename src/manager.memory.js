@@ -15,7 +15,11 @@ class MemoryManager {
 	 */
 
 	static fetchAllRoomRoleConfigs(allRoles) {
-		game.findAllRooms().forEach(room => this.fetchRoomRoleConfig(room, allRoles));
+		game.findAllRooms().forEach(room => {
+			if (room.memory.base) {
+				this.fetchRoomRoleConfig(room, allRoles);
+			}
+		});
 	}
 	
 	/*

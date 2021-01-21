@@ -24,6 +24,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 - each room has a fancy overview GUI
 - each room has a console which prints most info
 
+
 ### Creeps
 
 - will follow their role until there is nothing else to do
@@ -35,6 +36,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 <p style="clear: both;" ></p>
 <img align="right" width="202" height="236" src="readme/road-counter.png">
 
+
 ### Roads
 
 - the game will remember which tiles are heavily traveled by creeps
@@ -42,6 +44,17 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 - to enable the view on the right, check the `roadManager` memory of a room
 
 <p style="clear: both;" ></p>
+
+
+### Mayor
+
+- Mayor verifies that the base is in order and warns you
+- optionally the mayor can fix some problems and help base building that way
+
+
+| Warning            | Auto Mode            | Description  |
+| ------------------ | -------------------- | -------------------- |
+| Roads are missing. | I'm building roads.  | There are some well-traveled tiles without roads (set `room.memory.roadManager.visualize` to `true` to see which) |
 
 
 
@@ -143,7 +156,7 @@ Documentation on which memory is used for which information. Mandatory elements 
 - Tests run against a mock of the original game: [mock folder](./test/mock)
 
 
-## Courier Implementation
+### Courier Implementation
 
 For the question how to implement couriers, two option present itself: routes stored for each room / base, or for each creep.
 
@@ -159,7 +172,6 @@ For the question how to implement couriers, two option present itself: routes st
 
 - don't switch to roles where you missing parts
 - remove console entries after a while
-- creeps are displayed even if they are not on map
 - finish Explorer
 - findTargets() sometimes depends on the creep, not the room (then probably findSources() too) ???
 - TODOs in code

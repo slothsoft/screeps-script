@@ -170,7 +170,7 @@ class BaseManager {
                 var currentNumber = creep.room.memory.roleInfo[creepRole.roleName].currentNumber;
                 creep.room.memory.roleInfo[creepRole.roleName].currentNumber = currentNumber ? currentNumber + 1 : 1;
                 
-                if (constants.DEBUG_ROLES) {
+                if (constants.DEBUG_ROLES && this.room == creep.room) {
                 	this.room.visual.text(creepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
                 }
             } catch (e) {

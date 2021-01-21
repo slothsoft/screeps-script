@@ -81,7 +81,7 @@ class RoadManager extends TileWatcher {
 				}
 			}
 		}
-		return result.sort((a, b) => b.value - a.value);
+		return result.sort((a, b) => b.value - a.value).map(pos => new RoomPosition(pos.x, pos.y, this.room.name));
 	}
 
 };
