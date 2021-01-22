@@ -47,29 +47,29 @@ describe('role.protoype', () => {
 	describe('#calculateCostsForSinglePart', () => {
 		it('MOVE', () => {
 			var object = new RolePrototype();
-			assert.equal('50', object.calculateCostsForSinglePart(MOVE));
+			assert.equal('50', object._calculateCostsForSinglePart(MOVE));
 		});
 
 		it('WORK', () => {
 			var object = new RolePrototype();
-			assert.equal('100', object.calculateCostsForSinglePart(WORK));
+			assert.equal('100', object._calculateCostsForSinglePart(WORK));
 		});
 	});
 
 	describe('#calculateCostsForParts', () => {
 		it('empty', () => {
 			var object = new RolePrototype();
-			assert.equal('0', object.calculateCostsForParts([]));
+			assert.equal('0', object._calculateCostsForParts([]));
 		});
 
 		it('WORK', () => {
 			var object = new RolePrototype();
-			assert.equal('100', object.calculateCostsForParts([WORK]));
+			assert.equal('100', object._calculateCostsForParts([WORK]));
 		});
 
 		it('MOVE, WORK', () => {
 			var object = new RolePrototype();
-			assert.equal('150', object.calculateCostsForParts([WORK, MOVE]));
+			assert.equal('150', object._calculateCostsForParts([WORK, MOVE]));
 		});
 	});
 
@@ -77,7 +77,7 @@ describe('role.protoype', () => {
 		it('default', () => {
 			var object = new RolePrototype();
 			
-			assert.equal(0, object.getPartsMinMultiplier(new Spawn()));
+			assert.equal(0, object._getPartsMinMultiplier(new Spawn()));
 		});
 
 		it('set', () => {
@@ -86,7 +86,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(2, object.getPartsMinMultiplier(spawn));
+			assert.equal(2, object._getPartsMinMultiplier(spawn));
 		});
 	});
 
@@ -94,7 +94,7 @@ describe('role.protoype', () => {
 		it('default', () => {
 			var object = new RolePrototype();
 			
-			assert.equal(20, object.getPartsMaxMultiplier(new Spawn()));
+			assert.equal(20, object._getPartsMaxMultiplier(new Spawn()));
 		});
 
 		it('set', () => {
@@ -103,7 +103,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(7, object.getPartsMaxMultiplier(spawn));
+			assert.equal(7, object._getPartsMaxMultiplier(spawn));
 		});
 	});
 	
@@ -111,55 +111,55 @@ describe('role.protoype', () => {
 		it('0 parts x 0', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([], object.replicateParts([], 0));
+			assert.deepEqual([], object._replicateParts([], 0));
 		});
 		
 		it('1 parts x 0', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([], object.replicateParts([MOVE], 0));
+			assert.deepEqual([], object._replicateParts([MOVE], 0));
 		});
 
 		it('2 parts x 0', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([], object.replicateParts([MOVE, WORK], 0));
+			assert.deepEqual([], object._replicateParts([MOVE, WORK], 0));
 		});
 
 		it('0 parts x 1', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([], object.replicateParts([], 1));
+			assert.deepEqual([], object._replicateParts([], 1));
 		});
 		
 		it('1 parts x 1', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([MOVE], object.replicateParts([MOVE], 1));
+			assert.deepEqual([MOVE], object._replicateParts([MOVE], 1));
 		});
 
 		it('2 parts x 1', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([MOVE, WORK], object.replicateParts([MOVE, WORK], 1));
+			assert.deepEqual([MOVE, WORK], object._replicateParts([MOVE, WORK], 1));
 		});
 
 		it('0 parts x 2', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([], object.replicateParts([], 2));
+			assert.deepEqual([], object._replicateParts([], 2));
 		});
 		
 		it('1 parts x 2', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([MOVE, MOVE], object.replicateParts([MOVE], 2));
+			assert.deepEqual([MOVE, MOVE], object._replicateParts([MOVE], 2));
 		});
 
 		it('2 parts x 2', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([MOVE, WORK, MOVE, WORK], object.replicateParts([MOVE, WORK], 2));
+			assert.deepEqual([MOVE, WORK, MOVE, WORK], object._replicateParts([MOVE, WORK], 2));
 		});
 	});
 
@@ -170,7 +170,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(null, object.calculateMaxParts(spawn, []));
+			assert.equal(null, object._calculateMaxParts(spawn, []));
 		});
 
 		it('1 parts 0 single => 0', () => {
@@ -179,7 +179,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(null, object.calculateMaxParts(spawn, [MOVE]));
+			assert.equal(null, object._calculateMaxParts(spawn, [MOVE]));
 		});
 
 		it('1 parts 0 single => 1', () => {
@@ -188,7 +188,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([MOVE], object.calculateMaxParts(spawn, [MOVE]));
+			assert.deepEqual([MOVE], object._calculateMaxParts(spawn, [MOVE]));
 		});
 
 		it('1 parts 0 single => 2', () => {
@@ -197,7 +197,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE]));
+			assert.deepEqual([MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE]));
 		});
 
 		it('2 parts 0 single => 0', () => {
@@ -206,7 +206,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(null, object.calculateMaxParts(spawn, [MOVE, MOVE]));
+			assert.equal(null, object._calculateMaxParts(spawn, [MOVE, MOVE]));
 		});
 
 		it('2 parts 0 single => 1', () => {
@@ -215,7 +215,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE, MOVE]));
+			assert.deepEqual([MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE, MOVE]));
 		});
 
 		it('2 parts 0 single => 2', () => {
@@ -224,7 +224,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([MOVE, MOVE, MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE, MOVE]));
+			assert.deepEqual([MOVE, MOVE, MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE, MOVE]));
 		});
 
 		it('0 parts 1 single => 0', () => {
@@ -233,7 +233,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(null, object.calculateMaxParts(spawn, [], [WORK]));
+			assert.equal(null, object._calculateMaxParts(spawn, [], [WORK]));
 		});
 
 		it('1 parts 1 single => 0', () => {
@@ -242,7 +242,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(null, object.calculateMaxParts(spawn, [MOVE], [ATTACK]));
+			assert.equal(null, object._calculateMaxParts(spawn, [MOVE], [ATTACK]));
 		});
 
 		it('1 parts 1 single => 1', () => {
@@ -251,7 +251,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([ATTACK, MOVE], object.calculateMaxParts(spawn, [MOVE], [ATTACK]));
+			assert.deepEqual([ATTACK, MOVE], object._calculateMaxParts(spawn, [MOVE], [ATTACK]));
 		});
 
 		it('1 parts 1 single => 2', () => {
@@ -260,7 +260,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([ATTACK, MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE], [ATTACK]));
+			assert.deepEqual([ATTACK, MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE], [ATTACK]));
 		});
 
 		it('2 parts 1 single => 0', () => {
@@ -269,7 +269,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(null, object.calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK]));
+			assert.equal(null, object._calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK]));
 		});
 
 		it('2 parts 1 single => 1', () => {
@@ -278,7 +278,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([ATTACK, MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK]));
+			assert.deepEqual([ATTACK, MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK]));
 		});
 
 		it('2 parts 1 single => 2', () => {
@@ -287,7 +287,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([ATTACK, MOVE, MOVE, MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK]));
+			assert.deepEqual([ATTACK, MOVE, MOVE, MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK]));
 		});
 
 		it('1 parts 2 single => 2', () => {
@@ -296,7 +296,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([ATTACK, WORK, MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE], [ATTACK, WORK]));
+			assert.deepEqual([ATTACK, WORK, MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE], [ATTACK, WORK]));
 		});
 
 		it('2 parts 2 single => 0', () => {
@@ -305,7 +305,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.equal(null, object.calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK, WORK]));
+			assert.equal(null, object._calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK, WORK]));
 		});
 
 		it('2 parts 2 single => 1', () => {
@@ -314,7 +314,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([ATTACK, WORK, MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK, WORK]));
+			assert.deepEqual([ATTACK, WORK, MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK, WORK]));
 		});
 
 		it('2 parts 2 single => 2', () => {
@@ -323,7 +323,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([ATTACK, WORK, MOVE, MOVE, MOVE, MOVE], object.calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK, WORK]));
+			assert.deepEqual([ATTACK, WORK, MOVE, MOVE, MOVE, MOVE], object._calculateMaxParts(spawn, [MOVE, MOVE], [ATTACK, WORK]));
 		});
 	});
 
@@ -333,7 +333,7 @@ describe('role.protoype', () => {
 			spawn.room.energyAvailable = 50;
 			var object = new RolePrototype();
 			
-			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE]);
+			var creep = object._spawnCreepWithParts(spawn, [WORK, MOVE]);
 			assert.equal(false, creep);
 		});
 
@@ -342,7 +342,7 @@ describe('role.protoype', () => {
 			spawn.room.energyAvailable = 150;
 			var object = new RolePrototype();
 			
-			var creep = object.spawnCreepWithParts(spawn, [MOVE, WORK]);
+			var creep = object._spawnCreepWithParts(spawn, [MOVE, WORK]);
 			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([MOVE, WORK], creep.body);
 		});
@@ -352,7 +352,7 @@ describe('role.protoype', () => {
 			spawn.room.energyAvailable = 449;
 			var object = new RolePrototype();
 			
-			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE]);
+			var creep = object._spawnCreepWithParts(spawn, [WORK, MOVE]);
 			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([WORK, MOVE, WORK, MOVE], creep.body);
 		});
@@ -362,7 +362,7 @@ describe('role.protoype', () => {
 			spawn.room.energyAvailable = 650;
 			var object = new RolePrototype();
 			
-			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE, CLAIM], [CLAIM]);
+			var creep = object._spawnCreepWithParts(spawn, [WORK, MOVE, CLAIM], [CLAIM]);
 			assert.equal(false, creep);
 		});
 
@@ -371,7 +371,7 @@ describe('role.protoype', () => {
 			spawn.room.energyAvailable = 750;
 			var object = new RolePrototype();
 			
-			var creep = object.spawnCreepWithParts(spawn, [MOVE, WORK], [CLAIM]);
+			var creep = object._spawnCreepWithParts(spawn, [MOVE, WORK], [CLAIM]);
 			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([CLAIM, MOVE, WORK], creep.body);
 		});
@@ -381,7 +381,7 @@ describe('role.protoype', () => {
 			spawn.room.energyAvailable = 1049;
 			var object = new RolePrototype();
 			
-			var creep = object.spawnCreepWithParts(spawn, [WORK, MOVE], [CLAIM]);
+			var creep = object._spawnCreepWithParts(spawn, [WORK, MOVE], [CLAIM]);
 			assert.equal(Game.creeps['Prototype 1'], creep);
 			assert.deepEqual([CLAIM, WORK, MOVE, WORK, MOVE], creep.body);
 		});
@@ -421,21 +421,21 @@ describe('role.protoype', () => {
 	describe('#isNecessary', () => {
 		it('target present', () => {
 			var object = new RolePrototype();
-			object.findTargets = room => [ 'target' ];
+			object._findTargets = room => [ 'target' ];
 			
 			assert.equal(true, object.isNecessary('room'));
 		});
 
 		it('no targets', () => {
 			var object = new RolePrototype();
-			object.findTargets = room => [];
+			object._findTargets = room => [];
 			
 			assert.equal(false, object.isNecessary('room'));
 		});
 
 		it('default', () => {
 			var object = new RolePrototype();
-			object.findTargets = room => [];
+			object._findTargets = room => [];
 			
 			assert.equal(false, object.isNecessary('room'));
 		});
@@ -445,7 +445,7 @@ describe('role.protoype', () => {
 		it('default', () => {
 			var object = new RolePrototype();
 			
-			assert.deepEqual([], object.findTargets('room'));
+			assert.deepEqual([], object._findTargets('room'));
 		});
 	});
 
@@ -462,7 +462,7 @@ describe('role.protoype', () => {
 			creep.pos = {};
 			creep.pos.getRangeTo = target => distances[target];
 			
-			assert.deepEqual([ 'B', 'A', 'C' ], object.sortTargetForClosest([ 'A', 'B', 'C' ], creep));
+			assert.deepEqual([ 'B', 'A', 'C' ], object._sortTargetForClosest([ 'A', 'B', 'C' ], creep));
 		});
 	});
 
@@ -472,16 +472,16 @@ describe('role.protoype', () => {
 
 			var creep = new Creep('findClosestTarget > default');
 			
-			assert.equal(null, object.findClosestTarget(creep));
+			assert.equal(null, object._findClosestTarget(creep));
 		});
 
 		it('empty', () => {
 			var object = new RolePrototype();
-			object.findTargets = room => [];
+			object._findTargets = room => [];
 
 			var creep = new Creep('findClosestTarget > empty');
 			
-			assert.equal(null, object.findClosestTarget(creep));
+			assert.equal(null, object._findClosestTarget(creep));
 		});
 
 		it('single', () => {
@@ -489,11 +489,11 @@ describe('role.protoype', () => {
 			target.pos.x = 4;
 			
 			var object = new RolePrototype();
-			object.findTargets = room => [ target ];
+			object._findTargets = room => [ target ];
 
 			var creep = new Creep('findClosestTarget > single');
 			
-			assert.equal(target, object.findClosestTarget(creep));
+			assert.equal(target, object._findClosestTarget(creep));
 		});
 
 		it('multiple', () => {
@@ -507,11 +507,11 @@ describe('role.protoype', () => {
 			targetC.pos.x = 10;
 			
 			var object = new RolePrototype();
-			object.findTargets = room => [ targetA, targetB, targetC ];
+			object._findTargets = room => [ targetA, targetB, targetC ];
 
 			var creep = new Creep('findClosestTarget > multiple');
 			
-			assert.equal(targetB, object.findClosestTarget(creep));
+			assert.equal(targetB, object._findClosestTarget(creep));
 		});
 	});
 
@@ -527,12 +527,12 @@ describe('role.protoype', () => {
 			targetC.pos.x = 10;
 			
 			var object = new RolePrototype();
-			object.findTargets = room => [ targetA, targetB, targetC ];
+			object._findTargets = room => [ targetA, targetB, targetC ];
 
 			var creep = new Creep('moveToClosestTarget');
 			
 			var workWasCalled = false;
-			object.moveToClosestTarget(creep, target => {
+			object._moveToClosestTarget(creep, target => {
 				workWasCalled = true;
 				assert.equal(targetB, target);
 				return OK;
@@ -547,10 +547,10 @@ describe('role.protoype', () => {
 			target.pos.y = 42;
 			
 			var object = new RolePrototype();
-			object.findTargets = room => [ target ];
+			object._findTargets = room => [ target ];
 
 			var workWasCalled = false;
-			object.moveToClosestTarget(creep, t => {
+			object._moveToClosestTarget(creep, t => {
 				workWasCalled = true;
 				assert.equal(target, t);
 				return ERR_NOT_IN_RANGE;
@@ -561,22 +561,22 @@ describe('role.protoype', () => {
 		});
 		
 		it('diverse error', () => {
-			info.clearLog();
+			info.clearLines();
 			var target = new Spawn();
 			
 			var object = new RolePrototype();
-			object.findTargets = room => [ target ];
+			object._findTargets = room => [ target ];
 
 			var creep = new Creep('moveToClosestTarget');
 			
 			var workWasCalled = false;
-			object.moveToClosestTarget(creep, t => {
+			object._moveToClosestTarget(creep, t => {
 				workWasCalled = true;
 				assert.equal(target, t);
 				return ERR_BUSY;
 			});
 			assert.equal(true, workWasCalled);
-			assert.equal(1, info.console.length);
+			assert.equal(1, info.getLines().length);
 		});
 	});
 
@@ -588,7 +588,7 @@ describe('role.protoype', () => {
 			target.pos.y = 42;
 			
 			var object = new RolePrototype();
-			object.moveToLocation(creep, target);
+			object._moveToLocation(creep, target);
 			
 			assert.equal(13, creep.pos.x);
 			assert.equal(42, creep.pos.y);
@@ -603,17 +603,17 @@ describe('role.protoype', () => {
 			target.pos.y = 42;
 			
 			var object = new RolePrototype();
-			object.findTargets = room => [ target ];
+			object._findTargets = room => [ target ];
 			
 			var workWasCalled = false; 
-			object.handleTargetWorkResult = (workingCreep, result) => {
+			object._handleTargetWorkResult = (workingCreep, result) => {
 				workWasCalled = true;
 				assert.equal(workingCreep, creep);
 				assert.equal(result, 42);
 				return ERR_BUSY;
 			};
 
-			object.moveToClosestTarget(creep, t => 42);
+			object._moveToClosestTarget(creep, t => 42);
 			assert.equal(true, workWasCalled);
 		});
 	});
@@ -624,7 +624,7 @@ describe('role.protoype', () => {
 			
 			var object = new RolePrototype();
 			
-			assert.deepEqual([], object.findSources(room));
+			assert.deepEqual([], object._findSources(room));
 		});
 	});
 
@@ -643,7 +643,7 @@ describe('role.protoype', () => {
 			creep.pos = {};
 			creep.pos.getRangeTo = source => distances[source];
 			
-			assert.deepEqual([ 'B', 'A', 'C' ], object.sortSourceForClosest([ 'A', 'B', 'C' ], creep));
+			assert.deepEqual([ 'B', 'A', 'C' ], object._sortSourceForClosest([ 'A', 'B', 'C' ], creep));
 		});
 	});
 
@@ -654,16 +654,16 @@ describe('role.protoype', () => {
 			var creep = new Creep('findClosestSource > default');
 			creep.room = new Room();
 			
-			assert.equal(null, object.findClosestSource(creep));
+			assert.equal(null, object._findClosestSource(creep));
 		});
 
 		it('empty', () => {
 			var object = new RolePrototype();
-			object.findSources = room => [];
+			object._findSources = room => [];
 
 			var creep = new Creep('findClosestSource > empty');
 			
-			assert.equal(null, object.findClosestSource(creep));
+			assert.equal(null, object._findClosestSource(creep));
 		});
 
 		it('single', () => {
@@ -671,11 +671,11 @@ describe('role.protoype', () => {
 			source.pos.x = 4;
 			
 			var object = new RolePrototype();
-			object.findSources = room => [ source ];
+			object._findSources = room => [ source ];
 
 			var creep = new Creep('findClosestSource > single');
 			
-			assert.equal(source, object.findClosestSource(creep));
+			assert.equal(source, object._findClosestSource(creep));
 		});
 
 		it('multiple', () => {
@@ -689,11 +689,11 @@ describe('role.protoype', () => {
 			sourceC.pos.x = 10;
 			
 			var object = new RolePrototype();
-			object.findSources = room => [ sourceA, sourceB, sourceC ];
+			object._findSources = room => [ sourceA, sourceB, sourceC ];
 
 			var creep = new Creep('findClosestSource > multiple');
 			
-			assert.equal(sourceB, object.findClosestSource(creep));
+			assert.equal(sourceB, object._findClosestSource(creep));
 		});
 	});
 
@@ -709,7 +709,7 @@ describe('role.protoype', () => {
 			sourceC.pos.x = 10;
 			
 			var object = new RolePrototype();
-			object.findSources = room => [ sourceA, sourceB, sourceC ];
+			object._findSources = room => [ sourceA, sourceB, sourceC ];
 
 			var creep = new Creep('moveToClosestSource');
 			creep.harvest = source => {
@@ -719,7 +719,7 @@ describe('role.protoype', () => {
 			};
 			
 			var workWasCalled = false;
-			object.moveToClosestSource(creep);
+			object._moveToClosestSource(creep);
 			assert.equal(true, workWasCalled);
 		});
 
@@ -730,7 +730,7 @@ describe('role.protoype', () => {
 			source.pos.y = 42;
 			
 			var object = new RolePrototype();
-			object.findSources = room => [ source ];
+			object._findSources = room => [ source ];
 
 			var workWasCalled = false;
 			creep.harvest = t => {
@@ -739,18 +739,18 @@ describe('role.protoype', () => {
 				return ERR_NOT_IN_RANGE;
 			};
 			
-			object.moveToClosestSource(creep);
+			object._moveToClosestSource(creep);
 			assert.equal(true, workWasCalled);
 			assert.equal(13, creep.pos.x);
 			assert.equal(42, creep.pos.y);
 		});
 		
 		it('diverse error', () => {
-			info.clearLog();
+			info.clearLines();
 			var source = new Spawn();
 			
 			var object = new RolePrototype();
-			object.findSources = room => [ source ];
+			object._findSources = room => [ source ];
 
 			var creep = new Creep('moveToClosestSource');
 			
@@ -761,9 +761,9 @@ describe('role.protoype', () => {
 				return ERR_BUSY;
 			};
 			
-			object.moveToClosestSource(creep);
+			object._moveToClosestSource(creep);
 			assert.equal(true, workWasCalled);
-			assert.equal(1, info.console.length);
+			assert.equal(1, info.getLines().length);
 		});
 	});
 
@@ -777,17 +777,17 @@ describe('role.protoype', () => {
 			source.pos.y = 42;
 			
 			var object = new RolePrototype();
-			object.findSources = room => [ source ];
+			object._findSources = room => [ source ];
 			
 			var workWasCalled = false; 
-			object.handleSourceWorkResult = (workingCreep, result) => {
+			object._handleSourceWorkResult = (workingCreep, result) => {
 				workWasCalled = true;
 				assert.equal(workingCreep, creep);
 				assert.equal(result, 42);
 				return ERR_BUSY;
 			};
 
-			object.moveToClosestSource(creep);
+			object._moveToClosestSource(creep);
 			assert.equal(true, workWasCalled);
 		});
 	});
@@ -809,11 +809,11 @@ describe('role.protoype', () => {
 			target.pos.y = 6;
 			
 			var object = new RolePrototype();
-			object.findSources = room => [ source ];
-			object.findTargets = room => [ target ];
+			object._findSources = room => [ source ];
+			object._findTargets = room => [ target ];
 			
 			// store is half full, so first travel to source
-			object.commuteBetweenSourceAndTarget(creep, target => assert.fail('Creep should not work yet!'));
+			object._commuteBetweenSourceAndTarget(creep, target => assert.fail('Creep should not work yet!'));
 
 			assert.equal(50, creep.store[RESOURCE_ENERGY].getUsedCapacity());
 			assert.equal(100, creep.store[RESOURCE_ENERGY].getCapacity());
@@ -821,7 +821,7 @@ describe('role.protoype', () => {
 			assert.equal(source.pos.y, creep.pos.y);
 
 			// store is still half full, so harvest source
-			object.commuteBetweenSourceAndTarget(creep, target => assert.fail('Creep should not work yet!'));
+			object._commuteBetweenSourceAndTarget(creep, target => assert.fail('Creep should not work yet!'));
 
 			assert.equal(100, creep.store[RESOURCE_ENERGY].getUsedCapacity());
 			assert.equal(100, creep.store[RESOURCE_ENERGY].getCapacity());
@@ -829,7 +829,7 @@ describe('role.protoype', () => {
 			assert.equal(source.pos.y, creep.pos.y);
 
 			// store is full, target is out of range, so move to target
-			object.commuteBetweenSourceAndTarget(creep, target => creep.transfer(target, RESOURCE_ENERGY));
+			object._commuteBetweenSourceAndTarget(creep, target => creep.transfer(target, RESOURCE_ENERGY));
 
 			assert.equal(100, creep.store[RESOURCE_ENERGY].getUsedCapacity());
 			assert.equal(100, creep.store[RESOURCE_ENERGY].getCapacity());
@@ -837,7 +837,7 @@ describe('role.protoype', () => {
 			assert.equal(target.pos.y, creep.pos.y);
 
 			// store is full, target is in range, so work
-			object.commuteBetweenSourceAndTarget(creep, target => creep.transfer(target, RESOURCE_ENERGY));
+			object._commuteBetweenSourceAndTarget(creep, target => creep.transfer(target, RESOURCE_ENERGY));
 
 			assert.equal(null, creep.store[RESOURCE_ENERGY]);
 			assert.equal(0, creep.store.getUsedCapacity());
@@ -846,7 +846,7 @@ describe('role.protoype', () => {
 			assert.equal(target.pos.y, creep.pos.y);
 
 			// 2) store is empty, so first travel to source
-			object.commuteBetweenSourceAndTarget(creep, target => assert.fail('Creep should not work anymore!'));
+			object._commuteBetweenSourceAndTarget(creep, target => assert.fail('Creep should not work anymore!'));
 
 			assert.equal(null, creep.store[RESOURCE_ENERGY]);
 			assert.equal(0, creep.store.getUsedCapacity());
@@ -867,7 +867,7 @@ describe('role.protoype', () => {
 			};
 
 			var object = new RolePrototype();
-			object.work(creep);
+			object._work(creep);
 
 			assert.equal(true, workWasCalled);
 		});
@@ -880,7 +880,7 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 			
 			var workWasCalled = false; 
-			object.work = (workingCreep) => {
+			object._work = (workingCreep) => {
 				workWasCalled = true;
 				assert.equal(workingCreep, creep);
 			};
@@ -890,7 +890,7 @@ describe('role.protoype', () => {
 		});
 
 		it('self-destruct', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
@@ -918,7 +918,7 @@ describe('role.protoype', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var droppedEnergy = { 
 				pos: new RoomPosition(),
@@ -934,7 +934,7 @@ describe('role.protoype', () => {
 			
 			// dropped energy is far away, so go there
 			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while moving!');
 			
 			object.run(creep);
 
@@ -945,7 +945,7 @@ describe('role.protoype', () => {
 			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
 			
 			var workCalled = false; 
-			object.work = (workingCreep) => workCalled = true;
+			object._work = (workingCreep) => workCalled = true;
 			
 			object.run(creep);
 
@@ -955,7 +955,7 @@ describe('role.protoype', () => {
 		});
 
 		it('loot tombstone', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var tombstone = { 
 				pos: new RoomPosition(),
@@ -973,7 +973,7 @@ describe('role.protoype', () => {
 			
 			// tombstone is far away, so go there
 			creep.pickup = resource => (resource == tombstone) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while looting!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while looting!');
 			
 			object.run(creep);
 
@@ -992,7 +992,7 @@ describe('role.protoype', () => {
 
 	describe('#selfdestruct', () => {
 		it('no spawn', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
@@ -1001,13 +1001,13 @@ describe('role.protoype', () => {
 			
 			// no spawn found, so print error message and return
 			creep.pos.findClosestByPath = type => null;
-			object.selfdestruct(creep);
+			object._selfdestruct(creep);
 
-			assert.equal(1, info.console.length);
+			assert.equal(1, info.getLines().length);
 		});
 
 		it('lifecycle', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('selfdestruct');
 			creep.memory.selfdestruct = true;
@@ -1020,14 +1020,14 @@ describe('role.protoype', () => {
 			var object = new RolePrototype();
 			
 			// spawn is far away, so go there
-			object.selfdestruct(creep);
+			object._selfdestruct(creep);
 
 			assert.equal(spawn.pos.x, creep.pos.x);
 			assert.equal(spawn.pos.y, creep.pos.y);
 			assert.equal(creep, Game.creeps['selfdestruct']);
 
 			// spawn is now close, so self-destruct
-			object.selfdestruct(creep);
+			object._selfdestruct(creep);
 
 			assert.equal(spawn.pos.x, creep.pos.x);
 			assert.equal(spawn.pos.y, creep.pos.y);

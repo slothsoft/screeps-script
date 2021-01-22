@@ -17,15 +17,15 @@ class Harvester extends RolePrototype {
 	 * Just transfer energy between source and and the targets.
 	 */
 	
-    work(creep) {
-        this.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
+    _work(creep) {
+        this._commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
     }
     
     /*
      * Valid targets are everything where energy can be stored. 
      */
     
-    findTargets(room) {
+    _findTargets(room) {
         return room.find(FIND_MY_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||

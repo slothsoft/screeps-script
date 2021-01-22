@@ -17,7 +17,7 @@ describe('role.courier', () => {
 	});
 	
 	beforeEach(() => {
-	    info.clearLog();
+	    info.clearLines();
 	});
 	
 	it('constructor', () => {
@@ -49,7 +49,7 @@ describe('role.courier', () => {
 			};
 
 			var object = new Courier();
-			assert.deepEqual(['result'], object.findTargets(room));
+			assert.deepEqual(['result'], object._findTargets(room));
 			assert.equal(true, findWasCalled);
 		});
 		
@@ -60,9 +60,9 @@ describe('role.courier', () => {
 			Game.getObjectById = (id) => null;
 
 			var object = new Courier();
-			assert.deepEqual([], object.findTargets(room));
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 R2 could not find game object with ID: undefined', info.console[0]);
+			assert.deepEqual([], object._findTargets(room));
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 R2 could not find game object with ID: undefined', info.getLine(0));
 		});
 	});
 
@@ -81,7 +81,7 @@ describe('role.courier', () => {
 			};
 
 			var object = new Courier();
-			assert.deepEqual(['result'], object.findSources(room));
+			assert.deepEqual(['result'], object._findSources(room));
 			assert.equal(true, findWasCalled);
 		});
 		
@@ -93,9 +93,9 @@ describe('role.courier', () => {
 			Game.getObjectById = (id) => null;
 
 			var object = new Courier();
-			assert.deepEqual([], object.findSources(room));
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 R1 could not find game object with ID: 67890', info.console[0]);
+			assert.deepEqual([], object._findSources(room));
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 R1 could not find game object with ID: 67890', info.getLine(0));
 		});
 	});
 
@@ -111,7 +111,7 @@ describe('role.courier', () => {
 			};
 
 			var object = new Courier();
-			assert.deepEqual(['result'], object.findById(room, '74102'));
+			assert.deepEqual(['result'], object._findById(room, '74102'));
 			assert.equal(true, findWasCalled);
 		});
 		
@@ -122,9 +122,9 @@ describe('role.courier', () => {
 			Game.getObjectById = (id) => null;
 
 			var object = new Courier();
-			assert.deepEqual([], object.findById(room, '74102'));
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 R3 could not find game object with ID: 74102', info.console[0]);
+			assert.deepEqual([], object._findById(room, '74102'));
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 R3 could not find game object with ID: 74102', info.getLine(0));
 		});
 	});
 
@@ -136,10 +136,10 @@ describe('role.courier', () => {
 			creep.name = 'Courier 123';
 			
 			var object = new Courier();
-			object.handleSourceWorkResult(creep, ERR_INVALID_ARGS);
+			object._handleSourceWorkResult(creep, ERR_INVALID_ARGS);
 
-			assert.equal(1, info.console.length);
-			assert.equal('⚠ Courier 123 cannot harvest: -10', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('⚠ Courier 123 cannot harvest: -10', info.getLine(0));
 		});
 		
 		it('tired', () => {
@@ -149,9 +149,9 @@ describe('role.courier', () => {
 			creep.name = 'Courier 123';
 			
 			var object = new Courier();
-			object.handleSourceWorkResult(creep, ERR_TIRED);
+			object._handleSourceWorkResult(creep, ERR_TIRED);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 			assert.equal(true, creep.memory.working);
 		});
 	});
@@ -176,7 +176,7 @@ describe('role.courier', () => {
 			lab.pos.y = 6;
 			
 			var object = new Courier();
-			object.findById = (room, id) => (id == 'target') ? [ lab ] : [ mineral ];
+			object._findById = (room, id) => (id == 'target') ? [ lab ] : [ mineral ];
 			
 			// store is half full, so first travel to source
 			object.run(creep);
@@ -222,7 +222,7 @@ describe('role.courier', () => {
 		});
 		
 		it('self-destruct', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
@@ -250,7 +250,7 @@ describe('role.courier', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var droppedEnergy = new Spawn();
 			droppedEnergy.pos.x = 12;
@@ -264,7 +264,7 @@ describe('role.courier', () => {
 			
 			// dropped energy is far away, so go there
 			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while moving!');
 			
 			object.run(creep);
 
@@ -275,7 +275,7 @@ describe('role.courier', () => {
 			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
 			
 			var workCalled = false; 
-			object.work = (workingCreep) => workCalled = true;
+			object._work = (workingCreep) => workCalled = true;
 			
 			object.run(creep);
 

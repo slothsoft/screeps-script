@@ -15,10 +15,10 @@ class MemoryManager {
 	 * @param allRoles
 	 */
 
-	static fetchAllRoomRoleConfigs(allRoles) {
+	static _fetchAllRoomRoleConfigs(allRoles) {
 		game.findAllRooms().forEach(room => {
 			if (room.memory.base) {
-				this.fetchRoomRoleConfig(room, allRoles);
+				this._fetchRoomRoleConfig(room, allRoles);
 			}
 		});
 	}
@@ -30,7 +30,7 @@ class MemoryManager {
 	 * @param allRoles
 	 */
 
-	static fetchRoomRoleConfig(room, allRoles) {
+	static _fetchRoomRoleConfig(room, allRoles) {
 		var defaultArray = {
 			partsMinMultiplier: 0,
 			partsMaxMultiplier: 20,
@@ -54,7 +54,7 @@ class MemoryManager {
 	 * @param baseName
 	 */	
 
-	static fetchRoomBase(room, baseName) { 
+	static _fetchRoomBase(room, baseName) { 
 		var defaultArray = {
 	         name : baseName,
 	    };
@@ -74,8 +74,8 @@ class MemoryManager {
 	 * @param allRoles
 	 */
 	
-	static clearAllRoomRoleInfos(allRoles) {
-		game.findAllRooms().forEach(room => this.clearRoomRoleInfo(room, allRoles));
+	static _clearAllRoomRoleInfos(allRoles) {
+		game.findAllRooms().forEach(room => this._clearRoomRoleInfo(room, allRoles));
 	}
 
 	/*
@@ -85,13 +85,13 @@ class MemoryManager {
 	 * @param allRoles
 	 */
 	
-	static clearRoomRoleInfo(room, allRoles) {
+	static _clearRoomRoleInfo(room, allRoles) {
 		var defaultArray = {};
         allRoles.forEach(role => {
         	defaultArray[role.roleName] = { 
                     symbol: role.symbol,
                     currentNumber: 0,
-                    requiredNumber: this.getRequiredNumberForRoomAndRole(room, role),
+                    requiredNumber: this.getRequiredNumberForRoomAndRole(room, role.roleName),
         	};
         });
 		room.memory.roleInfo = defaultArray;
@@ -102,13 +102,13 @@ class MemoryManager {
      * Gets the required number for a room and a role.
      * 
      * @param {Room} room
-     * @param role
+     * @param roleName
      */
     
-	static getRequiredNumberForRoomAndRole(room, role) {
+	static getRequiredNumberForRoomAndRole(room, roleName) {
     	var hasBase = room.memory.base;
     	return hasBase 
-    				? (room.memory.base.roleConfig && room.memory.base.roleConfig[role.roleName] ? room.memory.base.roleConfig[role.roleName].requiredNumber : 0) 
+    				? (room.memory.base.roleConfig && room.memory.base.roleConfig[roleName] ? room.memory.base.roleConfig[roleName].requiredNumber : 0) 
     				: -1;
     }
 
@@ -120,19 +120,19 @@ class MemoryManager {
  	 */	
 
 	static initRound(allRoles) {  
-		this.initSpawns();
+		this._initSpawns();
 
-    	this.fetchAllRoomRoleConfigs(allRoles);
-    	this.clearAllRoomRoleInfos(allRoles);
+    	this._fetchAllRoomRoleConfigs(allRoles);
+    	this._clearAllRoomRoleInfos(allRoles);
     	
-    	this.deleteUnusedMemory();
+    	this._deleteUnusedMemory();
 	}
 
 	/*
 	 * Initializes the very first base.
 	 */	
 
-	static initSpawns() {  
+	static _initSpawns() {  
 	    // all spawns (and all creeps) have a home, so that we find them again
 	    
 	    game.findAllSpawns().filter(spawn => !spawn.memory.home).forEach(spawn => {
@@ -142,7 +142,7 @@ class MemoryManager {
 	    		info.log('🏠 Created new spawn in base: ' + spawn.room.memory.home);
 	    	} else {
 	    		// new base in this room
-	    		this.fetchRoomBase(spawn.room, spawn.name);
+	    		this._fetchRoomBase(spawn.room, spawn.name);
 	    		spawn.memory.home = spawn.room.memory.base.name;
 	    	}
 	    });
@@ -152,7 +152,7 @@ class MemoryManager {
      * Delete the memory of deceased creeps.
      */ 
 
-	static deleteUnusedMemory() {  
+	static _deleteUnusedMemory() {  
 	    for (var name in Memory.creeps) {
 	        if (!Game.creeps[name]) {
 	        	var debug = Memory.creeps[name].debug;

@@ -24,7 +24,7 @@ class Spawn {
 	}
 	
 	spawnCreep(body, name, opts = {}) {
-		var bodyCost = this.calculateCostsForParts(body);
+		var bodyCost = this._calculateCostsForParts(body);
 		if (bodyCost <= this.room.energyAvailable) {
 			this.room.energyAvailable -= bodyCost;
 			new Creep(name, body, opts.memory);
@@ -33,7 +33,7 @@ class Spawn {
 		return ERR_NOT_ENOUGH_ENERGY;
 	}
     
-    calculateCostsForParts(parts) {
+    _calculateCostsForParts(parts) {
         var result = 0;
         parts.forEach(part => result += BODYPART_COST[part]);
         return result;

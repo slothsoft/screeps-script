@@ -15,7 +15,7 @@ describe('tile.watcher', () => {
 		it('no memory', () => {
 			var room = new Room();
 	
-			var result = new TileWatcher('test', room).fetchMemoryOfWatcher();
+			var result = new TileWatcher('test', room)._fetchMemoryOfWatcher();
 			
 			var expecting = {
 				enabled: true,
@@ -34,7 +34,7 @@ describe('tile.watcher', () => {
 				watchTime: 0,
 			};
 	
-			var result = new TileWatcher('other', room).fetchMemoryOfWatcher();
+			var result = new TileWatcher('other', room)._fetchMemoryOfWatcher();
 			
 			var expecting = {
 				enabled: true,
@@ -56,7 +56,7 @@ describe('tile.watcher', () => {
 				tick: 70,
 			};
 	
-			var result = new TileWatcher('bean', room).fetchMemoryOfWatcher();
+			var result = new TileWatcher('bean', room)._fetchMemoryOfWatcher();
 			
 			var expecting = {
 				enabled: false,
@@ -75,8 +75,8 @@ describe('tile.watcher', () => {
 			var room = new Room();
 	
 			var watcher = new TileWatcher('test', room);
-			watcher.fetchMemoryOfWatcher().watchTime = 3;
-			watcher.watchRoomTiles = a => {
+			watcher._fetchMemoryOfWatcher().watchTime = 3;
+			watcher._watchRoomTiles = a => {
 				var value = a.get(12, 34);
 				a.set(12, 34, value ? (1 + parseInt(value)) : 1);
 			};
@@ -85,9 +85,9 @@ describe('tile.watcher', () => {
 			
 			watcher.watchRoom();
 
-			assert.equal(1, watcher.fetchMemoryOfWatcher().tick);
+			assert.equal(1, watcher._fetchMemoryOfWatcher().tick);
 			
-			var array = watcher.createTileArray(watcher.fetchMemoryOfWatcher().currentTiles);
+			var array = watcher._createTileArray(watcher._fetchMemoryOfWatcher().currentTiles);
 			for (var x = 0; x < 50; x++) {
 				for (var y = 0; y < 50; y++) {
 					if (x == 12 && y == 34) {
@@ -97,15 +97,15 @@ describe('tile.watcher', () => {
 					}
 				}
 			}
-			assert.equal(true, watcher.fetchMemoryOfWatcher().lastTiles === undefined);
+			assert.equal(true, watcher._fetchMemoryOfWatcher().lastTiles === undefined);
 
 			// second tick
 			
 			watcher.watchRoom();
 
-			assert.equal(2, watcher.fetchMemoryOfWatcher().tick);
+			assert.equal(2, watcher._fetchMemoryOfWatcher().tick);
 			
-			var array = watcher.createTileArray(watcher.fetchMemoryOfWatcher().currentTiles);
+			var array = watcher._createTileArray(watcher._fetchMemoryOfWatcher().currentTiles);
 			for (var x = 0; x < 50; x++) {
 				for (var y = 0; y < 50; y++) {
 					if (x == 12 && y == 34) {
@@ -115,15 +115,15 @@ describe('tile.watcher', () => {
 					}
 				}
 			}
-			assert.equal(true, watcher.fetchMemoryOfWatcher().lastTiles === undefined);
+			assert.equal(true, watcher._fetchMemoryOfWatcher().lastTiles === undefined);
 
 			// third tick
 			
 			watcher.watchRoom();
 
-			assert.equal(3, watcher.fetchMemoryOfWatcher().tick);
+			assert.equal(3, watcher._fetchMemoryOfWatcher().tick);
 			
-			var array = watcher.createTileArray(watcher.fetchMemoryOfWatcher().currentTiles);
+			var array = watcher._createTileArray(watcher._fetchMemoryOfWatcher().currentTiles);
 			for (var x = 0; x < 50; x++) {
 				for (var y = 0; y < 50; y++) {
 					if (x == 12 && y == 34) {
@@ -133,15 +133,15 @@ describe('tile.watcher', () => {
 					}
 				}
 			}
-			assert.equal(true, watcher.fetchMemoryOfWatcher().lastTiles === undefined);
+			assert.equal(true, watcher._fetchMemoryOfWatcher().lastTiles === undefined);
 
 			// fourth tick
 			
 			watcher.watchRoom();
 
-			assert.equal(0, watcher.fetchMemoryOfWatcher().tick);
+			assert.equal(0, watcher._fetchMemoryOfWatcher().tick);
 			
-			var array = watcher.createTileArray(watcher.fetchMemoryOfWatcher().currentTiles);
+			var array = watcher._createTileArray(watcher._fetchMemoryOfWatcher().currentTiles);
 			for (var x = 0; x < 50; x++) {
 				for (var y = 0; y < 50; y++) {
 					if (x == 12 && y == 34) {
@@ -152,7 +152,7 @@ describe('tile.watcher', () => {
 				}
 			}
 
-			var array = watcher.createTileArray(watcher.fetchMemoryOfWatcher().lastTiles);
+			var array = watcher._createTileArray(watcher._fetchMemoryOfWatcher().lastTiles);
 			for (var x = 0; x < 50; x++) {
 				for (var y = 0; y < 50; y++) {
 					if (x == 12 && y == 34) {
@@ -168,8 +168,8 @@ describe('tile.watcher', () => {
 			var room = new Room();
 	
 			var watcher = new TileWatcher('test', room);
-			watcher.fetchMemoryOfWatcher().enabled = false;
-			watcher.watchRoomTiles = a => {
+			watcher._fetchMemoryOfWatcher().enabled = false;
+			watcher._watchRoomTiles = a => {
 				var value = a.get(12, 34);
 				a.set(12, 34, value ? (1 + parseInt(value)) : 1);
 			};
@@ -178,15 +178,15 @@ describe('tile.watcher', () => {
 			
 			watcher.watchRoom();
 
-			assert.equal(0, watcher.fetchMemoryOfWatcher().tick);
+			assert.equal(0, watcher._fetchMemoryOfWatcher().tick);
 			
-			var array = watcher.createTileArray(watcher.fetchMemoryOfWatcher().currentTiles);
+			var array = watcher._createTileArray(watcher._fetchMemoryOfWatcher().currentTiles);
 			for (var x = 0; x < 50; x++) {
 				for (var y = 0; y < 50; y++) {
 						assert.equal(undefined, array.get(x, y));
 				}
 			}
-			assert.equal(true, watcher.fetchMemoryOfWatcher().lastTiles === undefined);
+			assert.equal(true, watcher._fetchMemoryOfWatcher().lastTiles === undefined);
 		});
 	});
 });

@@ -22,7 +22,7 @@ class MayorManager {
 
 	constructor(room) {
 		this.room = room;
-		this.memory = this.fetchMemoryOfMayor();
+		this.memory = this._fetchMemoryOfMayor();
 	}
 
 	/*
@@ -31,7 +31,7 @@ class MayorManager {
 	 * @param {Room} room
 	 */
 	
-	fetchMemoryOfMayor() { 
+	_fetchMemoryOfMayor() { 
 		var defaultArray = {
 			x: 10,
 			y: 0,
@@ -54,29 +54,29 @@ class MayorManager {
 		this.errors = [];
 		this.warnings = [];
 		
-		this.validate();
-		this.fixProblems();
-		this.visualize();
+		this._validate();
+		this._fixProblems();
+		this._visualize();
 	}
 
 	/*
 	 * Validates the current room as is.
 	 */
 	
-	validate() {
+	_validate() {
 		// TODO: creating roads is nice, but they should be removed if not used
 		// TODO: if can build extractor but was not build -> build
 		// TODO: if has extractor but no courier -> build?
 		
-		this.validateRoads();
-		this.validateCreeps();
+		this._validateRoads();
+		this._validateCreeps();
 	}
 
 	/*
 	 * Validates the road network.
 	 */
 	
-	validateRoads() {
+	_validateRoads() {
 		// if there is no creep in this room, roads are the least of our problems
 		if (this.room.find(FIND_MY_CREEPS).length == 0) {
 			return;
@@ -99,7 +99,7 @@ class MayorManager {
 			this.warnings.push({ 
 				text: 'Roads are missing.' , 
 				solution: 'I\'m building roads.',
-				act: () => this.buildRoads(roadPositions),
+				act: () => this._buildRoads(roadPositions),
 			});
 		}
 	}
@@ -108,7 +108,7 @@ class MayorManager {
 	 * Builds one or many roads at specific road positions.
 	 */
 
-	buildRoads(roadPositions) {
+	_buildRoads(roadPositions) {
 		// if there are already road construction sites, we won't do anything for now
 		var roadConstructionSites = this.room.find(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType == STRUCTURE_ROAD });
 		if (roadConstructionSites.length > 0) {
@@ -123,7 +123,7 @@ class MayorManager {
 		}
 	}
 	
-	validateCreeps() {
+	_validateCreeps() {
 		if (this.room.find(FIND_CREEPS).length == 0) {
 			// We have ZERO creeps. That's our biggest problem!
 			this.errors.push({ 
@@ -159,7 +159,7 @@ class MayorManager {
 		}
 	}
 
-	spawnOnlyHarvesters() {
+	_spawnOnlyHarvesters() {
 		// reset every other role to 0
 		for (var roleConfig in this.room.memory.base.roleConfig) {
 			if (roleConfig.requiredNumber) {
@@ -174,7 +174,7 @@ class MayorManager {
 	 * Fixes the problems the mayor has found - if the mode is auto.
 	 */
 	
-	fixProblems() {
+	_fixProblems() {
 		if (this.memory.mode === MayorManager.MODE_AUTO) {
 			 this.errors.forEach(error => error.act());
 			 this.warnings.forEach(warning => warning.act());
@@ -185,11 +185,11 @@ class MayorManager {
 	 * Visualizes the mayor problems.
 	 */
 
-    visualize() {   
+    _visualize() {   
         var x = this.memory.x;
         var y = this.memory.y;
 
-        this.room.visual.text('👷‍♀️ ' + this.getModeDisplayName(this.memory.mode), x, y++, { align: 'left', opacity: 0.8});
+        this.room.visual.text('👷‍♀️ ' + this._getModeDisplayName(this.memory.mode), x, y++, { align: 'left', opacity: 0.8});
         
         if (this.memory.mode === MayorManager.MODE_OFF) {
         	return;
@@ -212,7 +212,7 @@ class MayorManager {
      * Gets the display name of the mode. 
      */
     
-    getModeDisplayName(mode) {
+    _getModeDisplayName(mode) {
     	switch (mode) {
     		case MayorManager.MODE_OFF:
     			return 'Mayor is off';

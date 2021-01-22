@@ -26,7 +26,7 @@ describe('manager.memory', () => {
 	
 			var role = { roleName: 'Role' };
 			
-			var result = MemoryManager.fetchRoomRoleConfig(room, [ role ]);
+			var result = MemoryManager._fetchRoomRoleConfig(room, [ role ]);
 			
 			var expecting = {
 				partsMinMultiplier: 0,
@@ -52,7 +52,7 @@ describe('manager.memory', () => {
 			var role1 = { roleName: 'Role1' };
 			var role2 = { roleName: 'Role2' };
 			
-			var result = MemoryManager.fetchRoomRoleConfig(room, [ role1, role2 ]);
+			var result = MemoryManager._fetchRoomRoleConfig(room, [ role1, role2 ]);
 			
 			var expecting = {
 				partsMinMultiplier: 0,
@@ -84,7 +84,7 @@ describe('manager.memory', () => {
 			var role1 = { roleName: 'Role1' };
 			var role2 = { roleName: 'Role2' };
 			
-			var result = MemoryManager.fetchRoomRoleConfig(room, [ role1, role2 ]);
+			var result = MemoryManager._fetchRoomRoleConfig(room, [ role1, role2 ]);
 			
 			var expecting = {
 				partsMinMultiplier: 0,
@@ -114,7 +114,7 @@ describe('manager.memory', () => {
 			var role = { roleName: 'Role' };
 			
 			game.findAllRooms = () => [ room1, room2 ];
-			MemoryManager.fetchAllRoomRoleConfigs([ role ]);
+			MemoryManager._fetchAllRoomRoleConfigs([ role ]);
 			
 			var expecting = {
 				partsMinMultiplier: 0,
@@ -152,7 +152,7 @@ describe('manager.memory', () => {
 			var role2 = { roleName: 'Role2' };
 
 			game.findAllRooms = () => [ room1, room2 ];
-			MemoryManager.fetchAllRoomRoleConfigs([ role1, role2 ]);
+			MemoryManager._fetchAllRoomRoleConfigs([ role1, role2 ]);
 			
 			var expecting = {
 				partsMinMultiplier: 0,
@@ -196,7 +196,7 @@ describe('manager.memory', () => {
 			var role2 = { roleName: 'Role2' };
 
 			game.findAllRooms = () => [ room1, room2 ];
-			MemoryManager.fetchAllRoomRoleConfigs([ role1, role2 ]);
+			MemoryManager._fetchAllRoomRoleConfigs([ role1, role2 ]);
 			
 			var expecting = {
 				partsMinMultiplier: 0,
@@ -223,7 +223,7 @@ describe('manager.memory', () => {
 				roleName: 'Role', 
 			};
 			
-			var result = MemoryManager.clearRoomRoleInfo(room, [ role ]);
+			var result = MemoryManager._clearRoomRoleInfo(room, [ role ]);
 			
 			var expecting = {
 				Role: {
@@ -258,7 +258,7 @@ describe('manager.memory', () => {
 				roleName: 'Role2' 
 			};
 			
-			var result = MemoryManager.clearRoomRoleInfo(room, [ role1, role2 ]);
+			var result = MemoryManager._clearRoomRoleInfo(room, [ role1, role2 ]);
 			
 			var expecting = {
 				Role1: {
@@ -290,7 +290,7 @@ describe('manager.memory', () => {
 			};
 			
 			game.findAllRooms = () => [ room1, room2 ];
-			MemoryManager.clearAllRoomRoleInfos( [ role ]);
+			MemoryManager._clearAllRoomRoleInfos( [ role ]);
 			
 			var expecting = {
 				Role: {
@@ -334,7 +334,7 @@ describe('manager.memory', () => {
 			};
 
 			game.findAllRooms = () => [ room1, room2 ];
-			var result = MemoryManager.clearAllRoomRoleInfos([ role1, role2 ]);
+			var result = MemoryManager._clearAllRoomRoleInfos([ role1, role2 ]);
 			
 			var expecting = {
 				Role1: {
@@ -361,7 +361,7 @@ describe('manager.memory', () => {
 			
 			var room = new Room();
 			
-			assert.equal(-1, MemoryManager.getRequiredNumberForRoomAndRole(room, role));
+			assert.equal(-1, MemoryManager.getRequiredNumberForRoomAndRole(room, role.roleName));
 		});
 
 		it('not defined but base', () => {
@@ -371,7 +371,7 @@ describe('manager.memory', () => {
 			var room = new Room();
 			room.memory.base = {};
 			
-			assert.equal(0, MemoryManager.getRequiredNumberForRoomAndRole(room, role));
+			assert.equal(0, MemoryManager.getRequiredNumberForRoomAndRole(room, role.roleName));
 		});
 
 		it('defined in base', () => {
@@ -381,7 +381,7 @@ describe('manager.memory', () => {
 			var room = new Room();
 			room.memory.base = { roleConfig : { Role :  { requiredNumber : 1 } } };
 			
-			assert.equal(1, MemoryManager.getRequiredNumberForRoomAndRole(room, role));
+			assert.equal(1, MemoryManager.getRequiredNumberForRoomAndRole(room, role.roleName));
 		});
 	});
 
@@ -391,7 +391,7 @@ describe('manager.memory', () => {
 	
 			var role = { roleName: 'Role' };
 			
-			var result = MemoryManager.fetchRoomBase(room, 'Dresden');
+			var result = MemoryManager._fetchRoomBase(room, 'Dresden');
 			
 			var expecting = {
 				name: 'Dresden',
@@ -408,7 +408,7 @@ describe('manager.memory', () => {
 			var role1 = { roleName: 'Role1' };
 			var role2 = { roleName: 'Role2' };
 
-			var result = MemoryManager.fetchRoomBase(room, 'Leipzig');
+			var result = MemoryManager._fetchRoomBase(room, 'Leipzig');
 			
 			var expecting = {
 				name: 'Leipzig',
@@ -427,7 +427,7 @@ describe('manager.memory', () => {
 			var role1 = { roleName: 'Role1' };
 			var role2 = { roleName: 'Role2' };
 
-			var result = MemoryManager.fetchRoomBase(room, 'Görlitz');
+			var result = MemoryManager._fetchRoomBase(room, 'Görlitz');
 			
 			var expecting = {
 				name: 'Chemnitz',
@@ -445,7 +445,7 @@ describe('manager.memory', () => {
 			var spawn = new Spawn(room);
 			spawn.name = 'Dresden';
 			
-			MemoryManager.initSpawns();
+			MemoryManager._initSpawns();
 
 			var expecting = {
 				name: 'Dresden',
@@ -465,7 +465,7 @@ describe('manager.memory', () => {
 			var spawn = new Spawn(room);
 			spawn.name = 'Dresden';
 			
-			MemoryManager.initSpawns();
+			MemoryManager._initSpawns();
 
 			var expecting = {
 				name: 'Chemnitz',

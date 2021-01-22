@@ -41,7 +41,7 @@ describe('role.builder', () => {
 			};
 
 			var object = new Builder();
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -63,8 +63,8 @@ describe('role.builder', () => {
 			target.pos.y = 6;
 			
 			var object = new Builder();
-			object.findSources = room => [ source ];
-			object.findTargets = room => [ target ];
+			object._findSources = room => [ source ];
+			object._findTargets = room => [ target ];
 			
 			// store is half full, so first travel to source
 			object.run(creep);
@@ -110,7 +110,7 @@ describe('role.builder', () => {
 		});
 		
 		it('self-destruct', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
@@ -138,7 +138,7 @@ describe('role.builder', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var droppedEnergy = new Spawn();
 			droppedEnergy.pos.x = 12;
@@ -152,7 +152,7 @@ describe('role.builder', () => {
 			
 			// dropped energy is far away, so go there
 			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while moving!');
 			
 			object.run(creep);
 
@@ -163,7 +163,7 @@ describe('role.builder', () => {
 			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
 			
 			var workCalled = false; 
-			object.work = (workingCreep) => workCalled = true;
+			object._work = (workingCreep) => workCalled = true;
 			
 			object.run(creep);
 
@@ -191,7 +191,7 @@ describe('role.builder', () => {
 
 			var object = new Builder();
 			
-			assert.deepEqual([target1, target2], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target1, target2], object._sortTargetForClosest([target1, target2], creep));
 		});
 
 		it('sort by progress', () => {
@@ -213,7 +213,7 @@ describe('role.builder', () => {
 			target2.progressTotal = 1000; 
 			target2.progress = 700;
 			
-			assert.deepEqual([target2, target1], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target2, target1], object._sortTargetForClosest([target1, target2], creep));
 			
 			// sort with different total
 			
@@ -223,7 +223,7 @@ describe('role.builder', () => {
 			target2.progressTotal = 1000; 
 			target2.progress = 700;
 
-			assert.deepEqual([target1, target2], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target1, target2], object._sortTargetForClosest([target1, target2], creep));
 		});
 
 
@@ -245,21 +245,21 @@ describe('role.builder', () => {
 			target2.progress = 500;
 			creep.pos.getRangeTo = t => t == target1 ? 3 : 3;
 			
-			assert.deepEqual([target1, target2], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target1, target2], object._sortTargetForClosest([target1, target2], creep));
 			
 			// both targets are close together, sort by progress
 			target1.progress = 500;
 			target2.progress = 700;
 			creep.pos.getRangeTo = t => t == target1 ? 3 : 4;
 			
-			assert.deepEqual([target2, target1], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target2, target1], object._sortTargetForClosest([target1, target2], creep));
 
 			// both targets are far apart, sort by range
 			target1.progress = 500;
 			target2.progress = 700;
 			creep.pos.getRangeTo = t => t == target1 ? 4 : 14;
 			
-			assert.deepEqual([target1, target2], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target1, target2], object._sortTargetForClosest([target1, target2], creep));
 		});
 	});
 });

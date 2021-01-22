@@ -30,7 +30,7 @@ class LinkManager {
 	 */
 
 	static makeLinkTarget(linkId) {
-		this.makeLinkType(linkId, TYPE_TARGET);
+		LinkManager._makeLinkType(linkId, TYPE_TARGET);
 	}
 
 	/*
@@ -40,7 +40,7 @@ class LinkManager {
 	 */
 
 	static makeLinkSource(linkId) {
-		this.makeLinkType(linkId, TYPE_SOURCE);
+		LinkManager._makeLinkType(linkId, TYPE_SOURCE);
 	}
 
 	/*
@@ -50,7 +50,7 @@ class LinkManager {
 	 * @param type
 	 */
 
-	static makeLinkType(linkId, type) {
+	static _makeLinkType(linkId, type) {
 		var object = Game.getObjectById(linkId);
 		var memory = game.fetchMemoryOfStructure(object);
 		memory.type = type; 
@@ -67,15 +67,15 @@ class LinkManager {
 	runLinks() { 
 		// TODO: implement transferId 
 		
-		var allSourceLinks = this.findSourceLinks();
-		allSourceLinks.forEach(sourceLink => this.runLink(sourceLink));
+		var allSourceLinks = this._findSourceLinks();
+		allSourceLinks.forEach(sourceLink => this._runLink(sourceLink));
 	}
 
 	/*
 	 * Finds all links that are sources for link-to-link communication.
 	 */
 	
-	findSourceLinks() {
+	_findSourceLinks() {
 		return this.room.find(FIND_MY_STRUCTURES, {
             filter: (structure) => {
             	if (structure.structureType != STRUCTURE_LINK) {
@@ -95,14 +95,14 @@ class LinkManager {
 	 * Handles the specific link in this room.
 	 */
 	
-	runLink(sourceLink) { 
+	_runLink(sourceLink) { 
 
 		if (sourceLink.cooldown) {
 			return;
 		}
 		
 		// transfer my energy
-		var targetLink = this.findTargetLink(sourceLink);
+		var targetLink = this._findTargetLink(sourceLink);
 		if (targetLink) {
 			sourceLink.transferEnergy(targetLink);  
 			info.log('💫 transfering resources from ' + sourceLink.id + ' to ' + targetLink.id);
@@ -113,7 +113,7 @@ class LinkManager {
 	 * Finds a target for the specific source link.
 	 */
 	
-	findTargetLink(sourceLink) { 
+	_findTargetLink(sourceLink) { 
 		// TODO: sort by capacity?
 		var targetLinks = this.room.find(FIND_MY_STRUCTURES, {
 	        filter: (structure) => {

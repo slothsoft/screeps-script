@@ -35,19 +35,19 @@ class MainInfo {
 	}
 	
 	constructor() {
-		this.consoleTime = [];
-		this.console = [];
+		this._lineTimes = [];
+		this._lines = [];
 	}
     
     /*
 	 * Displays the collected information on the screen.
 	 */
     
-    print() {   
+	visualize() {   
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
-            this.printRolesInfoForRoom(room);
-            this.printConsole(room);
+            this._visualizeRoleInfos(room);
+            this._visualizeConsole(room);
         }
     }
 
@@ -57,7 +57,7 @@ class MainInfo {
 	 * @param {Room} room
 	 */
     
-    printRolesInfoForRoom(room) {   
+    _visualizeRoleInfos(room) {   
         if (!room.memory.roleInfo)
             return;
 
@@ -92,7 +92,7 @@ class MainInfo {
 	 * @param {Room} room
 	 */
     
-    printConsole(room) {   
+    _visualizeConsole(room) {   
     	var console = this.fetchMemoryOfRoomConsole(room);
         var x = console.x;
         var xLine = x + 5;
@@ -100,13 +100,13 @@ class MainInfo {
         var height = console.height;
         var y = yMin + height;
         
-        if (this.console.length == 0) {
+        if (this._lines.length == 0) {
             room.visual.text('<no console entries>', x, y, {align: 'left', opacity: console.opacity});
         } else {
-            for (const lineIndex in this.console) {
-                var time = this.consoleTime[lineIndex];
+            for (const lineIndex in this._lines) {
+                var time = this._lineTimes[lineIndex];
                 room.visual.text(time.toISOString().substring(2, 16).replace('T', ' '), x, y, {align: 'left'});
-                room.visual.text(this.console[lineIndex], xLine, y, {align: 'left'});
+                room.visual.text(this._lines[lineIndex], xLine, y, {align: 'left'});
                 
                 y--;
                 if (y <= yMin) {
@@ -120,9 +120,9 @@ class MainInfo {
 	 * Clears the UI console.
 	 */
     
-    clearLog() {   
-        this.consoleTime = [];
-        this.console = [];
+    clearLines() {   
+        this._lineTimes = [];
+        this._lines = [];
     }
     
     /*
@@ -139,11 +139,11 @@ class MainInfo {
         }
         var height = this.getMaxHeight();
         
-        this.consoleTime.splice(0, 0, new Date());
-        this.consoleTime = this.consoleTime.slice(0, height);
+        this._lineTimes.splice(0, 0, new Date());
+        this._lineTimes = this._lineTimes.slice(0, height);
         
-        this.console.splice(0, 0, newLine);
-        this.console = this.console.slice(0, height);
+        this._lines.splice(0, 0, newLine);
+        this._lines = this._lines.slice(0, height);
     }
 
     /*
@@ -176,6 +176,14 @@ class MainInfo {
     getMaxHeight() {   
         var result = Math.max(game.findAllRooms().map(room => (room.memory.console && room.memory.console.height)));
         return result || 10;
+    }
+
+    getLine(index) {
+    	return this._lines[index];
+    }
+    
+    getLines() {
+    	return this._lines;
     }
 };
 

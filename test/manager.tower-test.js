@@ -30,7 +30,7 @@ describe('manager.base', () => {
 			};
 	
 			var manager = new TowerManager(room);
-			manager.findTowers();
+			manager._findTowers();
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -51,7 +51,7 @@ describe('manager.base', () => {
 			};
 	
 			var manager = new TowerManager(room);
-			manager.findTowers();
+			manager._findTowers();
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -68,7 +68,7 @@ describe('manager.base', () => {
 			var room = new Room();
 			
 			var manager = new TowerManager(room);
-			manager.runTower(tower);
+			manager._runTower(tower);
 		});
 
 		it('attack', () => {
@@ -87,7 +87,7 @@ describe('manager.base', () => {
 			var room = new Room();
 			
 			var manager = new TowerManager(room);
-			manager.runTower(tower);
+			manager._runTower(tower);
 			
 			assert.equal(true, called);
 		});
@@ -108,7 +108,7 @@ describe('manager.base', () => {
 			var room = new Room();
 			
 			var manager = new TowerManager(room);
-			manager.runTower(tower);
+			manager._runTower(tower);
 			
 			assert.equal(true, called);
 		});

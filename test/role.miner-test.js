@@ -47,7 +47,7 @@ describe('role.miner', () => {
 	describe('#getPartsMaxMultiplier', () => {
 		it('always 5', () => {
 			var object = new Miner();
-			assert.equal(6, object.getPartsMaxMultiplier());
+			assert.equal(6, object._getPartsMaxMultiplier());
 		});
 	});
 
@@ -76,7 +76,7 @@ describe('role.miner', () => {
 			};
 
 			var object = new Miner();
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -110,7 +110,7 @@ describe('role.miner', () => {
 			object.creep.room = room;
 			object.creep.pos.inRangeTo = (structure, range) => true;
 			
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -146,7 +146,7 @@ describe('role.miner', () => {
 			object.creep.pos.inRangeTo = (structure, range) => false;
 			object.creep.memory.ticksToSource = 1500;
 			
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -178,7 +178,7 @@ describe('role.miner', () => {
 			};
 
 			var object = new Miner();
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -207,7 +207,7 @@ describe('role.miner', () => {
 			};
 
 			var object = new Miner();
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -229,8 +229,8 @@ describe('role.miner', () => {
 			target.pos.y = 6;
 			
 			var object = new Miner();
-			object.findSources = room => [ source ];
-			object.findTargets = room => [ target ];
+			object._findSources = room => [ source ];
+			object._findTargets = room => [ target ];
 			
 			// store is half full, so first travel to source
 			object.run(creep);
@@ -302,7 +302,7 @@ describe('role.miner', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var droppedEnergy = new Spawn();
 			droppedEnergy.pos.x = 12;
@@ -316,7 +316,7 @@ describe('role.miner', () => {
 			
 			// dropped energy is far away, so go there
 			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while moving!');
 			
 			object.run(creep);
 
@@ -327,7 +327,7 @@ describe('role.miner', () => {
 			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
 			
 			var workCalled = false; 
-			object.work = (workingCreep) => workCalled = true;
+			object._work = (workingCreep) => workCalled = true;
 			
 			object.run(creep);
 
@@ -352,7 +352,7 @@ describe('role.miner', () => {
 			target.pos.y = 6;
 			
 			var object = new Miner();
-			object.findSources = room => [ source ];
+			object._findSources = room => [ source ];
 			object.findTargets = room => [ target ];
 			
 			// Remember when I was spawned (+ travel to source)
@@ -414,11 +414,11 @@ describe('role.miner', () => {
 	
 			var object = new Miner();
 			object.creep = creep;
-			assert.deepEqual(source, object.findSources(room));
+			assert.deepEqual(source, object._findSources(room));
 		});
 
 		it('not found', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var creep = new Creep('findSources');
 			creep.memory.homeSource = 'Home sweet home.';
@@ -428,10 +428,10 @@ describe('role.miner', () => {
 	
 			var object = new Miner();
 			object.creep = creep;
-			assert.deepEqual([], object.findSources(room));
+			assert.deepEqual([], object._findSources(room));
 
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find source: Home sweet home.', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find source: Home sweet home.', info.getLine(0));
 		});
 	});
 
@@ -444,7 +444,7 @@ describe('role.miner', () => {
 			
 			var object = new Miner();
 			
-			var creep = object.spawnCreepFromSpawn(spawn, 'Source');
+			var creep = object._spawnCreepFromSpawn(spawn, 'Source');
 			assert.equal(false, creep);
 		});
 		
@@ -456,7 +456,7 @@ describe('role.miner', () => {
 			
 			var object = new Miner();
 			
-			var creep = object.spawnCreepFromSpawn(spawn, 'Source');
+			var creep = object._spawnCreepFromSpawn(spawn, 'Source');
 			assert.equal(spawn.name, creep.memory.homeSpawn);
 			assert.equal('Source', creep.memory.homeSource);
 			assert.equal(Game.creeps['Miner 1'], creep);
@@ -464,7 +464,7 @@ describe('role.miner', () => {
 		});
 
 		it('no source', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var spawn = new Spawn();
 			spawn.name = 'My Spawn';
@@ -472,11 +472,11 @@ describe('role.miner', () => {
 			
 			var object = new Miner();
 			
-			var creep = object.spawnCreepFromSpawn(spawn);
+			var creep = object._spawnCreepFromSpawn(spawn);
 			assert.equal(false, creep);
 			
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 The source is mandatory!', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 The source is mandatory!', info.getLine(0));
 		});
 	});
 
@@ -494,7 +494,7 @@ describe('role.miner', () => {
 		});
 		
 		it('spawn', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var spawn = new Spawn();
 			spawn.name = 'My Spawn';
@@ -509,12 +509,12 @@ describe('role.miner', () => {
 			assert.equal(Game.creeps['Miner 1'], creep);
 			assert.deepEqual([MOVE, CARRY, WORK], creep.body);
 
-			assert.equal(1, info.console.length);
-			assert.equal('🛒 Spawning new Miner (3p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛒 Spawning new Miner (3p)', info.getLine(0));
 		});
 
 		it('no spawn', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var spawn = new Spawn();
 			spawn.name = 'My Spawn';
@@ -525,8 +525,8 @@ describe('role.miner', () => {
 			var creep = object.spawnCreepFromSpawnName('ABC');
 			assert.equal(false, creep);
 			
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find spawn: ABC', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find spawn: ABC', info.getLine(0));
 		});
 	});
 
@@ -543,7 +543,7 @@ describe('role.miner', () => {
 			var object = new Miner();
 			
 			var spawnWasCalled = false;
-			object.spawnCreepFromSpawn = (usedSpawn, sourceId) => {
+			object._spawnCreepFromSpawn = (usedSpawn, sourceId) => {
 				assert.deepEqual(spawn, usedSpawn);
 				assert.equal(source.id, sourceId);
 				spawnWasCalled = true;
@@ -563,7 +563,7 @@ describe('role.miner', () => {
 			var object = new Miner();
 			
 			var spawnWasCalled = false;
-			object.spawnCreepFromSpawn = (usedSpawn, sourceId) => {
+			object._spawnCreepFromSpawn = (usedSpawn, sourceId) => {
 				spawnWasCalled = true;
 			};
 			
@@ -594,7 +594,7 @@ describe('role.miner', () => {
 			var object = new Miner();
 			
 			var spawnWasCalled = false;
-			object.spawnCreepFromSpawn = (usedSpawn, sourceId) => {
+			object._spawnCreepFromSpawn = (usedSpawn, sourceId) => {
 				assert.deepEqual(spawn, usedSpawn);
 				assert.equal(source3.id, sourceId);
 				spawnWasCalled = true;
@@ -628,7 +628,7 @@ describe('role.miner', () => {
 			var object = new Miner();
 
 			var spawnWasCalled = false;
-			object.spawnCreepFromSpawn = (usedSpawn, sourceId) => {
+			object._spawnCreepFromSpawn = (usedSpawn, sourceId) => {
 				spawnWasCalled = true;
 			};
 			

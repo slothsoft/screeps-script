@@ -42,7 +42,7 @@ describe('role.handyman', () => {
 			};
 
 			var object = new Handyman();
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -66,8 +66,8 @@ describe('role.handyman', () => {
 			target.pos.y = 6;
 			
 			var object = new Handyman();
-			object.findSources = room => [ source ];
-			object.findTargets = room => [ target ];
+			object._findSources = room => [ source ];
+			object._findTargets = room => [ target ];
 			
 			// store is half full, so first travel to source
 			object.run(creep);
@@ -137,7 +137,7 @@ describe('role.handyman', () => {
 		});
 		
 		it('self-destruct', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
@@ -165,7 +165,7 @@ describe('role.handyman', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var droppedEnergy = new Spawn();
 			droppedEnergy.pos.x = 12;
@@ -179,7 +179,7 @@ describe('role.handyman', () => {
 			
 			// dropped energy is far away, so go there
 			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while moving!');
 			
 			object.run(creep);
 
@@ -190,7 +190,7 @@ describe('role.handyman', () => {
 			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
 			
 			var workCalled = false; 
-			object.work = (workingCreep) => workCalled = true;
+			object._work = (workingCreep) => workCalled = true;
 			
 			object.run(creep);
 
@@ -216,7 +216,7 @@ describe('role.handyman', () => {
 
 			var object = new Handyman();
 			
-			assert.deepEqual([target2, target1], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target2, target1], object._sortTargetForClosest([target1, target2], creep));
 		});
 
 		it('sort by hits but stay with target', () => {
@@ -233,12 +233,12 @@ describe('role.handyman', () => {
 
 			var object = new Handyman();
 			
-			assert.deepEqual([target2, target1], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target2, target1], object._sortTargetForClosest([target1, target2], creep));
 			
 			// 2nd time take the same target
 
 			target1.hits = 900;
-			assert.deepEqual([target2], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target2], object._sortTargetForClosest([target1, target2], creep));
 		});
 
 		it('sort by hits but don not stay with target after fix', () => {
@@ -254,12 +254,12 @@ describe('role.handyman', () => {
 
 			var object = new Handyman();
 			
-			assert.deepEqual([target2, target1], object.sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target2, target1], object._sortTargetForClosest([target1, target2], creep));
 			
 			// 2nd time the target was fixed, so take the other target
 
 			target2.hits = 1000;
-			assert.deepEqual([target1], object.sortTargetForClosest([target1], creep));
+			assert.deepEqual([target1], object._sortTargetForClosest([target1], creep));
 		});
 	});
 });

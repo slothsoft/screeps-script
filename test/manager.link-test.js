@@ -80,7 +80,7 @@ describe('manager.link', () => {
 			};
 			Game.getObjectById = id => structure;
 			
-			LinkManager.makeLinkType('ID', 'other');
+			LinkManager._makeLinkType('ID', 'other');
 			
 			assert.equal('other', structure.memory.type);
 			assert.equal('other', Memory.structures.ID.type);
@@ -95,7 +95,7 @@ describe('manager.link', () => {
 			};
 			Game.getObjectById = id => structure;
 			
-			LinkManager.makeLinkType('ID', 'other');
+			LinkManager._makeLinkType('ID', 'other');
 			
 			assert.equal('other', structure.memory.type);
 			assert.equal('other', Memory.structures.ID.type);
@@ -126,7 +126,7 @@ describe('manager.link', () => {
 			};
 	
 			var manager = new LinkManager(room);
-			manager.findSourceLinks();
+			manager._findSourceLinks();
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -159,7 +159,7 @@ describe('manager.link', () => {
 			};
 	
 			var manager = new LinkManager(room);
-			manager.findSourceLinks();
+			manager._findSourceLinks();
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -188,7 +188,7 @@ describe('manager.link', () => {
 			var sourceLink = {};
 	
 			var manager = new LinkManager(room);
-			manager.findTargetLink(sourceLink);
+			manager._findTargetLink(sourceLink);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -227,7 +227,7 @@ describe('manager.link', () => {
 			var sourceLink = {};
 			
 			var manager = new LinkManager(room);
-			manager.findTargetLink(sourceLink);
+			manager._findTargetLink(sourceLink);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -235,7 +235,7 @@ describe('manager.link', () => {
 
 	describe('#runLink', () => {
 		beforeEach(() => {
-			info.clearLog();
+			info.clearLines();
 		});
 		
 		it('default', () => {
@@ -254,12 +254,12 @@ describe('manager.link', () => {
 			};
 			
 			var manager = new LinkManager(room);
-			manager.findTargetLink = source => targetLink;
-			manager.runLink(sourceLink);
+			manager._findTargetLink = source => targetLink;
+			manager._runLink(sourceLink);
 			
 			assert.equal(true, transferEnergyCalled);
-			assert.equal(1, info.console.length);
-			assert.equal('💫 transfering resources from SOURCE to TARGET', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('💫 transfering resources from SOURCE to TARGET', info.getLine(0));
 		});
 
 		it('with cooldown', () => {
@@ -277,11 +277,11 @@ describe('manager.link', () => {
 			};
 			
 			var manager = new LinkManager(room);
-			manager.findTargetLink = source => targetLink;
-			manager.runLink(sourceLink);
+			manager._findTargetLink = source => targetLink;
+			manager._runLink(sourceLink);
 			
 			assert.equal(false, transferEnergyCalled);
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('no target', () => {
@@ -296,17 +296,17 @@ describe('manager.link', () => {
 			};
 			
 			var manager = new LinkManager(room);
-			manager.findTargetLink = source => null;
-			manager.runLink(sourceLink);
+			manager._findTargetLink = source => null;
+			manager._runLink(sourceLink);
 			
 			assert.equal(false, transferEnergyCalled);
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 	});
 
 	describe('#runLinks', () => {
 		beforeEach(() => {
-			info.clearLog();
+			info.clearLines();
 		});
 		
 		it('default', () => {
@@ -332,13 +332,13 @@ describe('manager.link', () => {
 			sourceLink3.transferEnergy = (t) => assert.fail('SOURCE3 should not transfer ennergy!');
 			
 			var manager = new LinkManager(room);
-			manager.findSourceLinks = () => [ sourceLink1, sourceLink2, sourceLink3 ];
-			manager.findTargetLink = source => sourceLink1 == source ? targetLink : null;
+			manager._findSourceLinks = () => [ sourceLink1, sourceLink2, sourceLink3 ];
+			manager._findTargetLink = source => sourceLink1 == source ? targetLink : null;
 			manager.runLinks();
 			
 			assert.equal(true, transferEnergyCalled);
-			assert.equal(1, info.console.length);
-			assert.equal('💫 transfering resources from SOURCE1 to TARGET', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('💫 transfering resources from SOURCE1 to TARGET', info.getLine(0));
 		});
 	});
 });

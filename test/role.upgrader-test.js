@@ -38,7 +38,7 @@ describe('role.upgrader', () => {
 
 			var object = new Upgrader();
 			
-			assert.deepEqual([ 'roomController' ], object.findTargets(room));
+			assert.deepEqual([ 'roomController' ], object._findTargets(room));
 		});
 	});
 	
@@ -59,7 +59,7 @@ describe('role.upgrader', () => {
 			creep.room.controller = target;
 			
 			var object = new Upgrader();
-			object.findSources = room => [ source ];
+			object._findSources = room => [ source ];
 			
 			// store is half full, so first travel to source
 			object.run(creep);
@@ -105,7 +105,7 @@ describe('role.upgrader', () => {
 		});
 		
 		it('self-destruct', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
@@ -133,7 +133,7 @@ describe('role.upgrader', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var droppedEnergy = new Spawn();
 			droppedEnergy.pos.x = 12;
@@ -147,7 +147,7 @@ describe('role.upgrader', () => {
 			
 			// dropped energy is far away, so go there
 			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while moving!');
 			
 			object.run(creep);
 
@@ -158,7 +158,7 @@ describe('role.upgrader', () => {
 			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
 			
 			var workCalled = false; 
-			object.work = (workingCreep) => workCalled = true;
+			object._work = (workingCreep) => workCalled = true;
 			
 			object.run(creep);
 

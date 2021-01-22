@@ -14,15 +14,15 @@ class Handyman extends RolePrototype {
 	 * Just transfer energy between source and and the broken structures.
 	 */
 	
-    work(creep) {
-    	this.commuteBetweenSourceAndTarget(creep, target => creep.repair(target));
+    _work(creep) {
+    	this._commuteBetweenSourceAndTarget(creep, target => creep.repair(target));
     }
     
     /*
      * Valid targets are all broken structures. 
      */
     
-    findTargets(room) {
+    _findTargets(room) {
     	
     	var necessaryDamageInPercent = 0.95;
     	
@@ -67,7 +67,7 @@ class Handyman extends RolePrototype {
 	 * Takes the closest to creep and closest to completion.
 	 */
     
-    sortTargetForClosest(targets, creep) {
+    _sortTargetForClosest(targets, creep) {
     	
         if (creep.memory.target) {
             var creepTarget = targets.filter(object => object.id == creep.memory.target);

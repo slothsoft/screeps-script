@@ -25,7 +25,7 @@ describe('role.explorer', () => {
 
 	beforeEach(() => {
 		Game.clearAll();
-		info.clearLog();
+		info.clearLines();
 	});
 	
 	it('exists', () => {
@@ -51,7 +51,7 @@ describe('role.explorer', () => {
 			game.findAllFlags = () => [ flag ];
 
 			var object = new Explorer();
-			assert.deepEqual([ flag ], object.findTargets(flag.room));
+			assert.deepEqual([ flag ], object._findTargets(flag.room));
 		});
 	});
 	
@@ -64,7 +64,7 @@ describe('role.explorer', () => {
 			
 			var object = new Explorer();
 			
-			var creep = object.spawnCreepFromSpawn(spawn, 'Flag');
+			var creep = object._spawnCreepFromSpawn(spawn, 'Flag');
 			assert.equal(false, creep);
 		});
 		
@@ -76,7 +76,7 @@ describe('role.explorer', () => {
 			
 			var object = new Explorer();
 			
-			var creep = object.spawnCreepFromSpawn(spawn, 'Flag');
+			var creep = object._spawnCreepFromSpawn(spawn, 'Flag');
 			assert.notEqual(false, creep);
 			assert.equal('Flag', creep.memory.targetFlag);
 			assert.equal(Game.creeps['Explorer 1'], creep);
@@ -84,7 +84,7 @@ describe('role.explorer', () => {
 		});
 
 		it('no flag', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var spawn = new Spawn();
 			spawn.name = 'My Spawn';
@@ -92,7 +92,7 @@ describe('role.explorer', () => {
 			
 			var object = new Explorer();
 			
-			var creep = object.spawnCreepFromSpawn(spawn);
+			var creep = object._spawnCreepFromSpawn(spawn);
 			assert.notEqual(false, creep);
 			assert.equal(undefined, creep.memory.targetFlag);
 			assert.equal(Game.creeps['Explorer 1'], creep);
@@ -114,7 +114,7 @@ describe('role.explorer', () => {
 		});
 		
 		it('spawn', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var spawn = new Spawn();
 			spawn.name = 'My Spawn';
@@ -128,12 +128,12 @@ describe('role.explorer', () => {
 			assert.equal(Game.creeps['Explorer 1'], creep);
 			assert.deepEqual([ CLAIM, MOVE, WORK, MOVE, CARRY, MOVE ], creep.body);
 
-			assert.equal(1, info.console.length);
-			assert.equal('🏴 Spawning new Explorer (6p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🏴 Spawning new Explorer (6p)', info.getLine(0));
 		});
 
 		it('no flag', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var spawn = new Spawn();
 			spawn.name = 'My Spawn';
@@ -149,7 +149,7 @@ describe('role.explorer', () => {
 		});
 
 		it('no spawn found', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var spawn = new Spawn();
 			spawn.name = 'My Spawn';
@@ -160,8 +160,8 @@ describe('role.explorer', () => {
 			var creep = object.spawnCreepFromSpawnName('ABC', 'Flag');
 			assert.equal(false, creep);
 			
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find spawn: ABC', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find spawn: ABC', info.getLine(0));
 		});
 	});
 
@@ -179,7 +179,7 @@ describe('role.explorer', () => {
 			var object = new Explorer();
 			
 			var spawnWasCalled = false;
-			object.spawnCreepFromSpawn = (usedSpawn, flagName) => {
+			object._spawnCreepFromSpawn = (usedSpawn, flagName) => {
 				assert.deepEqual(spawn, usedSpawn);
 				assert.deepEqual(flag.name, flagName);
 				spawnWasCalled = true;
@@ -211,7 +211,7 @@ describe('role.explorer', () => {
 
 	describe('#work (via run)', () => {
 		it('self-destruct', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
@@ -239,7 +239,7 @@ describe('role.explorer', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var droppedEnergy = new Spawn();
 			droppedEnergy.pos.x = 12;
@@ -253,7 +253,7 @@ describe('role.explorer', () => {
 			
 			// dropped energy is far away, so go there
 			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while moving!');
 			
 			object.run(creep);
 
@@ -264,7 +264,7 @@ describe('role.explorer', () => {
 			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
 			
 			var workCalled = false; 
-			object.work = (workingCreep) => workCalled = true;
+			object._work = (workingCreep) => workCalled = true;
 			
 			object.run(creep);
 
@@ -309,11 +309,11 @@ describe('role.explorer', () => {
 			assert.equal('Flag Name 1', creep.memory.targetFlag);
 			assert.equal(1, creep.pos.x);
 			assert.equal(2, creep.pos.y);
-			assert.equal(1, info.console.length);
-			assert.equal('🏴 CreepX travels to Flag Name 1', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🏴 CreepX travels to Flag Name 1', info.getLine(0));
 
 			// second time this is called find flag and store it in memory 
-			info.clearLog();
+			info.clearLines();
 			creep.memory.targetFlag = 'Flag Name 2';
 			
 			work(object, creep);
@@ -321,7 +321,7 @@ describe('role.explorer', () => {
 			assert.equal('Flag Name 2', creep.memory.targetFlag);
 			assert.equal(3, creep.pos.x);
 			assert.equal(4, creep.pos.y);
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 			
 			// third time the creep is in the same room, so switch phases
 			flag2.pos.x = 5;
@@ -333,15 +333,15 @@ describe('role.explorer', () => {
 			assert.equal('Flag Name 2', creep.memory.targetFlag);
 			assert.equal(5, creep.pos.x);
 			assert.equal(6, creep.pos.y);
-			assert.equal(1, info.console.length);
-			assert.equal('🏴 CreepX claims the room of Flag Name 2', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🏴 CreepX claims the room of Flag Name 2', info.getLine(0));
 			assert.equal('claimFlagRoom', creep.memory.phase);
 		};
 		it('function', () => {
-			test((explorer, creep) => explorer.goToFlagRoom(creep));
+			test((explorer, creep) => explorer._goToFlagRoom(creep));
 		});
 		it('with #work', () => {
-			test((explorer, creep) => explorer.work(creep));
+			test((explorer, creep) => explorer._work(creep));
 		});
 	});
 	
@@ -351,10 +351,10 @@ describe('role.explorer', () => {
 
 		};
 		it('function', () => {
-			test((explorer, creep) => explorer.goToFlagRoom(creep));
+			test((explorer, creep) => explorer._goToFlagRoom(creep));
 		});
 		it('with #work', () => {
-			test((explorer, creep) => explorer.work(creep));
+			test((explorer, creep) => explorer._work(creep));
 		});
 	});
 });

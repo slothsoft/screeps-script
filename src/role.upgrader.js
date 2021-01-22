@@ -15,15 +15,15 @@ class Upgrader extends RolePrototype {
 	 * Just transfer energy between source and and the room controllers.
 	 */
 	
-    work(creep) {
-        this.commuteBetweenSourceAndTarget(creep, target => creep.upgradeController(target));
+    _work(creep) {
+        this._commuteBetweenSourceAndTarget(creep, target => creep.upgradeController(target));
     }
     
     /*
      * The only valid target is the room controller.
      */
     
-    findTargets(room) {
+    _findTargets(room) {
         return [ room.controller ];
     }
 }

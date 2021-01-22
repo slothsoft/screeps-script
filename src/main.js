@@ -32,7 +32,7 @@ module.exports.loop = function () {
     
     // print GUI on top
     
-    info.print();
+    info.visualize();
 }
 
 // some helper methods to make managing this thing more easily

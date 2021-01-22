@@ -18,7 +18,7 @@ describe('main', () => {
 
 	beforeEach(() => {
 		Game.clearAll();
-		info.clearLog();
+		info.clearLines();
 	});
 
 	describe('#selfdestruct', () => {
@@ -33,8 +33,8 @@ describe('main', () => {
 		it('without creep', () => {
 			selfdestruct('ID');
 
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find creep: ID', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find creep: ID', info.getLine(0));
 		});
 	});
 
@@ -50,16 +50,16 @@ describe('main', () => {
 			game.findAllCreeps = () => [ creep1, creep2, creep3 ];
 
 			assert.equal(creep2, fetchOldestCreep());
-			assert.equal(1, info.console.length);
-			assert.equal('Oldest creep: B (20 ttl)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('Oldest creep: B (20 ttl)', info.getLine(0));
 		});
 
 		it('without creep', () => {
 			game.findAllCreeps = () => [ ];
 
 			assert.equal(null, fetchOldestCreep());
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 No creep found.', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 No creep found.', info.getLine(0));
 		});
 	});
 
@@ -85,8 +85,8 @@ describe('main', () => {
 			assert.equal(Game.creeps['Miner 1'], creep);
 			assert.deepEqual([MOVE, CARRY, WORK], creep.body);
 
-			assert.equal(1, info.console.length);
-			assert.equal('🛒 Spawning new Miner (3p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛒 Spawning new Miner (3p)', info.getLine(0));
 		});
 
 		it('no spawn', () => {
@@ -96,8 +96,8 @@ describe('main', () => {
 			var creep = spawnMiner('ABC');
 			assert.equal(false, creep);
 			
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find spawn: ABC', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find spawn: ABC', info.getLine(0));
 		});
 	});
 
@@ -122,8 +122,8 @@ describe('main', () => {
 			assert.equal(Game.creeps['Explorer 1'], creep);
 			assert.deepEqual([ CLAIM, MOVE, WORK, MOVE, CARRY, MOVE ], creep.body);
 
-			assert.equal(1, info.console.length);
-			assert.equal('🏴 Spawning new Explorer (6p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🏴 Spawning new Explorer (6p)', info.getLine(0));
 		});
 
 		it('no spawn', () => {
@@ -133,8 +133,8 @@ describe('main', () => {
 			var creep = spawnExplorer('ABC');
 			assert.equal(false, creep);
 			
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find spawn: ABC', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find spawn: ABC', info.getLine(0));
 		});
 	});
 
@@ -210,7 +210,7 @@ describe('main', () => {
 			assert.notEqual(false, spawnedCreep);
 			assert.equal('Harvester 1', spawnedCreep.name);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('spawn with debug', () => {
@@ -227,8 +227,8 @@ describe('main', () => {
 			assert.notEqual(false, spawnedCreep);
 			assert.equal('Harvester 1', spawnedCreep.name);
 
-			assert.equal(1, info.console.length);
-			assert.equal('🧺 Spawning new Harvester (12p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🧺 Spawning new Harvester (12p)', info.getLine(0));
 		});
 
 		it('no room found', () => {
@@ -243,8 +243,8 @@ describe('main', () => {
 			var spawnedCreep = spawnCreepForRoom('other', 'Harvester');
 			assert.equal(false, spawnedCreep);
 
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find room: other', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find room: other', info.getLine(0));
 		});
 
 		it('no role found', () => {
@@ -259,8 +259,8 @@ describe('main', () => {
 			var spawnedCreep = spawnCreepForRoom(room.name, '1234567890');
 			assert.equal(false, spawnedCreep);
 
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find role: 1234567890', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find role: 1234567890', info.getLine(0));
 		});
 	});
 });

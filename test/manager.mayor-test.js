@@ -31,7 +31,7 @@ describe('manager.mayor', () => {
 		it('no memory', () => {
 			var room = new Room();
 	
-			var result = new MayorManager(room).fetchMemoryOfMayor();
+			var result = new MayorManager(room)._fetchMemoryOfMayor();
 			
 			var expecting = {
 				x: 10,
@@ -51,7 +51,7 @@ describe('manager.mayor', () => {
 				mode: 'warn',
 			};
 	
-			var result = new MayorManager(room).fetchMemoryOfMayor();
+			var result = new MayorManager(room)._fetchMemoryOfMayor();
 			
 			var expecting = {
 				x: 10,
@@ -72,7 +72,7 @@ describe('manager.mayor', () => {
 				mode: '3',
 			};
 	
-			var result = new MayorManager(room).fetchMemoryOfMayor();
+			var result = new MayorManager(room)._fetchMemoryOfMayor();
 			
 			var expecting = {
 				x: 1,

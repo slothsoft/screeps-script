@@ -30,15 +30,15 @@ class TowerManager {
 	 */
 	
 	runTowers() {
-		var allTowers = this.findTowers();
-		allTowers.forEach(tower => this.runTower(tower));
+		var allTowers = this._findTowers();
+		allTowers.forEach(tower => this._runTower(tower));
 	}
 
 	/*
 	 * Finds all towers of this room.
 	 */
 	
-	findTowers() {
+	_findTowers() {
 		return this.room.find(FIND_MY_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_TOWER;
@@ -50,7 +50,7 @@ class TowerManager {
 	 * Runs logic for specific tower of this room.
 	 */
 	
-	runTower(tower) {
+	_runTower(tower) {
 		// 1st priority: kill attacking creeps
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) {

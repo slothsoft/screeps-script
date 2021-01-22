@@ -31,7 +31,7 @@ class Miner extends RolePrototype {
 		var claimedSources = game.findAllCreeps().filter(creep => creep.memory.homeSource).map(creep => creep.memory.homeSource);
 		var allSources = spawn.room.find(FIND_SOURCES).filter(source => !claimedSources.includes(source.id));
 		if (allSources.length > 0) {
-			return this.spawnCreepFromSpawn(spawn, allSources[0].id);
+			return this._spawnCreepFromSpawn(spawn, allSources[0].id);
 		}
 		return false;
 	}
@@ -43,7 +43,7 @@ class Miner extends RolePrototype {
 	        return false;
 	    }
 	    var spawn = spawns[0];
-	    var resultingCreep = this.spawnCreepFromSpawn(spawn, sourceId);
+	    var resultingCreep = this._spawnCreepFromSpawn(spawn, sourceId);
 	    if (resultingCreep) {
 	        info.log(this.symbol + ' Spawning new ' + this.roleName + ' (' + resultingCreep.body.length + 'p)');
 	        return resultingCreep;
@@ -51,12 +51,12 @@ class Miner extends RolePrototype {
 	    return resultingCreep;
 	}
 
-	spawnCreepFromSpawn(spawn, sourceId) {
+	_spawnCreepFromSpawn(spawn, sourceId) {
 	    if (!sourceId) {
 	        info.error('The source is mandatory!');
 	        return false;
 	    }
-	    var resultingCreep = this.spawnCreepWithParts(spawn, [WORK], [MOVE, CARRY]);
+	    var resultingCreep = this._spawnCreepWithParts(spawn, [WORK], [MOVE, CARRY]);
 	    if (resultingCreep) {
 	        resultingCreep.memory.homeSpawn = spawn.name;
 	        resultingCreep.memory.homeSource = sourceId;
@@ -70,11 +70,11 @@ class Miner extends RolePrototype {
 	 * 10 energy per tick which is 5 WORK parts.
 	 */
 
-	getPartsMaxMultiplier(spawn) {
+	_getPartsMaxMultiplier(spawn) {
 		return 6; // fixes some rounding errors
 	}
 
-	work(creep) {
+	_work(creep) {
 	    this.creep = creep;
 	    
 	    if (!creep.memory.initialTicksToLive) {
@@ -83,12 +83,12 @@ class Miner extends RolePrototype {
 	        creep.memory.initialTicksToLive = creep.ticksToLive;
 	    }
 	    
-	    this.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
+	    this._commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_ENERGY));
 	    
 	    // we know how long it took this creep to the resource
 	    // so we need to retrain our replacement before we die
 	    if (creep.memory.ticksToSource && !creep.memory.trainedReplacement) {
-	        var timeToSpawn = (this.getPartsMaxMultiplier() + 2) * 3; // one part tacks 3 ticks
+	        var timeToSpawn = (this._getPartsMaxMultiplier() + 2) * 3; // one part tacks 3 ticks
 	        var ticksToGetReady = (creep.memory.initialTicksToLive - creep.memory.ticksToSource) + timeToSpawn;
 
 	        if (creep.ticksToLive < ticksToGetReady) {
@@ -101,7 +101,7 @@ class Miner extends RolePrototype {
 	    }
 	} 
 	
-	findSources(room) {
+	_findSources(room) {
 	    var sources = room.find(FIND_SOURCES, {
 	        filter: (structure) => {
 	            return (structure.id == this.creep.memory.homeSource);
@@ -113,8 +113,8 @@ class Miner extends RolePrototype {
 		return sources;
 	}
     
-	moveToClosestSource(creep) {
-		var harvestResult = super.moveToClosestSource(creep);
+	_moveToClosestSource(creep) {
+		var harvestResult = super._moveToClosestSource(creep);
 	    
 		if (harvestResult == OK) {     
 	        if (!creep.memory.ticksToSource) {
@@ -126,18 +126,18 @@ class Miner extends RolePrototype {
 		return harvestResult;
 	}
 
-    handleSourceWorkResult(creep, workResult) {
+    _handleSourceWorkResult(creep, workResult) {
     	if (workResult == ERR_NOT_ENOUGH_RESOURCES) {
-    		var source = this.findSources(creep.room)[0];
+    		var source = this._findSources(creep.room)[0];
     		if (source.ticksToRegeneration && (source.ticksToRegeneration < 10)) {
     			// we mined the source completely slightly ahead of time - ignore
     			return;
     		}
     	}
-    	super.handleSourceWorkResult(creep, workResult);
+    	super._handleSourceWorkResult(creep, workResult);
     }
 
-	findTargets(room) {
+	_findTargets(room) {
 		// creep must be defined and have reached the source to check the range
 	    var testCreepPosition = this.creep && this.creep.memory.ticksToSource;
 	    return room.find(FIND_STRUCTURES, {

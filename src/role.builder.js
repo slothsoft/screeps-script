@@ -15,15 +15,15 @@ class Builder extends RolePrototype {
 	 * Just transfer energy between source and and the construction sites.
 	 */
 	
-    work(creep) {
-    	this.commuteBetweenSourceAndTarget(creep, target => creep.build(target));
+    _work(creep) {
+    	this._commuteBetweenSourceAndTarget(creep, target => creep.build(target));
     }
     
     /*
      * Valid targets are construction sites. 
      */
     
-    findTargets(room) {
+    _findTargets(room) {
         return room.find(FIND_MY_CONSTRUCTION_SITES);
     }
 
@@ -31,7 +31,7 @@ class Builder extends RolePrototype {
 	 * Takes the closest to creep and closest to completion.
 	 */
     
-    sortTargetForClosest(targets, creep) {
+    _sortTargetForClosest(targets, creep) {
         return targets.sort((a, b) => {
         	var rangeA = creep.pos.getRangeTo(a);
         	var rangeB = creep.pos.getRangeTo(b);

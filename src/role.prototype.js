@@ -8,7 +8,7 @@
  * You need to implement / set:
  * - roleName
  * - (color, symbol)
- * - findTargets(room)
+ * - _findTargets(room)
  * - work(creep)
  * 
  * You might need to override / set:
@@ -39,7 +39,7 @@ class RolePrototype {
 	 */
     
     spawnCreep(spawn) {
-    	return this.spawnCreepWithParts(spawn, [WORK, CARRY, MOVE, MOVE]);
+    	return this._spawnCreepWithParts(spawn, [WORK, CARRY, MOVE, MOVE]);
     }
 
     /*
@@ -50,7 +50,7 @@ class RolePrototype {
 	 */
     
     isNecessary(room) {
-        var targets = this.findTargets(room);
+        var targets = this._findTargets(room);
         return targets && targets.length > 0;
     }
     
@@ -61,7 +61,7 @@ class RolePrototype {
 	 * @param {Room} room
 	 */
 
-    findTargets(room) {
+    _findTargets(room) {
         return [];
     }
 
@@ -72,10 +72,10 @@ class RolePrototype {
 	 * @param {Creep} creep
 	 */
     
-    findClosestTarget(creep) {
-        var targets = this.findTargets(creep.room);
+    _findClosestTarget(creep) {
+        var targets = this._findTargets(creep.room);
         if (targets) {
-        	targets = this.sortTargetForClosest(targets, creep);
+        	targets = this._sortTargetForClosest(targets, creep);
         	return targets.length > 0 ? targets[0] : null;
 		}
         return null;
@@ -88,7 +88,7 @@ class RolePrototype {
 	 * @param {Creep} creep
 	 */
     
-    sortTargetForClosest(targets, creep) {
+    _sortTargetForClosest(targets, creep) {
         return targets.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
     }
 
@@ -99,8 +99,8 @@ class RolePrototype {
 	 * @param {Creep} creep @param function the work that should be done there
 	 */
 
-    moveToClosestTarget(creep, work) {
-    	var target = this.findClosestTarget(creep);
+    _moveToClosestTarget(creep, work) {
+    	var target = this._findClosestTarget(creep);
     	
     	if (!target) return;
     	
@@ -109,13 +109,13 @@ class RolePrototype {
             if (creep.memory.debug) {      
                 info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is moving to target ' + game.getDisplayName(target));  
             }
-        	this.moveToLocation(creep, target);
+        	this._moveToLocation(creep, target);
         } else if (workResult == OK) {     
             if (creep.memory.debug) {
                 info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is working on target ' + game.getDisplayName(target));  
             }
         } else {      
-        	this.handleTargetWorkResult(creep, workResult);
+        	this._handleTargetWorkResult(creep, workResult);
         }
     }  
 
@@ -125,8 +125,8 @@ class RolePrototype {
 	 * @param {Creep} creep @param work result
 	 */
 
-    handleTargetWorkResult(creep, workResult) {
-    	info.warning(this.symbol + ' ' + game.getDisplayName(creep) + ' cannot work: ' + workResult);  
+    _handleTargetWorkResult(creep, workResult) {
+    	info.warning(game.getDisplayName(creep) + ' cannot work: ' + workResult);  
     }
     
     /*
@@ -135,7 +135,7 @@ class RolePrototype {
 	 * @param {Creep} creep @param location
 	 */
     
-    moveToLocation(creep, location) {
+    _moveToLocation(creep, location) {
     	creep.moveTo(location, {visualizePathStyle: {stroke: this.color}});
     	creep.memory.moving = true;
     }
@@ -146,9 +146,9 @@ class RolePrototype {
 	 * @param {Creep} creep
 	 */
 
-    moveToClosestSource(creep) {
+    _moveToClosestSource(creep) {
     	// TODO: if source is empty, just go back to working
-        var source = this.findClosestSource(creep);
+        var source = this._findClosestSource(creep);
         
     	if (!source) return;
     	
@@ -157,13 +157,13 @@ class RolePrototype {
             if (creep.memory.debug) {      
                 info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is moving to source ' + game.getDisplayName(source));  
             }
-            this.moveToLocation(creep, source);
+            this._moveToLocation(creep, source);
         } else if (harvestResult == OK) {     
             if (creep.memory.debug) {
                 info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is harvesting from source ' + game.getDisplayName(source));  
             }
         } else {      
-            this.handleSourceWorkResult(creep, harvestResult);
+            this._handleSourceWorkResult(creep, harvestResult);
         }
         return harvestResult;
     }
@@ -174,10 +174,10 @@ class RolePrototype {
 	 * @param {Creep} creep
 	 */
     
-    findClosestSource(creep) {
-        var sources = this.findSources(creep.room);
+    _findClosestSource(creep) {
+        var sources = this._findSources(creep.room);
         if (sources) {
-            sources = this.sortSourceForClosest(sources, creep);
+            sources = this._sortSourceForClosest(sources, creep);
             return sources.length > 0 ? sources[0] : null;
         }
         return null;
@@ -190,7 +190,7 @@ class RolePrototype {
 	 * @param {Creep} creep
 	 */
     
-    sortSourceForClosest(sources, creep) {
+    _sortSourceForClosest(sources, creep) {
         return sources.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
     }
 
@@ -201,7 +201,7 @@ class RolePrototype {
 	 * @param {Room} room
 	 */
 
-    findSources(room) {
+    _findSources(room) {
         var storages = this.useStorageAsSource ? room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_STORAGE ||
@@ -228,7 +228,7 @@ class RolePrototype {
 	 * @param {Creep} creep @param harvest result
 	 */
 
-    handleSourceWorkResult(creep, harvestResult) {
+    _handleSourceWorkResult(creep, harvestResult) {
         info.warning(game.getDisplayName(creep) + ' cannot harvest: ' + harvestResult); 
     }
     
@@ -246,7 +246,7 @@ class RolePrototype {
         // self-destructing is more important than working
         
         if (creep.memory.selfdestruct) {
-            this.selfdestruct(creep);
+            this._selfdestruct(creep);
             return;
         }
         
@@ -259,7 +259,7 @@ class RolePrototype {
             	info.log('🟡 ' + game.getDisplayName(creep) + ' is picking up resource ' + game.getDisplayName(dropenergy[0]));
             }
         	if (creep.pickup(dropenergy[0]) == ERR_NOT_IN_RANGE) {
-        		this.moveToLocation(creep, dropenergy[0]);
+        		this._moveToLocation(creep, dropenergy[0]);
         		return;
         	}
         	// here is no return because creeps can pickup energy an work afterwards
@@ -269,7 +269,7 @@ class RolePrototype {
     	
         var tombstones = creep.pos.findInRange(FIND_TOMBSTONES, 3).filter(t => t.store.getUsedCapacity() > 0);
 		if (tombstones.length > 0 && creep.store.getFreeCapacity() > 0) {
-        	this.lootTombstone(creep, tombstones[0]);
+        	this._lootTombstone(creep, tombstones[0]);
         	return;
     	}
     		
@@ -288,7 +288,7 @@ class RolePrototype {
 //        		return;
 //	    	}
         
-        this.work(creep);
+        this._work(creep);
     }
 
     /*
@@ -297,7 +297,7 @@ class RolePrototype {
 	 * @param {Creep} creep
 	 */
     
-    selfdestruct(creep) {
+    _selfdestruct(creep) {
         var spawn = creep.pos.findClosestByPath(FIND_MY_SPAWNS);
         if (spawn) {
             var recycleAnswer = spawn.recycleCreep(creep);
@@ -305,7 +305,7 @@ class RolePrototype {
                 if (creep.memory.debug) {      
                     info.log('🔙 ' + game.getDisplayName(creep) + ' is moving to spawn ' + spawn.id);  
                 }
-                this.moveToLocation(creep, spawn);
+                this._moveToLocation(creep, spawn);
             } else if (recycleAnswer == OK) {  
                 if (creep.memory.debug) {
                     info.log('🗑 ' + game.getDisplayName(creep) + ' was recycled.');  
@@ -322,13 +322,13 @@ class RolePrototype {
 	 * @param {Creep} creep
 	 */
     
-    lootTombstone(creep, tombstone) {
+    _lootTombstone(creep, tombstone) {
 	    var withdrawResult = creep.withdraw(tombstone, RESOURCE_ENERGY);
 		if (withdrawResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
     	    	info.log('⚰ ' + game.getDisplayName(creep) + ' is moving to tombstone ' + game.getDisplayName(tombstone));
             }
-    		this.moveToLocation(creep, tombstone);
+    		this._moveToLocation(creep, tombstone);
 		} else if (withdrawResult == OK) {
             if (creep.memory.debug) {      
     	    	info.log('⚰ ' + game.getDisplayName(creep) + ' is looting the tombstone ' + game.getDisplayName(tombstone));
@@ -344,7 +344,7 @@ class RolePrototype {
 	 * @param {Creep} creep
 	 */
     
-    work(creep) {
+    _work(creep) {
         // do nothing on default
         creep.say('🛑 unimplemented 🛑');
     }
@@ -356,7 +356,7 @@ class RolePrototype {
 	 * @param {Creep} creep @param function the work that should be done there
 	 */
     
-    commuteBetweenSourceAndTarget(creep, work) {
+    _commuteBetweenSourceAndTarget(creep, work) {
         if (creep.memory.working && creep.store.getUsedCapacity() == 0) {
             creep.memory.working = false;
         }
@@ -365,9 +365,9 @@ class RolePrototype {
         }
     
         if (creep.memory.working) {
-            this.moveToClosestTarget(creep, work);
+            this._moveToClosestTarget(creep, work);
         } else {
-            this.moveToClosestSource(creep);
+            this._moveToClosestSource(creep);
         }
     }
 
@@ -379,8 +379,8 @@ class RolePrototype {
 	 * are added as is
 	 */
     
-    spawnCreepWithParts(spawn, parts, singleParts = []) {
-        var parts = this.calculateMaxParts(spawn, parts, singleParts);
+    _spawnCreepWithParts(spawn, parts, singleParts = []) {
+        var parts = this._calculateMaxParts(spawn, parts, singleParts);
         if (parts) {
             var newName = this.roleName + ' ' + Game.time;
             var spawnResult = spawn.spawnCreep(parts, newName, { memory: {
@@ -403,16 +403,16 @@ class RolePrototype {
 	 * are added as is
 	 */
     
-    calculateMaxParts(spawn, parts = [], singleParts = []) {
-        var costs = this.calculateCostsForParts(parts);
+    _calculateMaxParts(spawn, parts = [], singleParts = []) {
+        var costs = this._calculateCostsForParts(parts);
         
-        var singleCosts = singleParts ? this.calculateCostsForParts(singleParts) : 0;
+        var singleCosts = singleParts ? this._calculateCostsForParts(singleParts) : 0;
 
         if (!costs && !singleCosts) return null; // we can't spawn empty
 													// parts
         
-        var multiplier = this.getPartsMinMultiplier(spawn);
-        var partsMaxMultiplier = this.getPartsMaxMultiplier(spawn);
+        var multiplier = this._getPartsMinMultiplier(spawn);
+        var partsMaxMultiplier = this._getPartsMaxMultiplier(spawn);
       
         while ((multiplier + 1) * costs + singleCosts <= spawn.room.energyAvailable && multiplier < partsMaxMultiplier) {
             multiplier++;
@@ -423,7 +423,7 @@ class RolePrototype {
             return null;
         }
         
-        return singleParts ? singleParts.concat(this.replicateParts(parts, multiplier)) : this.replicateParts(parts, multiplier);
+        return singleParts ? singleParts.concat(this._replicateParts(parts, multiplier)) : this._replicateParts(parts, multiplier);
     }
 
     /*
@@ -432,7 +432,7 @@ class RolePrototype {
 	 * @param {Spawn} spawn
 	 */
     
-    getPartsMinMultiplier(spawn) {
+    _getPartsMinMultiplier(spawn) {
         return (spawn.room.memory.base && spawn.room.memory.base.roleConfig && spawn.room.memory.base.roleConfig.partsMinMultiplier) || 0;
     }
 
@@ -442,7 +442,7 @@ class RolePrototype {
 	 * @param {Spawn} spawn
 	 */
     
-    getPartsMaxMultiplier(spawn) {
+    _getPartsMaxMultiplier(spawn) {
         return (spawn.room.memory.base && spawn.room.memory.base.roleConfig && spawn.room.memory.base.roleConfig.partsMaxMultiplier) || 20;
     }
 
@@ -452,9 +452,9 @@ class RolePrototype {
 	 * @param parts array
 	 */
     
-    calculateCostsForParts(parts) {
+    _calculateCostsForParts(parts) {
         var result = 0;
-        parts.forEach(part => result += this.calculateCostsForSinglePart(part));
+        parts.forEach(part => result += this._calculateCostsForSinglePart(part));
         return result;
     }
 
@@ -464,7 +464,7 @@ class RolePrototype {
 	 * @param part
 	 */
         
-    calculateCostsForSinglePart(part) {
+    _calculateCostsForSinglePart(part) {
         return BODYPART_COST[part];
     }
 
@@ -475,7 +475,7 @@ class RolePrototype {
 	 * @param part array @param multiplier how often to replicate the array
 	 */
     
-    replicateParts(parts, multiplier) {
+    _replicateParts(parts, multiplier) {
         var result = [];
         for (var i = 0; i < multiplier; i++) {
             result = result.concat(parts);

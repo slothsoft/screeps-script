@@ -40,7 +40,7 @@ class TileArray {
 		};
 		opt = Object.assign(defaultOpt, opt);
 		
-		var flatMap = this.flatMap();
+		var flatMap = this._flatMap();
 		var maxLength = Math.max(...flatMap.map(value => value ? ("" + value).length : 0));
 		return flatMap.map(value =>  value ? ("" + value).padStart(maxLength, opt.paddingChar) : opt.paddingChar.repeat(maxLength)).join('');
 	}
@@ -64,7 +64,7 @@ class TileArray {
 		}
 	}
 	
-	flatMap() {
+	_flatMap() {
 		var result = [];
 		for (var y = 0; y < this.height; y++) {
 			for (var x = 0; x < this.width; x++) {

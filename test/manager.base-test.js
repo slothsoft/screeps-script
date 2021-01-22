@@ -48,17 +48,17 @@ describe('manager.base', () => {
 
 			var manager = new BaseManager(room);
 			
-			assert.deepEqual(spawn2, manager.fetchFreeSpawn('Dresden'));
+			assert.deepEqual(spawn2, manager._fetchFreeSpawn('Dresden'));
 		});
 
 		it('empty list', () => {
 			var room = new Room();
 			room.memory.base = 'Dresden'; // a room without base will never be run
 			
-			MemoryManager.initSpawns();
+			MemoryManager._initSpawns();
 			var manager = new BaseManager(room);
 			
-			assert.deepEqual(null, manager.fetchFreeSpawn('Dresden'));
+			assert.deepEqual(null, manager._fetchFreeSpawn('Dresden'));
 		});
 
 		it('none free exists', () => {
@@ -75,10 +75,10 @@ describe('manager.base', () => {
 			var spawn3 = new Spawn(room);
 			spawn3.spawning = true;
 
-			MemoryManager.initSpawns();
+			MemoryManager._initSpawns();
 			var manager = new BaseManager(spawn1.room);
 			
-			assert.deepEqual(null, manager.fetchFreeSpawn('Dresden'));
+			assert.deepEqual(null, manager._fetchFreeSpawn('Dresden'));
 		});
 
 		it('only specific base', () => {
@@ -100,7 +100,7 @@ describe('manager.base', () => {
 
 			var manager = new BaseManager(room);
 			
-			assert.deepEqual(spawn3, manager.fetchFreeSpawn('Dresden'));
+			assert.deepEqual(spawn3, manager._fetchFreeSpawn('Dresden'));
 		});
 
 		it('all bases', () => {
@@ -122,7 +122,7 @@ describe('manager.base', () => {
 
 			var manager = new BaseManager(room);
 			
-			assert.deepEqual(spawn1, manager.fetchFreeSpawn(null));
+			assert.deepEqual(spawn1, manager._fetchFreeSpawn(null));
 		});
 	});
 
@@ -142,15 +142,15 @@ describe('manager.base', () => {
 				return creep;
 			};
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(spawn.room);
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager._spawnCreepForRole(role);
 			assert.deepEqual(creep, spawnedCreep);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('spawn with debug', () => {
@@ -169,16 +169,16 @@ describe('manager.base', () => {
 				return creep;
 			};
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(spawn.room);
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager._spawnCreepForRole(role);
 			assert.deepEqual(creep, spawnedCreep);
 
-			assert.equal(1, info.console.length);
-			assert.equal('! Spawning new Role (1p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('! Spawning new Role (1p)', info.getLine(0));
 		});
 		
 		it('no free spawn', () => {
@@ -192,15 +192,15 @@ describe('manager.base', () => {
 			var room = new Room();
 			room.memory.base = 'Dresden'; // a room without base will never be run
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(room);
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager._spawnCreepForRole(role);
 			assert.equal(false, spawnedCreep);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('error while spawning', () => {
@@ -216,15 +216,15 @@ describe('manager.base', () => {
 				return false;
 			};
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(spawn.room);
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager._spawnCreepForRole(role);
 			assert.equal(false, spawnedCreep);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('no free spawn use other base', () => {
@@ -250,10 +250,10 @@ describe('manager.base', () => {
 			
 			var manager = new BaseManager(otherRoom);
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager._spawnCreepForRole(role);
 			assert.deepEqual(creep, spawnedCreep);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('no free spawn use other base with debug', () => {
@@ -280,11 +280,11 @@ describe('manager.base', () => {
 			
 			var manager = new BaseManager(otherRoom);
 			
-			var spawnedCreep = manager.spawnCreepForRole(role);
+			var spawnedCreep = manager._spawnCreepForRole(role);
 			assert.deepEqual(creep, spawnedCreep);
 
-			assert.equal(1, info.console.length);
-			assert.equal('! Spawning new Role (1p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('! Spawning new Role (1p)', info.getLine(0));
 		});
 	});
 	
@@ -304,17 +304,17 @@ describe('manager.base', () => {
 				return new Creep('repopulateCreeps', [ MOVE ]);
 			};
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			spawn.room.memory.base.roleConfig = { Role :  { requiredNumber : 1 } };
 
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [role];
-			manager.repopulateCreeps();
+			manager._repopulateCreeps();
 			
 			assert.equal(true, spawnCreepCalled);
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('spawn with debug', () => {
@@ -333,19 +333,19 @@ describe('manager.base', () => {
 				return new Creep('repopulateCreeps', [ MOVE ]);
 			};
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			spawn.room.memory.base.roleConfig = { Role :  { requiredNumber : 1 } };
 
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [role];
-			manager.repopulateCreeps();
+			manager._repopulateCreeps();
 			
 			assert.equal(true, spawnCreepCalled);
 
-			assert.equal(1, info.console.length);
-			assert.equal('! Spawning new Role (1p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('! Spawning new Role (1p)', info.getLine(0));
 		});
 
 		it('no spawn necessary', () => {
@@ -363,17 +363,17 @@ describe('manager.base', () => {
 			};
 
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			spawn.room.memory.base.roleConfig = { Role :  { requiredNumber : 0 } };
 
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [role];
-			manager.repopulateCreeps();
+			manager._repopulateCreeps();
 			
 			assert.equal(false, spawnCreepCalled);
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('do not spawn two per round', () => {
@@ -396,8 +396,8 @@ describe('manager.base', () => {
 			};
 			role2.spawnCreep = role1.spawnCreep;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			spawn.room.memory.base.roleConfig = { 
 					Role1 :  { requiredNumber : 1 },   
@@ -406,10 +406,10 @@ describe('manager.base', () => {
 
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [role1, role2];
-			manager.repopulateCreeps();
+			manager._repopulateCreeps();
 			
 			assert.equal(1, spawnCreepCalled);
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 
@@ -434,8 +434,8 @@ describe('manager.base', () => {
 			};
 			role2.spawnCreep = role1.spawnCreep;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			spawn.room.memory.base.roleConfig = { 
 					Role1 :  { requiredNumber : 1 },   
@@ -444,12 +444,12 @@ describe('manager.base', () => {
 
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [role1, role2];
-			manager.repopulateCreeps();
+			manager._repopulateCreeps();
 			
 			assert.equal(1, spawnCreepCalled);
 
-			assert.equal(1, info.console.length);
-			assert.equal('& Spawning new Role1 (1p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('& Spawning new Role1 (1p)', info.getLine(0));
 		});
 	});
 
@@ -469,8 +469,8 @@ describe('manager.base', () => {
 				return creep;
 			};
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [ role ];
@@ -478,7 +478,7 @@ describe('manager.base', () => {
 			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.deepEqual(creep, spawnedCreep);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('spawn with debug', () => {
@@ -497,8 +497,8 @@ describe('manager.base', () => {
 				return creep;
 			};
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [ role ];
@@ -506,8 +506,8 @@ describe('manager.base', () => {
 			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.deepEqual(creep, spawnedCreep);
 
-			assert.equal(1, info.console.length);
-			assert.equal('! Spawning new RoleName (1p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('! Spawning new RoleName (1p)', info.getLine(0));
 		});
 
 		it('no free spawn', () => {
@@ -521,8 +521,8 @@ describe('manager.base', () => {
 			var room = new Room();
 			room.memory.base = 'Dresden'; // a room without base will never be run
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(room);
 			manager.allRoles = [ role ];
@@ -530,7 +530,7 @@ describe('manager.base', () => {
 			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.equal(false, spawnedCreep);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('error while spawning', () => {
@@ -546,8 +546,8 @@ describe('manager.base', () => {
 				return false;
 			};
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [ role ];
@@ -555,7 +555,7 @@ describe('manager.base', () => {
 			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.equal(false, spawnedCreep);
 
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('no free spawn use other base', () => {
@@ -584,7 +584,7 @@ describe('manager.base', () => {
 			
 			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.deepEqual(creep, spawnedCreep);
-			assert.equal(0, info.console.length);
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('no free spawn use other base with debug', () => {
@@ -615,16 +615,16 @@ describe('manager.base', () => {
 			var spawnedCreep = manager.spawnCreepForRoleName(role.roleName);
 			assert.deepEqual(creep, spawnedCreep);
 
-			assert.equal(1, info.console.length);
-			assert.equal('! Spawning new RoleName (1p)', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('! Spawning new RoleName (1p)', info.getLine(0));
 		});
 
 		it('no role found', () => {
 
 			var spawn = new Spawn();
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(spawn.room);
 			manager.allRoles = [ ];
@@ -632,8 +632,8 @@ describe('manager.base', () => {
 			var spawnedCreep = manager.spawnCreepForRoleName('Other');
 			assert.deepEqual(false, spawnedCreep);
 
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 Could not find role: Other', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find role: Other', info.getLine(0));
 		});
 	});
 
@@ -649,13 +649,13 @@ describe('manager.base', () => {
 			var manager = new BaseManager(room);
 			
 			var repopulateCreeps = false;
-			manager.repopulateCreeps = () => repopulateCreeps = true;
+			manager._repopulateCreeps = () => repopulateCreeps = true;
 
 			var showSpawningAnimation = false;
-			manager.showSpawningAnimation = () => showSpawningAnimation = true;
+			manager._showSpawningAnimation = () => showSpawningAnimation = true;
 
 			var moveCreeps = false;
-			manager.moveCreeps = () => moveCreeps = true;
+			manager._moveCreeps = () => moveCreeps = true;
 			
 			manager.runBase();
 			
@@ -669,19 +669,19 @@ describe('manager.base', () => {
 			var spawn = new Spawn();
 			var room = spawn.room;
 			
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(room);
 			
 			var repopulateCreeps = false;
-			manager.repopulateCreeps = () => repopulateCreeps = true;
+			manager._repopulateCreeps = () => repopulateCreeps = true;
 
 			var showSpawningAnimation = false;
-			manager.showSpawningAnimation = () => showSpawningAnimation = true;
+			manager._showSpawningAnimation = () => showSpawningAnimation = true;
 
 			var moveCreeps = false;
-			manager.moveCreeps = () => moveCreeps = true;
+			manager._moveCreeps = () => moveCreeps = true;
 			
 			manager.runBase();
 			
@@ -700,8 +700,8 @@ describe('manager.base', () => {
 			var manager = new BaseManager(new Room());
 			manager.allRoles = [ role ];
 
-			assert.deepEqual(role, manager.findMandatoryRole('Role'));
-			assert.equal(0, info.console.length);
+			assert.deepEqual(role, manager._findMandatoryRole('Role'));
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('find default', () => {
@@ -717,10 +717,10 @@ describe('manager.base', () => {
 			manager.allRoles = [ role ];
 			manager.defaultRole = defaultRole;
 
-			assert.deepEqual(defaultRole, manager.findMandatoryRole('Rolo'));
+			assert.deepEqual(defaultRole, manager._findMandatoryRole('Rolo'));
 
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 COULD NOT FIND ROLE: Rolo 🛑', info.console[0]);
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 COULD NOT FIND ROLE: Rolo 🛑', info.getLine(0));
 		});
 	});
 
@@ -745,17 +745,17 @@ describe('manager.base', () => {
 			var spawn = new Spawn();
 			var room = spawn.room;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(room);
 			manager.allRoles = [ role1, role2 ];
 			manager.defaultRole = defaultRole;
-			MemoryManager.clearRoomRoleInfo(room, manager.allRoles);
+			MemoryManager._clearRoomRoleInfo(room, manager.allRoles);
 
-			assert.deepEqual(role1, manager.findNecessaryMandatoryRole('First'));
-			assert.deepEqual(role2, manager.findNecessaryMandatoryRole('Second'));
-			assert.equal(0, info.console.length);
+			assert.deepEqual(role1, manager._findNecessaryMandatoryRole('First'));
+			assert.deepEqual(role2, manager._findNecessaryMandatoryRole('Second'));
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('do not find', () => {
@@ -778,17 +778,17 @@ describe('manager.base', () => {
 			var spawn = new Spawn();
 			var room = spawn.room;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(room);
 			manager.allRoles = [ role1, role2 ];
 			manager.defaultRole = defaultRole;
-			MemoryManager.clearRoomRoleInfo(room, manager.allRoles);
+			MemoryManager._clearRoomRoleInfo(room, manager.allRoles);
 
-			assert.deepEqual(defaultRole, manager.findNecessaryMandatoryRole('Third'));
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 COULD NOT FIND ROLE: Third 🛑', info.console[0]);
+			assert.deepEqual(defaultRole, manager._findNecessaryMandatoryRole('Third'));
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 COULD NOT FIND ROLE: Third 🛑', info.getLine(0));
 		});
 		
 		it('find necessary', () => {
@@ -811,17 +811,17 @@ describe('manager.base', () => {
 			var spawn = new Spawn();
 			var room = spawn.room;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(room);
 			manager.allRoles = [ role1, role2 ];
 			manager.defaultRole = defaultRole;
-			MemoryManager.clearRoomRoleInfo(room, manager.allRoles);
+			MemoryManager._clearRoomRoleInfo(room, manager.allRoles);
 			
-			assert.deepEqual(role2, manager.findNecessaryMandatoryRole('First'));
-			assert.deepEqual(role2, manager.findNecessaryMandatoryRole('Second'));
-			assert.equal(0, info.console.length);
+			assert.deepEqual(role2, manager._findNecessaryMandatoryRole('First'));
+			assert.deepEqual(role2, manager._findNecessaryMandatoryRole('Second'));
+			assert.equal(0, info.getLines().length);
 		});
 
 		it('find default necessary', () => {
@@ -844,17 +844,17 @@ describe('manager.base', () => {
 			var spawn = new Spawn();
 			var room = spawn.room;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 			
 			var manager = new BaseManager(room);
 			manager.allRoles = [ role1, role2 ];
 			manager.defaultRole = defaultRole;
-			MemoryManager.clearRoomRoleInfo(room, manager.allRoles);
+			MemoryManager._clearRoomRoleInfo(room, manager.allRoles);
 			
-			assert.deepEqual(role2, manager.findNecessaryMandatoryRole('Third'));
-			assert.equal(1, info.console.length);
-			assert.equal('🛑 COULD NOT FIND ROLE: Third 🛑', info.console[0]);
+			assert.deepEqual(role2, manager._findNecessaryMandatoryRole('Third'));
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 COULD NOT FIND ROLE: Third 🛑', info.getLine(0));
 		});
 	});
 
@@ -890,8 +890,8 @@ describe('manager.base', () => {
 			spawn.name = 'My first base';
 			var room = spawn.room;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			assert.equal('My first base', room.memory.base.name);
 			creep1.memory.home = room.memory.base.name;
@@ -901,8 +901,8 @@ describe('manager.base', () => {
 			manager.allRoles = [ role1, role2 ];
 			game.findAllCreeps = () => [creep1, creep2];
 			
-			MemoryManager.clearRoomRoleInfo(room, manager.allRoles);
-			manager.moveCreeps();
+			MemoryManager._clearRoomRoleInfo(room, manager.allRoles);
+			manager._moveCreeps();
 
 			assert.equal(false, run1Called);
 			assert.equal(true, run2Called);
@@ -926,8 +926,8 @@ describe('manager.base', () => {
 			spawn.name = 'My Base';
 			var room = spawn.room;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			assert.equal('My Base', room.memory.base.name);
 			creep.memory.home = room.memory.base.name;
@@ -936,8 +936,8 @@ describe('manager.base', () => {
 			manager.allRoles = [ role ];
 			game.findAllCreeps = () => [creep];
 			
-			MemoryManager.clearRoomRoleInfo(room, manager.allRoles);
-			manager.moveCreeps();
+			MemoryManager._clearRoomRoleInfo(room, manager.allRoles);
+			manager._moveCreeps();
 
 			assert.equal(true, runCalled);
 		});
@@ -960,8 +960,8 @@ describe('manager.base', () => {
 			spawn.name = 'A Base';
 			var room = spawn.room;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			assert.equal('A Base', room.memory.base.name);
 			creep.memory.home = room.memory.base.name;
@@ -970,8 +970,8 @@ describe('manager.base', () => {
 			manager.allRoles = [ role ];
 			game.findAllCreeps = () => [creep];
 			
-			MemoryManager.clearRoomRoleInfo(room, manager.allRoles);
-			manager.moveCreeps();
+			MemoryManager._clearRoomRoleInfo(room, manager.allRoles);
+			manager._moveCreeps();
 
 			assert.equal(false, runCalled);
 		});
@@ -994,8 +994,8 @@ describe('manager.base', () => {
 			spawn.name = 'Leipzig';
 			var room = spawn.room;
 
-			MemoryManager.initSpawns();
-			info.clearLog();
+			MemoryManager._initSpawns();
+			info.clearLines();
 
 			assert.equal('Leipzig', room.memory.base.name);
 			creep.memory.home = 'Chemnitz'; // we don't associate with these guys
@@ -1004,8 +1004,8 @@ describe('manager.base', () => {
 			manager.allRoles = [ role ];
 			game.findAllCreeps = () => [creep];
 			
-			MemoryManager.clearRoomRoleInfo(room, manager.allRoles);
-			manager.moveCreeps();
+			MemoryManager._clearRoomRoleInfo(room, manager.allRoles);
+			manager._moveCreeps();
 
 			assert.equal(false, runCalled);
 		});

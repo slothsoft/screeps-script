@@ -19,7 +19,7 @@ class TileWatcher {
 	 * Fetches the memory of the room's watcher.
 	 */
 	
-	fetchMemoryOfWatcher() {
+	_fetchMemoryOfWatcher() {
 		var defaultArray = {
 			enabled: true,
 			watchTime: 1000,
@@ -39,7 +39,7 @@ class TileWatcher {
 	 */
 
 	watchRoom() {
-		var memory = this.fetchMemoryOfWatcher();
+		var memory = this._fetchMemoryOfWatcher();
 		
 		if (!memory.enabled) {
 			return;
@@ -53,13 +53,13 @@ class TileWatcher {
 			memory.currentTiles = null;
 		}
 		
-		var array = this.createTileArray(memory.currentTiles);
-		this.watchRoomTiles(array);
+		var array = this._createTileArray(memory.currentTiles);
+		this._watchRoomTiles(array);
 		
 		memory.currentTiles = array.toCompactString();
 
     	if (memory.visualize) {
-    		this.printRoom(array);
+    		this._printRoom(array);
     	}
 	}
 	
@@ -67,7 +67,7 @@ class TileWatcher {
 	 * Create a tile array from the tiles string.
 	 */
 
-	createTileArray(currentTiles) {
+	_createTileArray(currentTiles) {
 		var array = new TileArray(50, 50);
 		if (currentTiles) {
 			array.fromCompactString(currentTiles);
@@ -79,7 +79,7 @@ class TileWatcher {
 	 * Does the actual watching - i.e. the tile array manipulation.
 	 */
 
-	watchRoomTiles(array) {
+	_watchRoomTiles(array) {
 		throw 'TileWatcher#watchRoomTiles is not implemented!';
 	}
 
@@ -87,7 +87,7 @@ class TileWatcher {
 	 * Prints the values of the tile array onto the screen.
 	 */
 	
-	printRoom(array) {
+	_printRoom(array) {
 		for (var x = 0; x < 50; x++) {
 			for (var y = 0; y < 50; y++) {
 		        this.room.visual.text(array.get(x, y), x, y, {align: 'center', opacity: 0.8});

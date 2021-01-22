@@ -20,7 +20,7 @@ class RoadManager extends TileWatcher {
 		super('roadManager', room);
 	}
 
-	fetchMemoryOfWatcher() {
+	_fetchMemoryOfWatcher() {
 		var defaultArray = {
 			enabled: true,
 			watchTime: 1000,
@@ -48,7 +48,7 @@ class RoadManager extends TileWatcher {
 	 * Count the creeps on the tiles. 
 	 */
 
-	watchRoomTiles(array) {
+	_watchRoomTiles(array) {
 		this.room.find(FIND_MY_CREEPS).forEach(creep => {
 			if (creep.memory.moving) {
 				var value = array.get(creep.pos.x, creep.pos.y);
@@ -64,12 +64,12 @@ class RoadManager extends TileWatcher {
 	fetchPositionsOverThreshold() {
 		var result = [];
 		
-		var memory = this.fetchMemoryOfWatcher();
+		var memory = this._fetchMemoryOfWatcher();
 
 		if (!memory.lastTiles)
 			return  result;
 		
-		var array = this.createTileArray(memory.lastTiles);
+		var array = this._createTileArray(memory.lastTiles);
 
 		for (var x = 0; x < 50; x++) {
 			for (var y = 0; y < 50; y++) {

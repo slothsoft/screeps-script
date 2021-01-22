@@ -19,15 +19,15 @@ class StoreKeeper extends RolePrototype {
 		return true;
 	}
 
-	work(creep) {
-		this.commuteBetweenSourceAndTarget(creep, target => creep.transfer(target, RESOURCE_ENERGY));
+	_work(creep) {
+		this._commuteBetweenSourceAndTarget(creep, target => creep.transfer(target, RESOURCE_ENERGY));
 	}
 
 	spawnCreep(spawn) {
-		return this.spawnCreepWithParts(spawn, [MOVE, CARRY], [ MOVE, MOVE ]);
+		return this._spawnCreepWithParts(spawn, [MOVE, CARRY], [ MOVE, MOVE ]);
 	}
 
-    findSources(room) {
+    _findSources(room) {
 	    return room.find(FIND_MY_STRUCTURES, {
 	            filter: (structure) => {
 	                return (structure.structureType == STRUCTURE_STORAGE ||
@@ -37,7 +37,7 @@ class StoreKeeper extends RolePrototype {
 	    });
     }
     
-    findTargets(room)  {
+    _findTargets(room)  {
         return room.find(FIND_MY_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||

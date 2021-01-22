@@ -23,24 +23,24 @@ class Courier extends RolePrototype {
 		return false;
 	}
 	
-    work(creep) {
-        this.commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_OXYGEN));
+    _work(creep) {
+        this._commuteBetweenSourceAndTarget(creep, target =>  creep.transfer(target, RESOURCE_OXYGEN));
     }
 
-    handleSourceWorkResult(creep, harvestResult) {
+    _handleSourceWorkResult(creep, harvestResult) {
     	if (harvestResult == ERR_TIRED) {
     		creep.memory.working = true;
     	} else {
-    		super.handleSourceWorkResult(creep, harvestResult);
+    		super._handleSourceWorkResult(creep, harvestResult);
     	}
     }
 
-    findSources(room) {
-        return this.findById(room, room.memory.source);
+    _findSources(room) {
+        return this._findById(room, room.memory.source);
     }
 
-    findTargets(room) {
-        return this.findById(room, room.memory.target);
+    _findTargets(room) {
+        return this._findById(room, room.memory.target);
     }
     
     /*
@@ -49,7 +49,7 @@ class Courier extends RolePrototype {
      * @param ID
      */
 
-    findById(room, id) {
+    _findById(room, id) {
     	var object = Game.getObjectById(id);
     	if (!object) {
     		info.error(game.getDisplayName(room) + ' could not find game object with ID: ' + id);

@@ -53,7 +53,7 @@ describe('role.harvester', () => {
 			};
 
 			var object = new Harvester();
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -81,7 +81,7 @@ describe('role.harvester', () => {
 			};
 
 			var object = new Harvester();
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -110,7 +110,7 @@ describe('role.harvester', () => {
 			};
 
 			var object = new Harvester();
-			object.findTargets(room);
+			object._findTargets(room);
 			
 			assert.equal(true, findWasCalled);
 		});
@@ -132,8 +132,8 @@ describe('role.harvester', () => {
 			target.pos.y = 6;
 			
 			var object = new Harvester();
-			object.findSources = room => [ source ];
-			object.findTargets = room => [ target ];
+			object._findSources = room => [ source ];
+			object._findTargets = room => [ target ];
 			
 			// store is half full, so first travel to source
 			object.run(creep);
@@ -179,7 +179,7 @@ describe('role.harvester', () => {
 		});
 		
 		it('self-destruct', () => {
-			info.clearLog();
+			info.clearLines();
 			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
@@ -207,7 +207,7 @@ describe('role.harvester', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLog();
+			info.clearLines();
 
 			var droppedEnergy = new Spawn();
 			droppedEnergy.pos.x = 12;
@@ -221,7 +221,7 @@ describe('role.harvester', () => {
 			
 			// dropped energy is far away, so go there
 			creep.pickup = resource => (resource == droppedEnergy) ? ERR_NOT_IN_RANGE : -1;
-			object.work = (workingCreep) => assert.fail('Creep cannot work while moving!');
+			object._work = (workingCreep) => assert.fail('Creep cannot work while moving!');
 			
 			object.run(creep);
 
@@ -232,7 +232,7 @@ describe('role.harvester', () => {
 			creep.pickup = resource => (resource == droppedEnergy) ? OK : -1;
 			
 			var workCalled = false; 
-			object.work = (workingCreep) => workCalled = true;
+			object._work = (workingCreep) => workCalled = true;
 			
 			object.run(creep);
 
