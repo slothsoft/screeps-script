@@ -22,7 +22,7 @@ class TowerManager {
 	}
 	
 	constructor(room) {
-	    this.room = room;
+	    this._room = room;
 	}
 
 	/*
@@ -39,7 +39,7 @@ class TowerManager {
 	 */
 	
 	_findTowers() {
-		return this.room.find(FIND_MY_STRUCTURES, {
+		return this._room.find(FIND_MY_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_TOWER;
             }

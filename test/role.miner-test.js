@@ -31,10 +31,10 @@ describe('role.miner', () => {
 		assert.equal('Miner', object.roleName);
 		assert.equal('#000000', object.color);
 		assert.equal('🛒', object.symbol);
-		assert.equal(-1, object.priority);
+		assert.equal(-1, object._priority);
 
-		assert.equal(constants.SOURCE_USE_SOURCE, object.useStorageAsSource);
-		assert.equal(constants.SOURCE_USE_STORAGE, object.useSourceAsSource);
+		assert.equal(constants.SOURCE_USE_SOURCE, object._useStorageAsSource);
+		assert.equal(constants.SOURCE_USE_STORAGE, object._useSourceAsSource);
 	});
 
 	describe('#isNecessary', () => {

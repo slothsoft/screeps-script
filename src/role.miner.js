@@ -14,8 +14,8 @@ class Miner extends RolePrototype {
 
 	constructor() {
 		super('Miner', '#000000', '🛒');
-		this.priority = -1; // we never need more than the defined miners
-		this.range = 7;
+		this._priority = -1; // we never need more than the defined miners
+		this._maxRangeToTarget = 7;
 	}
 
 	isNecessary(room) {
@@ -145,7 +145,7 @@ class Miner extends RolePrototype {
 	                return (structure.structureType == STRUCTURE_STORAGE ||
 	                        structure.structureType == STRUCTURE_CONTAINER ||
                             (structure.structureType == STRUCTURE_LINK && structure.memory && structure.memory.type == 'source')) &&
-	                       (!testCreepPosition || this.creep.pos.inRangeTo(structure, this.range)) &&
+	                       (!testCreepPosition || this.creep.pos.inRangeTo(structure, this._maxRangeToTarget)) &&
 	                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
 	            }
 	    });

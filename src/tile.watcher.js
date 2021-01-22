@@ -10,9 +10,9 @@ var TileArray = require('./tile.array');
 class TileWatcher {
 	
 	constructor(id, room) {
-		this.array = new TileArray(50, 50);
-		this.id = id;
-		this.room = room;
+		this._array = new TileArray(50, 50);
+		this._id = id;
+		this._room = room;
 	}
 
 	/*
@@ -26,12 +26,12 @@ class TileWatcher {
 			visualize: false,
 			tick: 0,
 		};
-		if (this.room.memory[this.id]) {
-			this.room.memory[this.id] = Object.assign(defaultArray, this.room.memory[this.id]);
+		if (this._room.memory[this._id]) {
+			this._room.memory[this._id] = Object.assign(defaultArray, this._room.memory[this._id]);
 		} else {
-			this.room.memory[this.id] = defaultArray;
+			this._room.memory[this._id] = defaultArray;
 		}
-		return this.room.memory[this.id];
+		return this._room.memory[this._id];
 	}
 	
 	/*
@@ -90,7 +90,7 @@ class TileWatcher {
 	_printRoom(array) {
 		for (var x = 0; x < 50; x++) {
 			for (var y = 0; y < 50; y++) {
-		        this.room.visual.text(array.get(x, y), x, y, {align: 'center', opacity: 0.8});
+		        this._room.visual.text(array.get(x, y), x, y, {align: 'center', opacity: 0.8});
 			}
 		}
 	}

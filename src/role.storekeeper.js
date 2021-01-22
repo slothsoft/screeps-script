@@ -12,7 +12,7 @@ class StoreKeeper extends RolePrototype {
 
 	constructor() {
 		super('Storekeeper', '#ff9900', '🏭');
-		this.priority = -1;
+		this._priority = -1;
 	}
 
 	isNecessary(room) {

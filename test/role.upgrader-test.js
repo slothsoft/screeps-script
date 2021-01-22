@@ -24,10 +24,10 @@ describe('role.upgrader', () => {
 		assert.equal('Upgrader', object.roleName);
 		assert.equal('#00ff00', object.color);
 		assert.equal('⚡', object.symbol);
-		assert.equal(50, object.priority);
+		assert.equal(50, object._priority);
 
-		assert.equal(constants.SOURCE_USE_SOURCE, object.useStorageAsSource);
-		assert.equal(constants.SOURCE_USE_STORAGE, object.useSourceAsSource);
+		assert.equal(constants.SOURCE_USE_SOURCE, object._useStorageAsSource);
+		assert.equal(constants.SOURCE_USE_STORAGE, object._useSourceAsSource);
 	});
 
 	describe('#findTargets', () => {

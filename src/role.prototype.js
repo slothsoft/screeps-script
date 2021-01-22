@@ -28,10 +28,10 @@ class RolePrototype {
 	    this.roleName = roleName;
 	    this.color = color;
 	    this.symbol = symbol;
-	    this.priority = 0; // the higher the better
+	    this._priority = 0; // the higher the better
 	    
-	    this.useStorageAsSource = constants.SOURCE_USE_STORAGE;
-	    this.useSourceAsSource = constants.SOURCE_USE_SOURCE;
+	    this._useStorageAsSource = constants.SOURCE_USE_STORAGE;
+	    this._useSourceAsSource = constants.SOURCE_USE_SOURCE;
 	}
 	
 	/*
@@ -202,7 +202,7 @@ class RolePrototype {
 	 */
 
     _findSources(room) {
-        var storages = this.useStorageAsSource ? room.find(FIND_STRUCTURES, {
+        var storages = this._useStorageAsSource ? room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_STORAGE ||
                         structure.structureType == STRUCTURE_CONTAINER ||
@@ -210,7 +210,7 @@ class RolePrototype {
                         structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }}) : [];
             
-        var sources = this.useSourceAsSource ? room.find(FIND_SOURCES_ACTIVE, {
+        var sources = this._useSourceAsSource ? room.find(FIND_SOURCES_ACTIVE, {
                 filter: (source) => {
                     if (game.findAllCreeps().filter(creep => creep.memory.homeSource == source.id).length) {
                         // source was claimed by a miner

@@ -57,7 +57,7 @@ class LinkManager {
 	}
 	
 	constructor(room) {
-	    this.room = room;
+	    this._room = room;
 	}
 	
 	/*
@@ -76,7 +76,7 @@ class LinkManager {
 	 */
 	
 	_findSourceLinks() {
-		return this.room.find(FIND_MY_STRUCTURES, {
+		return this._room.find(FIND_MY_STRUCTURES, {
             filter: (structure) => {
             	if (structure.structureType != STRUCTURE_LINK) {
             		return false;
@@ -115,7 +115,7 @@ class LinkManager {
 	
 	_findTargetLink(sourceLink) { 
 		// TODO: sort by capacity?
-		var targetLinks = this.room.find(FIND_MY_STRUCTURES, {
+		var targetLinks = this._room.find(FIND_MY_STRUCTURES, {
 	        filter: (structure) => {
 	        	if (structure.structureType != STRUCTURE_LINK) {
 	        		return false;

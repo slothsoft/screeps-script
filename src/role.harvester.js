@@ -8,9 +8,9 @@ class Harvester extends RolePrototype {
 
 	constructor() {
 		super('Harvester', '#ffffff', '🧺');
-	    this.priority = 100; 
-	    this.useStorageAsSource = false;
-	    this.useSourceAsSource = true;
+	    this._priority = 100; 
+	    this._useStorageAsSource = false;
+	    this._useSourceAsSource = true;
 	}
 
 	/*

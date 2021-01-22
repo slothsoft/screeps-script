@@ -46,9 +46,9 @@ class BaseManager {
 	
 	
 	constructor(room, allRoles = BaseManager.fetchAllRoles()) {
-	    this.room = room;
-	    this.defaultRole = new Harvester();
-	    this.allRoles = allRoles;
+	    this._room = room;
+	    this._defaultRole = new Harvester();
+	    this._allRoles = allRoles;
 	}
 
 	/*
@@ -56,7 +56,7 @@ class BaseManager {
 	 */	
     
     runBase() {  
-    	if (this.room.memory.base) {
+    	if (this._room.memory.base) {
 	        this._repopulateCreeps();
 	        this._showSpawningAnimation();
 	        this._moveCreeps();
@@ -69,15 +69,15 @@ class BaseManager {
      */
 
     _repopulateCreeps() {    
-    	var baseName = this.room.memory.base.name;
+    	var baseName = this._room.memory.base.name;
     	var alreadySpawned = false;
-        this.allRoles.forEach(role => {
+        this._allRoles.forEach(role => {
         	
         	if (alreadySpawned) return;
         	
             var foundCreeps = game.findAllCreeps().filter(creep => creep.memory.role == role.roleName && creep.memory.home == baseName);
             
-            if (foundCreeps.length < MemoryManager.getRequiredNumberForRoomAndRole(this.room, role.roleName)) {
+            if (foundCreeps.length < MemoryManager.getRequiredNumberForRoomAndRole(this._room, role.roleName)) {
                 if (this._spawnCreepForRole(role)) {
                 	alreadySpawned = true;
                 }
@@ -92,20 +92,20 @@ class BaseManager {
      */
 
     _spawnCreepForRole(role) {    
-        var freeSpawn = this._fetchFreeSpawn(this.room.memory.base.name);
+        var freeSpawn = this._fetchFreeSpawn(this._room.memory.base.name);
         if (freeSpawn) {
             var resultingCreep = role.spawnCreep(freeSpawn);
             if (resultingCreep && freeSpawn.memory.debug) {
             	info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
             }
             return resultingCreep;
-        } else if (this.room.memory.base.outsourceSpawn) {
+        } else if (this._room.memory.base.outsourceSpawn) {
         	// take any other free spawn
             var freeSpawn = this._fetchFreeSpawn();
             if (freeSpawn) {
                 var resultingCreep = role.spawnCreep(freeSpawn);
                 if (resultingCreep) {
-                	resultingCreep.memory.home  = this.room.memory.base.name;
+                	resultingCreep.memory.home  = this._room.memory.base.name;
                 	if (freeSpawn.memory.debug) {
                 		info.log(role.symbol + ' Spawning new ' + role.roleName + ' (' + resultingCreep.body.length + 'p)');
                 	}
@@ -123,7 +123,7 @@ class BaseManager {
      */
 
     spawnCreepForRoleName(roleName) {
-	    var roles = this.allRoles.filter(role => role.roleName == roleName);
+	    var roles = this._allRoles.filter(role => role.roleName == roleName);
 	    if (roles.length > 0) {
 	    	return this._spawnCreepForRole(roles[0]);
 	    }
@@ -147,7 +147,7 @@ class BaseManager {
      */
     
     _showSpawningAnimation() {  
-    	game.findAllSpawns().filter(spawn => spawn.spawning && spawn.room == this.room).forEach(spawn => {
+    	game.findAllSpawns().filter(spawn => spawn.spawning && spawn.room == this._room).forEach(spawn => {
             spawn.room.visual.text('🔁', spawn.pos.x - 1, spawn.pos.y, {align: 'left', opacity: 0.8});
         });
     }
@@ -157,7 +157,7 @@ class BaseManager {
      */
     
     _moveCreeps() {  
-    	var baseName = this.room.memory.base.name;
+    	var baseName = this._room.memory.base.name;
         game.findAllCreeps()
 	        	.filter(creep => creep.memory.home == baseName) // creeps of this base
 	        	.filter(creep => !creep.spawning) // that are not spawning
@@ -170,8 +170,8 @@ class BaseManager {
                 var currentNumber = creep.room.memory.roleInfo[creepRole.roleName].currentNumber;
                 creep.room.memory.roleInfo[creepRole.roleName].currentNumber = currentNumber ? currentNumber + 1 : 1;
                 
-                if (constants.DEBUG_ROLES && this.room == creep.room) {
-                	this.room.visual.text(creepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
+                if (constants.DEBUG_ROLES && this._room == creep.room) {
+                	this._room.visual.text(creepRole.symbol, creep.pos.x, creep.pos.y, {align: 'left', opacity: 0.8});
                 }
             } catch (e) {
                 console.log(e.stack);
@@ -187,9 +187,9 @@ class BaseManager {
     _findNecessaryMandatoryRole(roleName) {
         var result = this._findMandatoryRole(roleName);
         
-        if (!result.isNecessary(this.room)) {
+        if (!result.isNecessary(this._room)) {
             // we have creeps in a role that is not necessary - try to find something better to do
-            var necessaryRoles = this.allRoles.filter(role => role.isNecessary(this.room));
+            var necessaryRoles = this._allRoles.filter(role => role.isNecessary(this._room));
             if (necessaryRoles.length > 0) {
             	result = necessaryRoles[0];
             }
@@ -202,14 +202,14 @@ class BaseManager {
      */
     
     _findMandatoryRole(roleName) {
-        var creepRoles = this.allRoles.filter(role => roleName == role.roleName);
+        var creepRoles = this._allRoles.filter(role => roleName == role.roleName);
         
         if(creepRoles.length > 0) {
             return creepRoles[0];
         } 
         // if no role could be found for a creep... he uses the default role
         info.error('COULD NOT FIND ROLE: ' + roleName + ' 🛑');
-        return this.defaultRole;
+        return this._defaultRole;
     }
 };
 

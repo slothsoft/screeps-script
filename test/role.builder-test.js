@@ -24,10 +24,10 @@ describe('role.builder', () => {
 		assert.equal('Builder', object.roleName);
 		assert.equal('#ffff00', object.color);
 		assert.equal('🔨', object.symbol);
-		assert.equal(70, object.priority);
+		assert.equal(70, object._priority);
 
-		assert.equal(constants.SOURCE_USE_SOURCE, object.useStorageAsSource);
-		assert.equal(constants.SOURCE_USE_STORAGE, object.useSourceAsSource);
+		assert.equal(constants.SOURCE_USE_SOURCE, object._useStorageAsSource);
+		assert.equal(constants.SOURCE_USE_STORAGE, object._useSourceAsSource);
 	});
 
 	describe('#findTargets', () => {

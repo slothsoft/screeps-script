@@ -28,17 +28,17 @@ class RoadManager extends TileWatcher {
 			tick: 0,
 			threshold: 100,
 		};
-		if (this.room.memory[this.id]) {
-			this.room.memory[this.id] = Object.assign(defaultArray, this.room.memory[this.id]);
+		if (this._room.memory[this._id]) {
+			this._room.memory[this._id] = Object.assign(defaultArray, this._room.memory[this._id]);
 		} else {
-			this.room.memory[this.id] = defaultArray;
+			this._room.memory[this._id] = defaultArray;
 		}
-		return this.room.memory[this.id];
+		return this._room.memory[this._id];
 	}
 	
 	watchRoom() {
 		// if there is no creep we don't need to watch that particular room
-		if (this.room.find(FIND_MY_CREEPS).length > 0) {
+		if (this._room.find(FIND_MY_CREEPS).length > 0) {
 			super.watchRoom();
 		}
 	}
@@ -49,7 +49,7 @@ class RoadManager extends TileWatcher {
 	 */
 
 	_watchRoomTiles(array) {
-		this.room.find(FIND_MY_CREEPS).forEach(creep => {
+		this._room.find(FIND_MY_CREEPS).forEach(creep => {
 			if (creep.memory.moving) {
 				var value = array.get(creep.pos.x, creep.pos.y);
 				array.set(creep.pos.x, creep.pos.y, value ? (parseInt(value) + 1) : 1);
@@ -83,7 +83,7 @@ class RoadManager extends TileWatcher {
 				}
 			}
 		}
-		return result.sort((a, b) => b.value - a.value).map(pos => new RoomPosition(pos.x, pos.y, this.room.name));
+		return result.sort((a, b) => b.value - a.value).map(pos => new RoomPosition(pos.x, pos.y, this._room.name));
 	}
 
 };

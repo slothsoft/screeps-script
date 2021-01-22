@@ -15,9 +15,9 @@ describe('tile.array', () => {
 		it('string array', () => {
 			var abcArray = Array.from(abc);
 			var array = new TileArray(6, 4);
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
-					array.set(x, y, abcArray[x + y * array.width]);
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
+					array.set(x, y, abcArray[x + y * array._width]);
 				}
 			}
 			assert.equal('ABCDEFGHIJKLMNOPQRSTUVWX', array.toCompactString());
@@ -26,9 +26,9 @@ describe('tile.array', () => {
 		it('string array with padding', () => {
 			var abcArray = Array.from(abc);
 			var array = new TileArray(6, 4);
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
-					array.set(x, y, abcArray[x + y * array.width]);
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
+					array.set(x, y, abcArray[x + y * array._width]);
 				}
 			}
 			array.set(0, 0, 'AA');
@@ -39,9 +39,9 @@ describe('tile.array', () => {
 		it('string array with other padding', () => {
 			var abcArray = Array.from(abc);
 			var array = new TileArray(6, 4);
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
-					array.set(x, y, abcArray[x + y * array.width]);
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
+					array.set(x, y, abcArray[x + y * array._width]);
 				}
 			}
 			array.set(0, 0, 'AA');
@@ -52,10 +52,10 @@ describe('tile.array', () => {
 		it('int array', () => {
 			var abcArray = Array.from(abc);
 			var array = new TileArray(3, 4);
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
 					if (x != y) {
-						array.set(x, y, (x + y * array.width) % 10);
+						array.set(x, y, (x + y * array._width) % 10);
 					}
 				}
 			}
@@ -69,9 +69,9 @@ describe('tile.array', () => {
 			array.fromCompactString('ABCDEFGHIJKLMNOPQRSTUVWX');
 
 			var abcArray = Array.from(abc);
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
-					assert.equal(abcArray[x + y * array.width], array.get(x, y));
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
+					assert.equal(abcArray[x + y * array._width], array.get(x, y));
 				}
 			}
 		});
@@ -82,9 +82,9 @@ describe('tile.array', () => {
 
 			var abcArray = Array.from(abc);
 			abcArray[0] = 'AA';
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
-					assert.equal(abcArray[x + y * array.width], array.get(x, y));
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
+					assert.equal(abcArray[x + y * array._width], array.get(x, y));
 				}
 			}
 		});
@@ -95,16 +95,16 @@ describe('tile.array', () => {
 
 			var abcArray = Array.from(abc);
 			abcArray[0] = 'AA';
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
-					assert.equal(abcArray[x + y * array.width], array.get(x, y));
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
+					assert.equal(abcArray[x + y * array._width], array.get(x, y));
 				}
 			}
 			var abcArray = Array.from(abc);
 			var array = new TileArray(6, 4);
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
-					array.set(x, y, abcArray[x + y * array.width]);
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
+					array.set(x, y, abcArray[x + y * array._width]);
 				}
 			}
 			array.set(0, 0, 'AA');
@@ -116,8 +116,8 @@ describe('tile.array', () => {
 			var array = new TileArray(6, 4);
 			array.fromCompactString('');
 
-			for (var x = 0; x < array.width; x++) {
-				for (var y = 0; y < array.height; y++) {
+			for (var x = 0; x < array._width; x++) {
+				for (var y = 0; y < array._height; y++) {
 					assert.equal('', array.get(x, y));
 				}
 			}
