@@ -92,6 +92,9 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ..roleConfig          | `object`    | used to configure the creeps in this base |
 | ....partsMinMultiplier| `number`    | used to configure how many parts new creeps have at least |
 | ....partsMaxMultiplier| `number`    | used to configure how many parts new creeps have at most |
+| ....showIcons         | `boolean`   | if `true`, shows icon on top of the creeps |
+| ....useSourceAsSource | `boolean`   | if `true`, creeps that collect energy from somewhere will use sources as a source (set to `false` if other creeps mine sources) |
+| ....useStorageAsSource| `boolean`   | if `true`, creeps that collect energy from somewhere will use storages as a source |
 | ....&lt;role&gt;      | `object`    | used to configure a specific role in this base |
 | ......requiredNumber  | `number`    | the required number of creeps for this role |
 | console               | `object`    | used to collect config of the console & other GUI elements |

@@ -22,6 +22,8 @@ var constants = require('./main.constants');
 var game = require('./main.game');
 var info = require('./main.info');
 
+var MemoryManager = require('./manager.memory');
+
 class RolePrototype {
     
 	constructor(roleName = 'Prototype', color = '#ff0000', symbol = '❗') {
@@ -29,9 +31,6 @@ class RolePrototype {
 	    this.color = color;
 	    this.symbol = symbol;
 	    this._priority = 0; // the higher the better
-	    
-	    this._useStorageAsSource = constants.SOURCE_USE_STORAGE;
-	    this._useSourceAsSource = constants.SOURCE_USE_SOURCE;
 	}
 	
 	/*
@@ -242,6 +241,12 @@ class RolePrototype {
     run(creep) {
     	// we want to keep track when a creep is actually moving
     	creep.memory.moving = false;
+    	
+    	// init values from room memory
+    	var memoryRoleConfig = MemoryManager.fetchRoomRoleConfigForBase(creep.memory.home, [ this ]);
+	    this._useStorageAsSource = !memoryRoleConfig || memoryRoleConfig.useStorageAsSource;
+	    this._useSourceAsSource = !memoryRoleConfig || memoryRoleConfig.useSourceAsSource;
+    	
         
         // self-destructing is more important than working
         

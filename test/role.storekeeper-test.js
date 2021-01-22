@@ -25,9 +25,6 @@ describe('role.storekeeper', () => {
 		assert.equal('#ff9900', object.color);
 		assert.equal('🏭', object.symbol);
 		assert.equal(-1, object._priority);
-
-		assert.equal(constants.SOURCE_USE_SOURCE, object._useStorageAsSource);
-		assert.equal(constants.SOURCE_USE_STORAGE, object._useSourceAsSource);
 	});
 
 	describe('#isNecessary', () => {

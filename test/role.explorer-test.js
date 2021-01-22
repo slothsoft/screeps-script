@@ -37,9 +37,6 @@ describe('role.explorer', () => {
 		assert.equal('#cccccc', object.color);
 		assert.equal('🏴', object.symbol);
 		assert.equal(0, object._priority);
-
-		assert.equal(constants.SOURCE_USE_SOURCE, object._useStorageAsSource);
-		assert.equal(constants.SOURCE_USE_STORAGE, object._useSourceAsSource);
 	});
 
 	describe('#findTargets', () => {

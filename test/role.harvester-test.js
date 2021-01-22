@@ -24,9 +24,6 @@ describe('role.harvester', () => {
 		assert.equal('#ffffff', object.color);
 		assert.equal('🧺', object.symbol);
 		assert.equal(100, object._priority);
-
-		assert.equal(false, object._useStorageAsSource);
-		assert.equal(true, object._useSourceAsSource);
 	});
 
 	describe('#findTargets', () => {

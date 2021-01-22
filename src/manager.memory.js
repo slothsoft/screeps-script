@@ -10,6 +10,21 @@ var info = require('./main.info');
 class MemoryManager {
 
 	/*
+	 * Fetches the memory of the room's role config for a specific base name.
+	 * 
+	 * @param {Room} room
+	 * @param allRoles - the roles to be initialized
+	 */
+	
+	static fetchRoomRoleConfigForBase(baseName, allRoles = []) {
+		var roomsOfBase = game.findAllRooms().filter(room => room.memory.base && room.memory.base.name === baseName);
+		if (roomsOfBase.length > 0) {
+			return this._fetchRoomRoleConfig(roomsOfBase[0], allRoles);
+		}
+		return null;
+	}
+	
+	/*
 	 * Fetches the memory of all the room's role configs.
 	 * 
 	 * @param allRoles
@@ -27,13 +42,16 @@ class MemoryManager {
 	 * Fetches the memory of the room's role config.
 	 * 
 	 * @param {Room} room
-	 * @param allRoles
+	 * @param allRoles - the roles to be initialized
 	 */
 
-	static _fetchRoomRoleConfig(room, allRoles) {
+	static _fetchRoomRoleConfig(room, allRoles = []) {
 		var defaultArray = {
 			partsMinMultiplier: 0,
 			partsMaxMultiplier: 20,
+			showIcons: true,
+	    	useStorageAsSource: true,
+	    	useSourceAsSource: true,
 		};
         allRoles.forEach(role => {
         	defaultArray[role.roleName] = { requiredNumber: 0 };

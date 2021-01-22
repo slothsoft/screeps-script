@@ -31,6 +31,9 @@ describe('manager.memory', () => {
 			var expecting = {
 				partsMinMultiplier: 0,
 				partsMaxMultiplier: 20,
+				showIcons: true,
+		    	useStorageAsSource: true,
+		    	useSourceAsSource: true,
 				Role: {
 					requiredNumber: 0,
 				}
@@ -57,6 +60,9 @@ describe('manager.memory', () => {
 			var expecting = {
 				partsMinMultiplier: 0,
 				partsMaxMultiplier: 20,
+				showIcons: true,
+		    	useStorageAsSource: true,
+		    	useSourceAsSource: true,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -73,6 +79,11 @@ describe('manager.memory', () => {
 			var room = new Room();
 			room.memory.base = {};
 			room.memory.base.roleConfig =  {
+					partsMinMultiplier: 3,
+					partsMaxMultiplier: 3,
+					showIcons: false,
+			    	useStorageAsSource: false,
+			    	useSourceAsSource: false,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -87,8 +98,11 @@ describe('manager.memory', () => {
 			var result = MemoryManager._fetchRoomRoleConfig(room, [ role1, role2 ]);
 			
 			var expecting = {
-				partsMinMultiplier: 0,
-				partsMaxMultiplier: 20,
+				partsMinMultiplier: 3,
+				partsMaxMultiplier: 3,
+				showIcons: false,
+		    	useStorageAsSource: false,
+		    	useSourceAsSource: false,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -101,7 +115,6 @@ describe('manager.memory', () => {
 			assert.deepEqual(expecting, room.memory.base.roleConfig);
 		});
 	});
-
 
 	describe('#fetchAllRoomRoleConfig', () => {
 		it('no memory', () => {
@@ -119,6 +132,9 @@ describe('manager.memory', () => {
 			var expecting = {
 				partsMinMultiplier: 0,
 				partsMaxMultiplier: 20,
+				showIcons: true,
+		    	useStorageAsSource: true,
+		    	useSourceAsSource: true,
 				Role: {
 					requiredNumber: 0,
 				}
@@ -132,6 +148,7 @@ describe('manager.memory', () => {
 			var room1 = new Room();
 			room1.memory.base = {};
 			room1.memory.base.roleConfig =  {
+		    	useStorageAsSource: false,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -140,6 +157,8 @@ describe('manager.memory', () => {
 			var room2 = new Room();
 			room2.memory.base = {};
 			room2.memory.base.roleConfig =  {
+		    	useStorageAsSource: false,
+		    	useSourceAsSource: true,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -157,6 +176,9 @@ describe('manager.memory', () => {
 			var expecting = {
 				partsMinMultiplier: 0,
 				partsMaxMultiplier: 20,
+				showIcons: true,
+		    	useStorageAsSource: false,
+		    	useSourceAsSource: true,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -173,6 +195,11 @@ describe('manager.memory', () => {
 			var room1 = new Room();
 			room1.memory.base = {};
 			room1.memory.base.roleConfig =  {
+				partsMinMultiplier: 1,
+				partsMaxMultiplier: 2,
+				showIcons: false,
+		    	useStorageAsSource: true,
+		    	useSourceAsSource: true,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -184,6 +211,11 @@ describe('manager.memory', () => {
 			var room2 = new Room();
 			room2.memory.base = {};
 			room2.memory.base.roleConfig =  {
+				partsMinMultiplier: 1,
+				partsMaxMultiplier: 2,
+				showIcons: false,
+		    	useStorageAsSource: true,
+		    	useSourceAsSource: true,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -199,8 +231,11 @@ describe('manager.memory', () => {
 			MemoryManager._fetchAllRoomRoleConfigs([ role1, role2 ]);
 			
 			var expecting = {
-				partsMinMultiplier: 0,
-				partsMaxMultiplier: 20,
+				partsMinMultiplier: 1,
+				partsMaxMultiplier: 2,
+				showIcons: false,
+		    	useStorageAsSource: true,
+		    	useSourceAsSource: true,
 				Role1: {
 					requiredNumber: 1,
 				},
@@ -474,6 +509,28 @@ describe('manager.memory', () => {
 			assert.equal('Chemnitz', spawn.memory.home);
 			assert.deepEqual(expecting, spawn.room.memory.base);
 			assert.deepEqual(expecting, room.memory.base);
+		});
+	});
+
+	describe('#fetchRoomRoleConfigForBase', () => {
+		it('found base', () => {
+			var room1 = new Room();
+			var room2 = new Room();
+			var room3 = new Room();
+			MemoryManager._fetchRoomBase(room2, 'New York');
+			var roleConfig = MemoryManager._fetchRoomRoleConfig(room2, [ { roleName: 'Role' } ]);
+			
+			game.findAllRooms = () => [ room1, room2, room3 ];
+			assert.deepEqual(roleConfig, MemoryManager.fetchRoomRoleConfigForBase('New York'));
+		});
+
+		it('no base', () => {
+			var room1 = new Room();
+			var room2 = new Room();
+			var room3 = new Room();
+
+			game.findAllRooms = () => [ room1, room2, room3 ];
+			assert.equal(null, MemoryManager.fetchRoomRoleConfigForBase('New York'));
 		});
 	});
 });
