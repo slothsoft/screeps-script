@@ -174,15 +174,8 @@ For the question how to implement couriers, two option present itself: routes st
 
 ## Open Tasks
 
-- don't switch to roles where you missing parts
-- remove console entries after a while
-- finish Explorer
-- findTargets() sometimes depends on the creep, not the room (then probably findSources() too) ???
-- TODOs in code
-- creeps cannot work on other maps than the base's
-- constants might be better of being base memory variables
-- make Courier more universal
-- Creep#dismantle !!!
+- `Creep#dismantle` can be used for something
 - spawn on new world and see what happens and what needs fixing, then document
-- organize TODOs-Tasks better?
-- how often is the block with "work; if outside range move; if ok, do nothing, if else log error" used? Is there a better way?
+- test the marked test classes (→ TODO)
+
+_(See [Issues](https://github.com/slothsoft/screeps-script/issues))_
