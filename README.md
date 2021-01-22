@@ -60,9 +60,6 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 | Roads are missing. | I'm building roads.  | There are some well-traveled tiles without roads (set `room.memory.roadManager.visualize` to `true` to see which) |
 | Upgrader is missing. | Spawning Upgrader.  | The base needs at least one Upgrader to work correctly. |
 
-				text: 'Handyman is missing.' , 
-				solution: 'Spawning Handyman.',
-
 
 
 ## Console Commands
