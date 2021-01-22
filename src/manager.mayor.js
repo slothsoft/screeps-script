@@ -64,7 +64,6 @@ class MayorManager {
 	 */
 	
 	validate() {
-		// TODO: if broken structures and no handyman -> spawn
 		// TODO: creating roads is nice, but they should be removed if not used
 		// TODO: if can build extractor but was not build -> build
 		// TODO: if has extractor but no courier -> build?

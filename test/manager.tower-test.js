@@ -1,9 +1,9 @@
 var TowerManager = require('../src/manager.tower');
 var assert = require('assert');
 
-var Room = require('./mock/room-mock.js');
-var RoomPosition = require('./mock/room-position-mock.js');
-var Store = require('./mock/store-mock.js');
+var Room = require('./mock/room-mock');
+var RoomPosition = require('./mock/room-position-mock');
+var Store = require('./mock/store-mock');
 
 // All methods tested.
 

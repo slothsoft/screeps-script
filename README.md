@@ -187,3 +187,5 @@ For the question how to implement couriers, two option present itself: routes st
 - make Courier more universal
 - Creep#dismantle !!!
 - spawn on new world and see what happens and what needs fixing, then document
+- organize TODOs-Tasks better?
+- how often is the block with "work; if outside range move; if ok, do nothing, if else log error" used? Is there a better way?

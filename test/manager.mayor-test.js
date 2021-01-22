@@ -4,7 +4,7 @@ var assert = require('assert');
 var game = require('../src/main.game');
 var info = require('../src/main.info');
 
-var Room = require('./mock/room-mock.js');
+var Room = require('./mock/room-mock');
 
 // TODO: Test these methods:
 // - runAll()

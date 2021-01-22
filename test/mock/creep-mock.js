@@ -4,9 +4,9 @@
 
 require('./game-mock');
 
-var Room = require('./room-mock.js');
-var RoomPosition = require('./room-position-mock.js');
-var Store = require('./store-mock.js');
+var Room = require('./room-mock');
+var RoomPosition = require('./room-position-mock');
+var Store = require('./store-mock');
 
 global.MOVE = 'move';
 global.WORK = 'work';

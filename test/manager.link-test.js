@@ -4,8 +4,8 @@ var assert = require('assert');
 var constants = require('../src/main.constants');
 var info = require('../src/main.info');
 
-var Room = require('./mock/room-mock.js');
-var Store = require('./mock/store-mock.js');
+var Room = require('./mock/room-mock');
+var Store = require('./mock/store-mock');
 
 // All methods tested.
 

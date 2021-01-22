@@ -1,9 +1,9 @@
 var RoadManager = require('../src/manager.road');
 var assert = require('assert');
 
-var Creep = require('./mock/creep-mock.js');
-var Room = require('./mock/room-mock.js');
-var RoomPosition = require('./mock/room-position-mock.js');
+var Creep = require('./mock/creep-mock');
+var Room = require('./mock/room-mock');
+var RoomPosition = require('./mock/room-position-mock');
 
 // All methods tested.
 

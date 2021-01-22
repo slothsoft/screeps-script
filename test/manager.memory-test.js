@@ -2,10 +2,10 @@ var MemoryManager = require('../src/manager.memory');
 var assert = require('assert');
 
 var game = require('../src/main.game');
-var memory = require('./mock/memory-mock.js');
+var memory = require('./mock/memory-mock');
 
-var Room = require('./mock/room-mock.js');
-var Spawn = require('./mock/spawn-mock.js');
+var Room = require('./mock/room-mock');
+var Spawn = require('./mock/spawn-mock');
 
 // All methods tested.
 

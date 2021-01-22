@@ -52,8 +52,7 @@ class LinkManager {
 
 	static makeLinkType(linkId, type) {
 		var object = Game.getObjectById(linkId);
-		// TODO: why doesn't variable work here?
-		var memory = require('./main.game').fetchMemoryOfStructure(object);
+		var memory = game.fetchMemoryOfStructure(object);
 		memory.type = type; 
 	}
 	

@@ -5,6 +5,7 @@
  */
  
 var game = require('./main.game');
+var info = require('./main.info');
 
 class MemoryManager {
 
@@ -62,8 +63,7 @@ class MemoryManager {
 			room.memory.base = Object.assign(defaultArray, room.memory.base);
 		} else {
 			room.memory.base = defaultArray;
-    		// TODO: why doesn't variable work here?
-			require('./main.info').log('🏠 Created new base: ' + baseName);
+			info.log('🏠 Created new base: ' + baseName);
 		}
 		return room.memory.base;
 	}
@@ -139,8 +139,7 @@ class MemoryManager {
 	    	if (spawn.room.memory.base) {
 	    		// 2nd spawn in a room
 	    		spawn.memory.home = spawn.room.memory.base.name;
-	    		// TODO: why doesn't variable work here?
-	    		require('./main.info').log('🏠 Created new spawn in base: ' + spawn.room.memory.home);
+	    		info.log('🏠 Created new spawn in base: ' + spawn.room.memory.home);
 	    	} else {
 	    		// new base in this room
 	    		this.fetchRoomBase(spawn.room, spawn.name);
@@ -159,8 +158,7 @@ class MemoryManager {
 	        	var debug = Memory.creeps[name].debug;
 	            delete Memory.creeps[name];
 	            if (debug) {
-		    		// TODO: why doesn't variable work here?
-		            require('./main.info').log('🚮 Clearing non-existing creep memory: ' + name);
+	            	info.log('🚮 Clearing non-existing creep memory: ' + name);
 	        	}
 	        }
 	    }

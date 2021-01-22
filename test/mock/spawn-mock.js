@@ -7,8 +7,8 @@ require('./memory-mock');
 
 var Creep = require('./creep-mock');
 var Room = require('./room-mock');
-var RoomPosition = require('./room-position-mock.js');
-var Store = require('./store-mock.js');
+var RoomPosition = require('./room-position-mock');
+var Store = require('./store-mock');
 
 class Spawn {
 	

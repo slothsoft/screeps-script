@@ -5,9 +5,9 @@ var constants = require('../src/main.constants');
 var info = require('../src/main.info');
 
 var Creep = require('./mock/creep-mock');
-var Room = require('./mock/room-mock.js');
+var Room = require('./mock/room-mock');
 var Spawn = require('./mock/spawn-mock');
-var Store = require('./mock/store-mock.js');
+var Store = require('./mock/store-mock');
 
 // All methods tested.
 

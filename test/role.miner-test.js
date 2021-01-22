@@ -8,9 +8,9 @@ var game = require('../src/main.game');
 var MemoryManager = require('../src/manager.memory');
 
 var Creep = require('./mock/creep-mock');
-var Room = require('./mock/room-mock.js');
+var Room = require('./mock/room-mock');
 var Spawn = require('./mock/spawn-mock');
-var Store = require('./mock/store-mock.js');
+var Store = require('./mock/store-mock');
 
 // All methods tested.
 

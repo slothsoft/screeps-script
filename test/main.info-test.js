@@ -2,7 +2,7 @@ var classUnderTest = require('../src/main.info');
 var assert = require('assert');
 
 var MemoryManager = require('../src/manager.memory');
-var Room = require('./mock/room-mock.js');
+var Room = require('./mock/room-mock');
 
 // All methods tested.
 

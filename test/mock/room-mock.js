@@ -5,7 +5,7 @@
 require('./game-mock');
 require('./memory-mock');
 
-var RoomVisual = require('./room-visual-mock.js');
+var RoomVisual = require('./room-visual-mock');
 
 global.FIND_EXIT_TOP = 1;
 global.FIND_EXIT_RIGHT = 3;

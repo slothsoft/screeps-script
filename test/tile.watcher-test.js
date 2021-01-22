@@ -1,7 +1,7 @@
 var TileWatcher = require('../src/tile.watcher');
 var assert = require('assert');
 
-var Room = require('./mock/room-mock.js');
+var Room = require('./mock/room-mock');
 
 // All methods tested.
 
