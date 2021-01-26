@@ -258,13 +258,13 @@ class RolePrototype {
         // picking up energy is more important than working
         
         // TODO: make sure this is a resource creep can use
-        var dropenergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3);
-    	if (dropenergy.length > 0 && creep.store.getFreeCapacity() > 0) {
+        var droppedEnergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3).filter(e => e.resourceType == RESOURCE_ENERGY);
+    	if (droppedEnergy.length > 0 && creep.store.getFreeCapacity() > 0) {
             if (creep.memory.debug) {
-            	info.log('🟡 ' + game.getDisplayName(creep) + ' is picking up resource ' + game.getDisplayName(dropenergy[0]));
+            	info.log('🟡 ' + game.getDisplayName(creep) + ' is picking up resource ' + game.getDisplayName(droppedEnergy[0]));
             }
-        	if (creep.pickup(dropenergy[0]) == ERR_NOT_IN_RANGE) {
-        		this._moveToLocation(creep, dropenergy[0]);
+        	if (creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
+        		this._moveToLocation(creep, droppedEnergy[0]);
         		return;
         	}
         	// here is no return because creeps can pickup energy an work afterwards

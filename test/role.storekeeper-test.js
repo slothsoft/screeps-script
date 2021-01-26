@@ -215,6 +215,7 @@ describe('role.storekeeper', () => {
 			info.clearLines();
 
 			var droppedEnergy = new Spawn();
+			droppedEnergy.resourceType = RESOURCE_ENERGY;
 			droppedEnergy.pos.x = 12;
 			droppedEnergy.pos.y = 13;
 			
@@ -251,7 +252,7 @@ describe('role.storekeeper', () => {
 	describe('#spawnCreep', () => {
 		it('no creep', () => {
 			var spawn = new Spawn();
-			spawn.room.energyAvailable = 229;
+			spawn.room.energyAvailable = 129;
 			var object = new StoreKeeper();
 			
 			var creep = object.spawnCreep(spawn);
@@ -260,22 +261,22 @@ describe('role.storekeeper', () => {
 
 		it('creep with 1 x parts', () => {
 			var spawn = new Spawn();
-			spawn.room.energyAvailable = 230;
+			spawn.room.energyAvailable = 130;
 			var object = new StoreKeeper();
 			
 			var creep = object.spawnCreep(spawn);
 			assert.equal(Game.creeps['Storekeeper 1'], creep);
-			assert.deepEqual([MOVE, MOVE, MOVE, CARRY], creep.body);
+			assert.deepEqual([MOVE, CARRY], creep.body);
 		});
 
 		it('creep with 2 x parts', () => {
 			var spawn = new Spawn();
-			spawn.room.energyAvailable = 460;
+			spawn.room.energyAvailable = 360;
 			var object = new StoreKeeper();
 			
 			var creep = object.spawnCreep(spawn);
 			assert.equal(Game.creeps['Storekeeper 1'], creep);
-			assert.deepEqual([MOVE, MOVE, MOVE, CARRY, MOVE, CARRY], creep.body);
+			assert.deepEqual([MOVE, CARRY, MOVE, CARRY], creep.body);
 		});
 	});
 

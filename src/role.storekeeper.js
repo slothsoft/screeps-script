@@ -24,7 +24,7 @@ class StoreKeeper extends RolePrototype {
 	}
 
 	spawnCreep(spawn) {
-		return this._spawnCreepWithParts(spawn, [MOVE, CARRY], [ MOVE, MOVE ]);
+		return this._spawnCreepWithParts(spawn, [MOVE, CARRY]);
 	}
 
     _findSources(room) {

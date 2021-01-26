@@ -90,7 +90,10 @@ class TileWatcher {
 	_printRoom(array) {
 		for (var x = 0; x < 50; x++) {
 			for (var y = 0; y < 50; y++) {
-		        this._room.visual.text(array.get(x, y), x, y, {align: 'center', opacity: 0.8});
+				var value = array.get(x, y);
+				if (value !== undefined) {
+					this._room.visual.text(array.get(x, y), x, y, {align: 'center', opacity: 0.8});
+				}
 			}
 		}
 	}

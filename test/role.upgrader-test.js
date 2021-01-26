@@ -133,6 +133,7 @@ describe('role.upgrader', () => {
 			info.clearLines();
 
 			var droppedEnergy = new Spawn();
+			droppedEnergy.resourceType = RESOURCE_ENERGY;
 			droppedEnergy.pos.x = 12;
 			droppedEnergy.pos.y = 13;
 			

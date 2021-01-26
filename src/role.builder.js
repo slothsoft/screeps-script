@@ -16,6 +16,7 @@ class Builder extends RolePrototype {
 	 */
 	
     _work(creep) {
+    	this._creep = creep;
     	this._commuteBetweenSourceAndTarget(creep, target => creep.build(target));
     }
     
@@ -24,6 +25,13 @@ class Builder extends RolePrototype {
      */
     
     _findTargets(room) {
+    	if (this._creep && this._creep.memory.target) {
+    		var definedTarget = Game.getObjectById(this._creep.memory.target);
+    		if (definedTarget) {
+    			return [ definedTarget ];
+    		}
+    	}
+    	
         return room.find(FIND_MY_CONSTRUCTION_SITES);
     }
 

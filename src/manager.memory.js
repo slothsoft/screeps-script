@@ -72,7 +72,7 @@ class MemoryManager {
 	 * @param baseName
 	 */	
 
-	static _fetchRoomBase(room, baseName) { 
+	static fetchRoomBase(room, baseName) { 
 		var defaultArray = {
 	         name : baseName,
 	    };
@@ -160,7 +160,7 @@ class MemoryManager {
 	    		info.log('🏠 Created new spawn in base: ' + spawn.room.memory.home);
 	    	} else {
 	    		// new base in this room
-	    		this._fetchRoomBase(spawn.room, spawn.name);
+	    		this.fetchRoomBase(spawn.room, spawn.name);
 	    		spawn.memory.home = spawn.room.memory.base.name;
 	    	}
 	    });

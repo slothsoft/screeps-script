@@ -14,6 +14,8 @@ var Store = require('./mock/store-mock');
 // TODO: Test other methods
 // - createSpawn
 // - claimFlagRoom
+// - buildSpaw
+// - retire
 
 const PHASE_GOTO_FLAG_ROOM = 'gotoFlagRoom';
 const PHASE_CLAIM_FLAG_ROOM = 'claimFlagRoom';
@@ -239,6 +241,7 @@ describe('role.explorer', () => {
 			info.clearLines();
 
 			var droppedEnergy = new Spawn();
+			droppedEnergy.resourceType = RESOURCE_ENERGY;
 			droppedEnergy.pos.x = 12;
 			droppedEnergy.pos.y = 13;
 			

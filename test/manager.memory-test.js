@@ -426,7 +426,7 @@ describe('manager.memory', () => {
 	
 			var role = { roleName: 'Role' };
 			
-			var result = MemoryManager._fetchRoomBase(room, 'Dresden');
+			var result = MemoryManager.fetchRoomBase(room, 'Dresden');
 			
 			var expecting = {
 				name: 'Dresden',
@@ -443,7 +443,7 @@ describe('manager.memory', () => {
 			var role1 = { roleName: 'Role1' };
 			var role2 = { roleName: 'Role2' };
 
-			var result = MemoryManager._fetchRoomBase(room, 'Leipzig');
+			var result = MemoryManager.fetchRoomBase(room, 'Leipzig');
 			
 			var expecting = {
 				name: 'Leipzig',
@@ -462,7 +462,7 @@ describe('manager.memory', () => {
 			var role1 = { roleName: 'Role1' };
 			var role2 = { roleName: 'Role2' };
 
-			var result = MemoryManager._fetchRoomBase(room, 'Görlitz');
+			var result = MemoryManager.fetchRoomBase(room, 'Görlitz');
 			
 			var expecting = {
 				name: 'Chemnitz',
@@ -517,7 +517,7 @@ describe('manager.memory', () => {
 			var room1 = new Room();
 			var room2 = new Room();
 			var room3 = new Room();
-			MemoryManager._fetchRoomBase(room2, 'New York');
+			MemoryManager.fetchRoomBase(room2, 'New York');
 			var roleConfig = MemoryManager._fetchRoomRoleConfig(room2, [ { roleName: 'Role' } ]);
 			
 			game.findAllRooms = () => [ room1, room2, room3 ];

@@ -6,7 +6,9 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 
 - [Features](#features)
     - [Creeps](#creeps)
+        - [Explorer](#explorer)
     - [Roads](#roads)
+    - [Mayor](#mayor)
 - [Console Commands](#console-commands)
 - [Memory](#memory)
     - [Room Memory](#room-memory)
@@ -35,6 +37,26 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
 
 <p style="clear: both;" ></p>
 <img align="right" width="202" height="236" src="readme/road-counter.png">
+
+
+
+#### Explorer
+
+```js
+spawnExplorer(<spawnId>, <flagName>)
+```
+
+An Explorer creeps will go through the following phases (it might skip one or more of them if they are no longer necessary):
+
+
+| Phase              | Description Mode     |
+| ------------------ | -------------------- |
+| gotoFlagRoom       | creep walks into the room the flag ist in |
+| claimFlagRoom      | creep walks to the controller and claims it |
+| createSpawn        | creep creates a new construction side for a base on the flag |
+| buildSpawn         | creep works as a Builder and constructs the spawn |
+| retire             | creep gives up its role because it is no longer necessary |
+
 
 
 ### Roads

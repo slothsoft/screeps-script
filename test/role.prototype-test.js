@@ -923,6 +923,7 @@ describe('role.protoype', () => {
 			var droppedEnergy = { 
 				pos: new RoomPosition(),
 			};
+			droppedEnergy.resourceType = RESOURCE_ENERGY;
 			droppedEnergy.pos.x = 12;
 			droppedEnergy.pos.y = 13;
 			
