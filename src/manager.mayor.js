@@ -6,6 +6,7 @@ var game = require('./main.game');
 var info = require('./main.info');
 
 var RoadManager = require('./manager.road');
+var RoomManager = require('./manager.room');
 
 class MayorManager {
 
@@ -16,7 +17,14 @@ class MayorManager {
 	 */
 	
 	static runAll() {
-	    game.findAllRooms().forEach(room => new MayorManager(room).run());
+	    game.findAllRooms().forEach(room => {
+	    	try {
+		    	new MayorManager(room).run(); 
+			} catch (e) {
+				info.error('Could not run Mayor for room ' + game.getDisplayName(room) + ': ' + e);
+				console.log(e.stack);
+			}
+	    });
 	}
 	
 
@@ -67,6 +75,11 @@ class MayorManager {
 		// TODO: creating roads is nice, but they should be removed if not used
 		// TODO: if can build extractor but was not build -> build
 		// TODO: if has extractor but no courier -> build?
+
+		// no base, no problems
+		if (!this._room.memory.base) {
+			return;
+		}
 		
 		this._validateRoads();
 		this._validateCreeps();
@@ -129,7 +142,7 @@ class MayorManager {
 			this.errors.push({ 
 				text: 'Harvester is missing.' , 
 				solution: 'Spawning Harvester.',
-				act: this.spawnOnlyHarvesters,
+				act: () => this._spawnOnlyHarvesters(),
 			});
 			return;
 		}
@@ -166,6 +179,8 @@ class MayorManager {
 				roleConfig.requiredNumber = 0;
 			}
 		}
+		// reset how many parts we need for creeps
+		this._room.memory.base.roleConfig.partsMinMultiplier = 0;
 		// now increment harvesters
 		this._room.memory.base.roleConfig.Harvester.requiredNumber = 1;
 	}

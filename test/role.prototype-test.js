@@ -94,7 +94,7 @@ describe('role.protoype', () => {
 		it('default', () => {
 			var object = new RolePrototype();
 			
-			assert.equal(20, object._getPartsMaxMultiplier(new Spawn()));
+			assert.equal(5, object._getPartsMaxMultiplier(new Spawn()));
 		});
 
 		it('set', () => {

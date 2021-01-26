@@ -48,7 +48,7 @@ class MemoryManager {
 	static _fetchRoomRoleConfig(room, allRoles = []) {
 		var defaultArray = {
 			partsMinMultiplier: 0,
-			partsMaxMultiplier: 20,
+			partsMaxMultiplier: 5,
 			showIcons: true,
 	    	useStorageAsSource: true,
 	    	useSourceAsSource: true,

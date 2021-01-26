@@ -30,7 +30,7 @@ describe('manager.memory', () => {
 			
 			var expecting = {
 				partsMinMultiplier: 0,
-				partsMaxMultiplier: 20,
+				partsMaxMultiplier: 5,
 				showIcons: true,
 		    	useStorageAsSource: true,
 		    	useSourceAsSource: true,
@@ -59,7 +59,7 @@ describe('manager.memory', () => {
 			
 			var expecting = {
 				partsMinMultiplier: 0,
-				partsMaxMultiplier: 20,
+				partsMaxMultiplier: 5,
 				showIcons: true,
 		    	useStorageAsSource: true,
 		    	useSourceAsSource: true,
@@ -131,7 +131,7 @@ describe('manager.memory', () => {
 			
 			var expecting = {
 				partsMinMultiplier: 0,
-				partsMaxMultiplier: 20,
+				partsMaxMultiplier: 5,
 				showIcons: true,
 		    	useStorageAsSource: true,
 		    	useSourceAsSource: true,
@@ -175,7 +175,7 @@ describe('manager.memory', () => {
 			
 			var expecting = {
 				partsMinMultiplier: 0,
-				partsMaxMultiplier: 20,
+				partsMaxMultiplier: 5,
 				showIcons: true,
 		    	useStorageAsSource: false,
 		    	useSourceAsSource: true,

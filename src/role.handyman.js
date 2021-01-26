@@ -39,12 +39,13 @@ class Handyman extends RolePrototype {
         	return results;
         }
 
-    	// 2nd priority: freshly build ramparts (max hits: 30M)
+    	// 2nd priority: freshly build  walls (max hits: 300M) & ramparts (max hits: 30M)
         
         var results =  room.find(FIND_STRUCTURES, {
             filter: structure => {
-            	return (structure.structureType == STRUCTURE_RAMPART) &&
-                        structure.hits < 1000;
+            	return (structure.structureType == STRUCTURE_WALL ||
+                        structure.structureType == STRUCTURE_RAMPART) &&
+                        structure.hits < 100;
             }
         });
         if (results.length > 0) {
