@@ -6,7 +6,6 @@ var game = require('./main.game');
 var info = require('./main.info');
 
 var RoadManager = require('./manager.road');
-var RoomManager = require('./manager.room');
 
 class MayorManager {
 
