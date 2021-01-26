@@ -13,7 +13,6 @@
  * 
  * You might need to override / set:
  * - priority
- * - useStorageAsSource, useSourceAsSource
  * - isNecessary(room) (on default it returns if a valid target is found)
  * - sortTargetForClosest(targets, creep) (on default it sorts for positions)
  */
@@ -30,7 +29,7 @@ class RolePrototype {
 	    this.roleName = roleName;
 	    this.color = color;
 	    this.symbol = symbol;
-	    this._priority = 0; // the higher the better
+	    this.priority = 0; // the higher the better
 	}
 	
 	/*

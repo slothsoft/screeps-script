@@ -23,7 +23,7 @@ describe('role.harvester', () => {
 		assert.equal('Harvester', object.roleName);
 		assert.equal('#ffffff', object.color);
 		assert.equal('🧺', object.symbol);
-		assert.equal(100, object._priority);
+		assert.equal(100, object.priority);
 	});
 
 	describe('#findTargets', () => {

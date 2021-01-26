@@ -28,7 +28,7 @@ describe('role.courier', () => {
 		assert.equal('Courier', object.roleName);
 		assert.equal('#ff8800', object.color);
 		assert.equal('📯', object.symbol);
-		assert.equal(-1, object._priority);
+		assert.equal(-1, object.priority);
 	});
 	
 	describe('#findTargets', () => {

@@ -8,7 +8,7 @@ class Builder extends RolePrototype {
 
 	constructor() {
 		super('Builder', '#ffff00', '🔨');
-	    this._priority = 70; 
+	    this.priority = 70; 
 	}
 
 	/*

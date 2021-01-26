@@ -13,7 +13,7 @@ class Courier extends RolePrototype {
 
 	constructor() {
 		super('Courier', '#ff8800', '📯');
-	    this._priority = -1; 
+	    this.priority = -1; 
 	}
 
 	isNecessary(room) {

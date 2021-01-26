@@ -24,7 +24,7 @@ describe('role.upgrader', () => {
 		assert.equal('Upgrader', object.roleName);
 		assert.equal('#00ff00', object.color);
 		assert.equal('⚡', object.symbol);
-		assert.equal(50, object._priority);
+		assert.equal(50, object.priority);
 	});
 
 	describe('#findTargets', () => {

@@ -14,7 +14,7 @@ class Miner extends RolePrototype {
 
 	constructor() {
 		super('Miner', '#000000', '🛒');
-		this._priority = -1; // we never need more than the defined miners
+		this.priority = -1; // we never need more than the defined miners
 		this._maxRangeToTarget = 7;
 	}
 

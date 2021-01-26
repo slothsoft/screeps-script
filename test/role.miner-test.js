@@ -31,7 +31,7 @@ describe('role.miner', () => {
 		assert.equal('Miner', object.roleName);
 		assert.equal('#000000', object.color);
 		assert.equal('🛒', object.symbol);
-		assert.equal(-1, object._priority);
+		assert.equal(-1, object.priority);
 	});
 
 	describe('#isNecessary', () => {

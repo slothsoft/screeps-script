@@ -8,7 +8,7 @@ class Upgrader extends RolePrototype {
 
 	constructor() {
 		super('Upgrader', '#00ff00', '⚡');
-	    this._priority = 50; 
+	    this.priority = 50; 
 	}
 
 	/*
