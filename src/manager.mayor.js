@@ -6,6 +6,7 @@ var game = require('./main.game');
 var info = require('./main.info');
 
 var RoadManager = require('./manager.road');
+var RoomManager = require('./manager.room');
 
 class MayorManager {
 
@@ -80,8 +81,11 @@ class MayorManager {
 			return;
 		}
 		
+		//new RoomManager(this._room).run();
+		
 		this._validateRoads();
 		this._validateCreeps();
+		this._validateBuildings();
 	}
 
 	/*
@@ -190,11 +194,25 @@ class MayorManager {
 	
 	_fixProblems() {
 		if (this._memory.mode === MayorManager.MODE_AUTO) {
-			 this.errors.forEach(error => error.act());
+			 this.errors.forEach(error => {
+				 try {
+					 error.act();
+				 } catch (e) {
+					 info.error('Could not fix error "' + error.text + '": ' + e);
+				 }
+			 });
 			 this.warnings.forEach(warning => warning.act());
 		}
 	}
 
+	_validateBuildings() {
+		
+	}
+	
+	_fetchAvailableExtensions() {
+		return CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][this._room.controller.level];
+	}
+	
 	/*
 	 * Visualizes the mayor problems.
 	 */
