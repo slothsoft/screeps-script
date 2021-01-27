@@ -174,7 +174,7 @@ Documentation on which memory is used for which information. Mandatory elements 
 
 | Memory                | Type          | Description  |
 | --------------------- | ------------- | ------------ |
-| **homeSource**        | `string`    | the source this miner is claiming |
+| **source**            | `string`    | the source this miner is claiming |
 | **homeSpawn**         | `string`     | the spawn that created this miner |
 | initialTicksToLive    | `number`    | the `ticksToLive` this creep had initially |
 | ticksToSource         | `number`    | the `ticksToLive` when this creep first reached the source|
