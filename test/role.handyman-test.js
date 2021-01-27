@@ -248,8 +248,6 @@ describe('role.handyman', () => {
 			
 			// 2nd time take the same target
 
-			console.log('ABCDEF' +creep.memory.target);
-			
 			target1.hits = 900;
 			assert.deepEqual(target1, object._findClosestTarget(creep));
 		});

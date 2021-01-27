@@ -383,7 +383,7 @@ describe('role.miner', () => {
 			// Moving to source takes 100 ticks - make sure replacement is respawned 
 			creep.ticksToLive = 100;
 			creep.memory.homeSpawn = 'Spawn';
-			creep.memory.homeSource = 'Source';
+			creep.memory.source = 'Source';
 			
 			var spawnCalled = false;
 			object.spawnCreepFromSpawnName = (spawnName, sourceId) => {
@@ -398,39 +398,40 @@ describe('role.miner', () => {
 		});
 	});
 
-	describe('#findSources', () => {
+	describe('role.miner#findClosestSource', () => {
 		it('found', () => {
 
 			var creep = new Creep('findSources');
-			creep.memory.homeSource = 'Home sweet home.';
+			creep.memory.source = 'Home sweet home.';
 			
 			var source = new Spawn();
 			source.pos.x = 13;
 			source.pos.y = 42;
 
-			var room = new Room();
-			room.find = (type, opt) => source;
+			var room = creep.room;
+			room.find = (type, opt) => [ source ];
+			Game.getObjectById = id => source;
 	
 			var object = new Miner();
 			object.creep = creep;
-			assert.deepEqual(source, object._findSources(room));
+			assert.deepEqual(source, object._findClosestSource(creep));
 		});
 
 		it('not found', () => {
 			info.clearLines();
 
 			var creep = new Creep('findSources');
-			creep.memory.homeSource = 'Home sweet home.';
+			creep.memory.source = 'Home sweet home.';
 			
-			var room = new Room();
-			room.find = (type, opt) => [];
+			var room = creep.room;
+			Game.getObjectById = id => null;
 	
 			var object = new Miner();
 			object.creep = creep;
-			assert.deepEqual([], object._findSources(room));
+			assert.equal(null, object._findClosestSource(creep));
 
 			assert.equal(1, info.getLines().length);
-			assert.equal('🛑 Could not find source: Home sweet home.', info.getLine(0));
+			assert.equal('🛑 findSources could not find source: Home sweet home.', info.getLine(0));
 		});
 	});
 
@@ -457,7 +458,7 @@ describe('role.miner', () => {
 			
 			var creep = object._spawnCreepFromSpawn(spawn, 'Source');
 			assert.equal(spawn.name, creep.memory.homeSpawn);
-			assert.equal('Source', creep.memory.homeSource);
+			assert.equal('Source', creep.memory.source);
 			assert.equal(Game.creeps['Miner 1'], creep);
 			assert.deepEqual([MOVE, CARRY, WORK], creep.body);
 		});
@@ -504,7 +505,7 @@ describe('role.miner', () => {
 			var creep = object.spawnCreepFromSpawnName(spawn.name, 'Source');
 			assert.notEqual(false, creep);
 			assert.equal(spawn.name, creep.memory.homeSpawn);
-			assert.equal('Source', creep.memory.homeSource);
+			assert.equal('Source', creep.memory.source);
 			assert.equal(Game.creeps['Miner 1'], creep);
 			assert.deepEqual([MOVE, CARRY, WORK], creep.body);
 
@@ -579,11 +580,13 @@ describe('role.miner', () => {
 
 			var source1 = new Spawn();
 			var creep1 = new Creep();
-			creep1.memory.homeSource = source1.id;
+			creep1.memory.role = 'Miner';
+			creep1.memory.source = source1.id;
 			
 			var source2 = new Spawn();
 			var creep2 = new Creep();
-			creep2.memory.homeSource = source2.id;
+			creep2.memory.role = 'Miner';
+			creep2.memory.source = source2.id;
 			
 			var source3 = new Spawn();
 
@@ -602,6 +605,39 @@ describe('role.miner', () => {
 			var creep = object.spawnCreep(spawn);
 			assert.equal(true, spawnWasCalled);
 		});
+
+		it('find correct source ignore claimed by other roles', () => {
+
+			var spawn = new Spawn();
+			spawn.name = 'My Spawn';
+			spawn.room.energyAvailable = 50;
+
+			var source1 = new Spawn();
+			var creep1 = new Creep();
+			creep1.memory.source = source1.id;
+			
+			var source2 = new Spawn();
+			var creep2 = new Creep();
+			creep2.memory.source = source2.id;
+			
+			var source3 = new Spawn();
+
+			game.findAllCreeps = () => [ creep1, creep2 ];
+			spawn.room.find = (type) => [ source1, source2, source3 ];
+			
+			var object = new Miner();
+			
+			var spawnWasCalled = false;
+			object._spawnCreepFromSpawn = (usedSpawn, sourceId) => {
+				assert.deepEqual(spawn, usedSpawn);
+				assert.equal(source1.id, sourceId);
+				spawnWasCalled = true;
+			};
+
+			var creep = object.spawnCreep(spawn);
+			assert.equal(true, spawnWasCalled);
+		});
+		
 		
 		it('all claimed', () => {
 
@@ -611,15 +647,18 @@ describe('role.miner', () => {
 
 			var source1 = new Spawn();
 			var creep1 = new Creep();
-			creep1.memory.homeSource = source1.id;
+			creep1.memory.role = 'Miner';
+			creep1.memory.source = source1.id;
 			
 			var source2 = new Spawn();
 			var creep2 = new Creep();
-			creep2.memory.homeSource = source2.id;
+			creep2.memory.role = 'Miner';
+			creep2.memory.source = source2.id;
 			
 			var source3 = new Spawn();
 			var creep3 = new Creep();
-			creep3.memory.homeSource = source3.id;
+			creep3.memory.role = 'Miner';
+			creep3.memory.source = source3.id;
 
 			game.findAllCreeps = () => [ creep1, creep2, creep3 ];
 			spawn.room.find = (type) => [ source1, source2, source3 ];

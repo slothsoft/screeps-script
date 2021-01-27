@@ -30,7 +30,7 @@ class Miner extends RolePrototype {
 	 */
 	
 	spawnCreep(spawn) {
-		var claimedSources = game.findAllCreeps().filter(creep => creep.memory.homeSource).map(creep => creep.memory.homeSource);
+		var claimedSources = game.findAllCreeps().filter(creep => creep.memory.role == 'Miner').filter(creep => creep.memory.source).map(creep => creep.memory.source);
 		var allSources = spawn.room.find(FIND_SOURCES).filter(source => !claimedSources.includes(source.id));
 		if (allSources.length > 0) {
 			return this._spawnCreepFromSpawn(spawn, allSources[0].id);
@@ -61,7 +61,7 @@ class Miner extends RolePrototype {
 	    var resultingCreep = this._spawnCreepWithParts(spawn, [WORK], [MOVE, CARRY]);
 	    if (resultingCreep) {
 	        resultingCreep.memory.homeSpawn = spawn.name;
-	        resultingCreep.memory.homeSource = sourceId;
+	        resultingCreep.memory.source = sourceId;
 	        return resultingCreep;
 	    }
 	    return resultingCreep;
@@ -94,7 +94,7 @@ class Miner extends RolePrototype {
 	        var ticksToGetReady = (creep.memory.initialTicksToLive - creep.memory.ticksToSource) + timeToSpawn;
 
 	        if (creep.ticksToLive < ticksToGetReady) {
-	            var spawnedCreep = this.spawnCreepFromSpawnName(creep.memory.homeSpawn, creep.memory.homeSource);
+	            var spawnedCreep = this.spawnCreepFromSpawnName(creep.memory.homeSpawn, creep.memory.source);
 	            if (spawnedCreep) {
 	                info.log(this.symbol + ' Training the replacement ' + this.roleName);
 	                creep.memory.trainedReplacement = true;
@@ -103,18 +103,6 @@ class Miner extends RolePrototype {
 	    }
 	} 
 	
-	_findSources(room) {
-	    var sources = room.find(FIND_SOURCES, {
-	        filter: (structure) => {
-	            return (structure.id == this.creep.memory.homeSource);
-	        }
-	    });
-		if (sources.length == 0) {
-	        info.error('Could not find source: ' + this.creep.memory.homeSource);
-		}
-		return sources;
-	}
-    
 	_moveToClosestSource(creep) {
 		var harvestResult = super._moveToClosestSource(creep);
 	    
@@ -130,11 +118,8 @@ class Miner extends RolePrototype {
 
     _handleSourceWorkResult(creep, workResult) {
     	if (workResult == ERR_NOT_ENOUGH_RESOURCES) {
-    		var source = this._findSources(creep.room)[0];
-    		if (source.ticksToRegeneration && (source.ticksToRegeneration < 10)) {
-    			// we mined the source completely slightly ahead of time - ignore
+    			// we mined the source completely ahead of time - ignore
     			return;
-    		}
     	}
     	super._handleSourceWorkResult(creep, workResult);
     }

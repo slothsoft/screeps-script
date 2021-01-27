@@ -81,7 +81,7 @@ describe('main', () => {
 			var creep = spawnMiner(spawn.name, 'Source');
 			assert.notEqual(false, creep);
 			assert.equal(spawn.name, creep.memory.homeSpawn);
-			assert.equal('Source', creep.memory.homeSource);
+			assert.equal('Source', creep.memory.source);
 			assert.equal(Game.creeps['Miner 1'], creep);
 			assert.deepEqual([MOVE, CARRY, WORK], creep.body);
 

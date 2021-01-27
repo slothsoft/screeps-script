@@ -277,7 +277,7 @@ class RolePrototype {
 
         var sources = this._useSourceAsSource ? room.find(FIND_SOURCES_ACTIVE, {
                 filter: (source) => {
-                    if (game.findAllCreeps().filter(creep => creep.memory.homeSource == source.id).length) {
+                    if (game.findAllCreeps().filter(creep => creep.memory.role == 'Miner' && creep.memory.source == source.id).length) {
                         // source was claimed by a miner
                         return false;
                     }
