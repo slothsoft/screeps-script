@@ -12,8 +12,8 @@ var Store = require('./store-mock');
 
 class Spawn {
 	
-	constructor(room = new Room()) {
-		this.id = 'Spawn' + Spawn.nextId++;
+	constructor(room = new Room(), id) {
+		this.id = id ? id : 'Spawn' + Spawn.nextId++;
 	    Game.spawns[this.id] = this;
 		
 	    this.memory = Memory.spawns[this.id] = {};

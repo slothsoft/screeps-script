@@ -16,6 +16,8 @@ class Miner extends RolePrototype {
 		super('Miner', '#000000', '🛒');
 		this.priority = -1; // we never need more than the defined miners
 		this._maxRangeToTarget = 7;
+
+	    this._targetMode = RolePrototype.TARGET_MODE_USE_OR_WAIT;
 	}
 
 	isNecessary(room) {

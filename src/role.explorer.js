@@ -22,6 +22,8 @@ class Explorer extends RolePrototype {
 	
 	constructor() {
 		super('Explorer', '#cccccc', '🏴');
+
+	    this._targetMode = RolePrototype.TARGET_MODE_USE_OR_ERROR;
 	}
 
 	_findTargets(room) {
@@ -34,7 +36,7 @@ class Explorer extends RolePrototype {
 	 */
 	
 	spawnCreep(spawn) {
-		var claimedFlags = game.findAllCreeps().filter(creep => creep.memory.targetFlag).map(creep => creep.memory.targetFlag);
+		var claimedFlags = game.findAllCreeps().filter(creep => creep.memory.target).map(creep => creep.memory.target);
 		var allFlags = game.findAllFlags().filter(flag => !claimedFlags.includes(flag.name));
 		if (allFlags.length > 0)
 			return this._spawnCreepFromSpawn(spawn, allFlags[0].name);
@@ -59,7 +61,7 @@ class Explorer extends RolePrototype {
 	_spawnCreepFromSpawn(spawn, flagName) {
 	    var resultingCreep = this._spawnCreepWithParts(spawn, [WORK, MOVE, CARRY, MOVE], [ CLAIM, MOVE ]);
 	    if (resultingCreep) {
-	        resultingCreep.memory.targetFlag = flagName;
+	        resultingCreep.memory.target = flagName;
 	        return resultingCreep;
 	    }
 	    return resultingCreep;
@@ -98,15 +100,15 @@ class Explorer extends RolePrototype {
 	 
 	_goToFlagRoom(creep) {
 	    var targetFlag;
-	    if (creep.memory.targetFlag) {
-	        var creepTarget = this._findTargets(creep.room).filter(target => target.name == creep.memory.targetFlag);
+	    if (creep.memory.target) {
+	        var creepTarget = this._findTargets(creep.room).filter(target => target.name == creep.memory.target);
 	        if (creepTarget.length > 0) {
 	            targetFlag = creepTarget[0];
 	        }
 	    }
 	    if (!targetFlag) {
 	        targetFlag = this._findClosestTarget(creep);
-	        creep.memory.targetFlag = targetFlag.name;
+	        creep.memory.target = targetFlag.name;
     	    info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' travels to ' + targetFlag.name);
       		creep.memory.home = targetFlag.name;
 	    }
@@ -127,7 +129,7 @@ class Explorer extends RolePrototype {
 	 */
 	 
 	_claimFlagRoom(creep) {
-        var targetFlag = this._findTargets(creep.room).filter(target => target.name == creep.memory.targetFlag)[0];
+        var targetFlag = this._findTargets(creep.room).filter(target => target.name == creep.memory.target)[0];
       	var answer = creep.claimController(targetFlag.room.controller);
       	if (answer == ERR_NOT_IN_RANGE) {
       		creep.moveTo(targetFlag.room.controller);
@@ -147,7 +149,7 @@ class Explorer extends RolePrototype {
 
     _findSpawns(room) {
     	if (!room) {
-    		room = this._findTargets(creep.room).filter(target => target.name == creep.memory.targetFlag)[0].room;
+    		room = this._findTargets(creep.room).filter(target => target.name == creep.memory.target)[0].room;
     	}
         return room.find(FIND_MY_STRUCTURES, {
                 filter: (structure) => {
@@ -175,7 +177,7 @@ class Explorer extends RolePrototype {
 	        return;
     	}
     	
-        var targetFlag = this._findTargets(creep.room).filter(target => target.name == creep.memory.targetFlag)[0];
+        var targetFlag = this._findTargets(creep.room).filter(target => target.name == creep.memory.target)[0];
         var createResult = targetFlag.pos.createConstructionSite(STRUCTURE_SPAWN, targetFlag.name) ;
         if (createResult == OK) {
 	        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is a Builder now.');
@@ -195,7 +197,7 @@ class Explorer extends RolePrototype {
 	}
 	
 	_retire(creep) {
-        var targetFlag = this._findTargets(creep.room).filter(target => target.name == creep.memory.targetFlag)[0];
+        var targetFlag = this._findTargets(creep.room).filter(target => target.name == creep.memory.target)[0];
         info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' has finished ' + targetFlag.name);
         
         // create base

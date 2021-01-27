@@ -19,6 +19,7 @@ describe('role.protoype', () => {
 	
 	beforeEach(() => {
 		Game.clearAll();
+		info.clearLines();
 	});
 	
 	it('exists', () => {
@@ -1033,6 +1034,153 @@ describe('role.protoype', () => {
 			assert.equal(spawn.pos.x, creep.pos.x);
 			assert.equal(spawn.pos.y, creep.pos.y);
 			assert.equal(null, Game.creeps['selfdestruct']);
+		});
+	});
+
+	describe('TARGET_MODE_X', () => {
+		var setupRolePrototype = function(targetMode) {
+			
+			assert.notEqual(null, targetMode);
+			
+			// this is the default set up (see #findClosestTarget)
+	
+			var targetA = new Spawn(null, 'A');
+			targetA.pos.x = 4;
+	
+			var targetB = new Spawn(null, 'B');
+			targetB.pos.x = 1;
+	
+			var targetC = new Spawn(null, 'C');
+			targetC.pos.x = 10;
+	
+			var targetD = new Spawn(null, 'D');
+			targetD.pos.x = 11;
+			
+			var targets = [];
+			targets[targetA.id] = targetA;
+			targets[targetB.id] = targetB;
+			targets[targetC.id] = targetC;
+			targets[targetD.id] = targetD;
+			Game.getObjectById = id => targets[id];
+			
+			var object = new RolePrototype();
+			object._targetMode = targetMode;
+			object._findTargets = room => [ targetA, targetB, targetC ];
+
+			assert.equal(targetB, object._findClosestTarget(new Creep('TARGET_MODE_X')));
+			return object;
+		}
+		
+		describe('USE_IF_VALID', () => {
+			describe('#findClosestTarget', () => {
+				it('target found', () => {
+					var creep = new Creep('TARGET_MODE_USE_IF_VALID');
+					creep.memory.target = 'C';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_IF_VALID);
+					
+					assert.equal('C', object._findClosestTarget(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+
+				it('target not valid', () => {
+					// if it was not found in "findTargets()", the target is not valid -> use other
+					var creep = new Creep('TARGET_MODE_USE_IF_VALID');
+					creep.memory.target = 'D';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_IF_VALID);
+					
+					assert.equal('B', object._findClosestTarget(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+				
+				it('target not found', () => {
+					// target is not even a game object -> error and use other
+					var creep = new Creep('TARGET_MODE_USE_IF_VALID');
+					creep.memory.target = 'E';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_IF_VALID);
+					
+					assert.equal('B', object._findClosestTarget(creep).id);
+					assert.equal(1, info.getLines().length);
+					assert.equal('🛑 TARGET_MODE_USE_IF_VALID could not find target: E', info.getLine(0));
+				});
+			});
+		});
+		
+		describe('USE_OR_WAIT', () => {
+			describe('#findClosestTarget', () => {
+				it('target found', () => {
+					var creep = new Creep('TARGET_MODE_USE_OR_WAIT');
+					creep.memory.target = 'C';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_OR_WAIT);
+					
+					assert.equal('C', object._findClosestTarget(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+				
+				it('target not valid', () => {
+					// if it was not found in "findTargets()", the target is not valid -> use anyway
+					var creep = new Creep('TARGET_MODE_USE_OR_WAIT');
+					creep.memory.target = 'D';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_OR_WAIT);
+					
+					assert.equal('D', object._findClosestTarget(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+
+				it('target not found', () => {
+					// target is not even a game object -> error and wait
+					var creep = new Creep('TARGET_MODE_USE_OR_WAIT');
+					creep.memory.target = 'E';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_OR_WAIT);
+					
+					assert.equal(null, object._findClosestTarget(creep));
+					assert.equal(1, info.getLines().length);
+					assert.equal('🛑 TARGET_MODE_USE_OR_WAIT could not find target: E', info.getLine(0));
+				});
+			});
+		});
+
+		describe('USE_OR_ERROR', () => {
+			describe('#findClosestTarget', () => {
+				it('target found', () => {
+					var creep = new Creep('TARGET_MODE_USE_OR_ERROR');
+					creep.memory.target = 'C';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_OR_ERROR);
+					
+					assert.equal('C', object._findClosestTarget(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+				
+				it('target not valid', () => {
+					// if it was not found in "findTargets()", the target is not valid -> error
+					var creep = new Creep('TARGET_MODE_USE_OR_ERROR');
+					creep.memory.target = 'D';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_OR_ERROR);
+					
+					assert.equal(null, object._findClosestTarget(creep));	
+					assert.equal(1, info.getLines().length);
+					assert.equal('🛑 TARGET_MODE_USE_OR_ERROR could not find target in list: D', info.getLine(0));
+				});
+				
+				it('target not found', () => {
+					// target is not even a game object -> error
+					var creep = new Creep('TARGET_MODE_USE_OR_ERROR');
+					creep.memory.target = 'E';
+
+					var object = setupRolePrototype(RolePrototype.TARGET_MODE_USE_OR_ERROR);
+					
+					assert.equal(null, object._findClosestTarget(creep));	
+					assert.equal(1, info.getLines().length);
+					assert.equal('🛑 TARGET_MODE_USE_OR_ERROR could not find target: E', info.getLine(0));
+				});
+			});
 		});
 	});
 });

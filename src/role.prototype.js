@@ -30,6 +30,8 @@ class RolePrototype {
 	    this.color = color;
 	    this.symbol = symbol;
 	    this.priority = 0; // the higher the better
+	    
+	    this._targetMode = RolePrototype.TARGET_MODE_USE_IF_VALID;
 	}
 	
 	/*
@@ -71,8 +73,39 @@ class RolePrototype {
 	 */
     
     _findClosestTarget(creep) {
-        var targets = this._findTargets(creep.room);
+    	var specificTarget;
+    	if (creep.memory.target) {
+    		// creep has specific target in mind
+    		specificTarget = Game.getObjectById(creep.memory.target);
+    		if (specificTarget && this._targetMode == RolePrototype.TARGET_MODE_USE_OR_WAIT) {
+    			// only in TARGET_MODE_USE_OR_WAIT we don't care for the validity of the target
+    			return specificTarget;
+    		}
+    		if (!specificTarget) {
+    			info.error(game.getDisplayName(creep) + ' could not find target: ' + creep.memory.target);
+    			
+        		if (this._targetMode != RolePrototype.TARGET_MODE_USE_IF_VALID) {
+	    			// only in TARGET_MODE_USE_IF_VALID can we recover from that error
+	    			return null;
+        		}
+    		}
+    	}
+        var targets = this._findTargets(specificTarget ? specificTarget.room : creep.room);
         if (targets) {
+        	// let's see if we found our pre-selected target
+        	if (specificTarget) {
+        		var found = targets.filter(t => t.id == specificTarget.id);
+        		if (found.length > 0) {
+        			return found[0];
+        		}
+        		// our specific target is not valid 
+        		// - TARGET_MODE_USE_OR_ERROR errors out
+        	    // - TARGET_MODE_USE_IF_VALID falls back to valid target
+    			if (this._targetMode == RolePrototype.TARGET_MODE_USE_OR_ERROR) {
+        			info.error(game.getDisplayName(creep) + ' could not find target in list: ' + creep.memory.target);
+        			return null;
+        		}
+        	}
         	targets = this._sortTargetForClosest(targets, creep);
         	return targets.length > 0 ? targets[0] : null;
 		}
@@ -488,5 +521,12 @@ class RolePrototype {
     }
     
 };
+
+/* Use the target if valid, else switch to any other one */
+RolePrototype.TARGET_MODE_USE_IF_VALID = 'useIfValid';
+/* Use the target if valid, else wait for it to become valid */
+RolePrototype.TARGET_MODE_USE_OR_WAIT = 'useOrWait';
+/* Use the target if valid, else throw an error */
+RolePrototype.TARGET_MODE_USE_OR_ERROR = 'useOrError';
 
 module.exports = RolePrototype;

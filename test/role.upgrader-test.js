@@ -15,6 +15,11 @@ describe('role.upgrader', () => {
 	before(() => {
 	    global.Game = require('./mock/game-mock').Game;
 	});
+
+	beforeEach(() => {
+		Game.clearAll();
+		info.clearLines();
+	});
 	
 	it('constructor', () => {
 		var startsWith = 'class Upgrader';
@@ -164,6 +169,74 @@ describe('role.upgrader', () => {
 			assert.equal(13, creep.pos.y);
 			assert.equal(true, workCalled);
 
+		});
+	});
+
+	describe('TARGET_MODE_USE_OR_ERROR', () => {
+		var setupUpgrader = function() {
+			
+			// this is the default set up (see #findClosestTarget)
+	
+			var targetA = new Spawn(null, 'A');
+			targetA.pos.x = 4;
+	
+			var targetB = new Spawn(null, 'B');
+			targetB.pos.x = 1;
+	
+			var targetC = new Spawn(null, 'C');
+			targetC.pos.x = 10;
+	
+			var targetD = new Spawn(null, 'D');
+			targetD.pos.x = 11;
+			
+			var targets = [];
+			targets[targetA.id] = targetA;
+			targets[targetB.id] = targetB;
+			targets[targetC.id] = targetC;
+			targets[targetD.id] = targetD;
+			Game.getObjectById = id => targets[id];
+			
+			var object = new Upgrader();
+			object._findTargets = room => [ targetA, targetB, targetC ];
+
+			assert.equal(targetB, object._findClosestTarget(new Creep('TARGET_MODE_X')));
+			return object;
+		}
+		
+		describe('#findClosestTarget', () => {
+			it('target found', () => {
+				var creep = new Creep('Upgrader');
+				creep.memory.target = 'C';
+
+				var object = setupUpgrader();
+				
+				assert.equal('C', object._findClosestTarget(creep).id);
+				assert.equal(0, info.getLines().length, info.getLines().toString());
+			});
+			
+			it('target not valid', () => {
+				// if it was not found in "findTargets()", the target is not valid -> error
+				var creep = new Creep('Upgrader');
+				creep.memory.target = 'D';
+
+				var object = setupUpgrader();
+				
+				assert.equal(null, object._findClosestTarget(creep));	
+				assert.equal(1, info.getLines().length);
+				assert.equal('🛑 Upgrader could not find target in list: D', info.getLine(0));
+			});
+			
+			it('target not found', () => {
+				// target is not even a game object -> error
+				var creep = new Creep('Upgrader');
+				creep.memory.target = 'E';
+
+				var object = setupUpgrader();
+				
+				assert.equal(null, object._findClosestTarget(creep));	
+				assert.equal(1, info.getLines().length);
+				assert.equal('🛑 Upgrader could not find target: E', info.getLine(0));
+			});
 		});
 	});
 });

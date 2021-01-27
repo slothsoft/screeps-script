@@ -260,4 +260,79 @@ describe('role.builder', () => {
 			assert.deepEqual([target1, target2], object._sortTargetForClosest([target1, target2], creep));
 		});
 	});
+
+	describe('TARGET_MODE_USE_IF_VALID', () => {
+		var setupBuilder = function() {
+			
+			// this is the default set up (see #findClosestTarget)
+	
+			var targetA = new Spawn(null, 'A');
+			targetA.pos.x = 4;
+			targetA.progressTotal = 1000; 
+			targetA.progress = 600;
+	
+			var targetB = new Spawn(null, 'B');
+			targetB.pos.x = 1;
+			targetB.progressTotal = 1000; 
+			targetB.progress = 900;
+	
+			var targetC = new Spawn(null, 'C');
+			targetC.pos.x = 10;
+			targetC.progressTotal = 1000; 
+			targetC.progress = 0;
+	
+			var targetD = new Spawn(null, 'D');
+			targetD.pos.x = 11;
+			targetD.progressTotal = 1000; 
+			targetD.progress = 0;
+			
+			var targets = [];
+			targets[targetA.id] = targetA;
+			targets[targetB.id] = targetB;
+			targets[targetC.id] = targetC;
+			targets[targetD.id] = targetD;
+			Game.getObjectById = id => targets[id];
+			
+			var object = new Builder();
+			object._findTargets = room => [ targetA, targetB, targetC ];
+
+			assert.equal(targetB, object._findClosestTarget(new Creep('Builder')));
+			return object;
+		}
+		
+		describe('#findClosestTarget', () => {
+			it('target found', () => {
+				var creep = new Creep('Builder');
+				creep.memory.target = 'C';
+
+				var object = setupBuilder();
+				
+				assert.equal('C', object._findClosestTarget(creep).id);
+				assert.equal(0, info.getLines().length);
+			});
+
+			it('target not valid', () => {
+				// if it was not found in "findTargets()", the target is not valid -> use other
+				var creep = new Creep('Builder');
+				creep.memory.target = 'D';
+
+				var object = setupBuilder();
+				
+				assert.equal('B', object._findClosestTarget(creep).id);
+				assert.equal(0, info.getLines().length);
+			});
+			
+			it('target not found', () => {
+				// target is not even a game object -> error and use other
+				var creep = new Creep('Builder');
+				creep.memory.target = 'E';
+
+				var object = setupBuilder();
+				
+				assert.equal('B', object._findClosestTarget(creep).id);
+				assert.equal(1, info.getLines().length);
+				assert.equal('🛑 Builder could not find target: E', info.getLine(0));
+			});
+		});
+	});
 });

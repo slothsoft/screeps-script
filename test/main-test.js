@@ -118,7 +118,7 @@ describe('main', () => {
 			
 			var creep = spawnExplorer(spawn.name, 'Flag');
 			assert.notEqual(false, creep);
-			assert.equal('Flag', creep.memory.targetFlag);
+			assert.equal('Flag', creep.memory.target);
 			assert.equal(Game.creeps['Explorer 1'], creep);
 			assert.deepEqual([ CLAIM, MOVE, WORK, MOVE, CARRY, MOVE ], creep.body);
 

@@ -14,6 +14,8 @@ class Courier extends RolePrototype {
 	constructor() {
 		super('Courier', '#ff8800', '📯');
 	    this.priority = -1; 
+	    
+	    this._targetMode = RolePrototype.TARGET_MODE_USE_OR_WAIT;
 	}
 
 	isNecessary(room) {

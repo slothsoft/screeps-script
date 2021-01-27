@@ -69,14 +69,7 @@ class Handyman extends RolePrototype {
 	 */
     
     _sortTargetForClosest(targets, creep) {
-    	
-        if (creep.memory.target) {
-            var creepTarget = targets.filter(object => object.id == creep.memory.target);
-            if (creepTarget.length > 0) {
-                return creepTarget;
-            }
-        }
-        var result = targets.sort((a, b) => (b.hits / b.hitsMax) - (a.hits / a.hitsMax));
+        var result = targets.sort((a, b) => (a.hits / a.hitsMax) - (b.hits / b.hitsMax));
         if (result.length > 0) {
             creep.memory.target = result[0].id;
         }

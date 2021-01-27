@@ -77,7 +77,7 @@ describe('role.explorer', () => {
 			
 			var creep = object._spawnCreepFromSpawn(spawn, 'Flag');
 			assert.notEqual(false, creep);
-			assert.equal('Flag', creep.memory.targetFlag);
+			assert.equal('Flag', creep.memory.target);
 			assert.equal(Game.creeps['Explorer 1'], creep);
 			assert.deepEqual([ CLAIM, MOVE, WORK, MOVE, CARRY, MOVE ], creep.body);
 		});
@@ -93,7 +93,7 @@ describe('role.explorer', () => {
 			
 			var creep = object._spawnCreepFromSpawn(spawn);
 			assert.notEqual(false, creep);
-			assert.equal(undefined, creep.memory.targetFlag);
+			assert.equal(undefined, creep.memory.target);
 			assert.equal(Game.creeps['Explorer 1'], creep);
 			assert.deepEqual([ CLAIM, MOVE, WORK, MOVE, CARRY, MOVE, WORK, MOVE, CARRY, MOVE ], creep.body);
 		});
@@ -123,7 +123,7 @@ describe('role.explorer', () => {
 			
 			var creep = object.spawnCreepFromSpawnName(spawn.name, 'Flag');
 			assert.notEqual(false, creep);
-			assert.equal('Flag', creep.memory.targetFlag);
+			assert.equal('Flag', creep.memory.target);
 			assert.equal(Game.creeps['Explorer 1'], creep);
 			assert.deepEqual([ CLAIM, MOVE, WORK, MOVE, CARRY, MOVE ], creep.body);
 
@@ -142,7 +142,7 @@ describe('role.explorer', () => {
 			
 			var creep = object.spawnCreepFromSpawnName(spawn.name);
 			assert.notEqual(false, creep);
-			assert.equal(undefined, creep.memory.targetFlag);
+			assert.equal(undefined, creep.memory.target);
 			assert.equal(Game.creeps['Explorer 1'], creep);
 			assert.deepEqual([ CLAIM, MOVE, WORK, MOVE, CARRY, MOVE, WORK, MOVE, CARRY, MOVE ], creep.body);
 		});
@@ -299,14 +299,14 @@ describe('role.explorer', () => {
 			
 			var object = new Explorer();
 
-			assert.equal(null, creep.memory.targetFlag);
+			assert.equal(null, creep.memory.target);
 			
 			// first time this is called find flag and store it in memory 
 			game.findAllFlags = () => [ flag1, flag2 ];
 			
 			work(object, creep);
 			
-			assert.equal('Flag Name 1', creep.memory.targetFlag);
+			assert.equal('Flag Name 1', creep.memory.target);
 			assert.equal(1, creep.pos.x);
 			assert.equal(2, creep.pos.y);
 			assert.equal(1, info.getLines().length);
@@ -314,11 +314,11 @@ describe('role.explorer', () => {
 
 			// second time this is called find flag and store it in memory 
 			info.clearLines();
-			creep.memory.targetFlag = 'Flag Name 2';
+			creep.memory.target = 'Flag Name 2';
 			
 			work(object, creep);
 			
-			assert.equal('Flag Name 2', creep.memory.targetFlag);
+			assert.equal('Flag Name 2', creep.memory.target);
 			assert.equal(3, creep.pos.x);
 			assert.equal(4, creep.pos.y);
 			assert.equal(0, info.getLines().length);
@@ -330,7 +330,7 @@ describe('role.explorer', () => {
 
 			work(object, creep);
 
-			assert.equal('Flag Name 2', creep.memory.targetFlag);
+			assert.equal('Flag Name 2', creep.memory.target);
 			assert.equal(5, creep.pos.x);
 			assert.equal(6, creep.pos.y);
 			assert.equal(1, info.getLines().length);
@@ -355,6 +355,74 @@ describe('role.explorer', () => {
 		});
 		it('with #work', () => {
 			test((explorer, creep) => explorer._work(creep));
+		});
+	});
+
+	describe('TARGET_MODE_USE_OR_ERROR', () => {
+		var setupExplorer = function() {
+			
+			// this is the default set up (see #findClosestTarget)
+	
+			var targetA = new Spawn(null, 'A');
+			targetA.pos.x = 4;
+	
+			var targetB = new Spawn(null, 'B');
+			targetB.pos.x = 1;
+	
+			var targetC = new Spawn(null, 'C');
+			targetC.pos.x = 10;
+	
+			var targetD = new Spawn(null, 'D');
+			targetD.pos.x = 11;
+			
+			var targets = [];
+			targets[targetA.id] = targetA;
+			targets[targetB.id] = targetB;
+			targets[targetC.id] = targetC;
+			targets[targetD.id] = targetD;
+			Game.getObjectById = id => targets[id];
+			
+			var object = new Explorer();
+			object._findTargets = room => [ targetA, targetB, targetC ];
+
+			assert.equal(targetB, object._findClosestTarget(new Creep('TARGET_MODE_X')));
+			return object;
+		}
+
+		describe('#findClosestTarget', () => {
+			it('target found', () => {
+				var creep = new Creep('Explorer');
+				creep.memory.target = 'C';
+
+				var object = setupExplorer();
+				
+				assert.equal('C', object._findClosestTarget(creep).id);
+				assert.equal(0, info.getLines().length);
+			});
+			
+			it('target not valid', () => {
+				// if it was not found in "findTargets()", the target is not valid -> error
+				var creep = new Creep('Explorer');
+				creep.memory.target = 'D';
+
+				var object = setupExplorer();
+				
+				assert.equal(null, object._findClosestTarget(creep));	
+				assert.equal(1, info.getLines().length);
+				assert.equal('🛑 Explorer could not find target in list: D', info.getLine(0));
+			});
+			
+			it('target not found', () => {
+				// target is not even a game object -> error
+				var creep = new Creep('Explorer');
+				creep.memory.target = 'E';
+
+				var object = setupExplorer();
+				
+				assert.equal(null, object._findClosestTarget(creep));	
+				assert.equal(1, info.getLines().length);
+				assert.equal('🛑 Explorer could not find target: E', info.getLine(0));
+			});
 		});
 	});
 });

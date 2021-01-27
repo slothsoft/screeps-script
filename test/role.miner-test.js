@@ -21,8 +21,9 @@ describe('role.miner', () => {
 	
 	beforeEach(() => {
 		Game.clearAll();
+		info.clearLines();
 	});
-	
+
 	it('constructor', () => {
 		var startsWith = 'class Miner';
 		assert.equal(startsWith, Miner.toString().substring(0, startsWith.length));
@@ -633,6 +634,73 @@ describe('role.miner', () => {
 			var creep = object.spawnCreep(spawn);
 			assert.equal(false, creep);
 			assert.equal(false, spawnWasCalled);
+		});
+	});
+
+	describe('TARGET_MODE_USE_OR_ERROR', () => {
+		var setupMiner = function() {
+			
+			// this is the default set up (see #findClosestTarget)
+	
+			var targetA = new Spawn(null, 'A');
+			targetA.pos.x = 4;
+	
+			var targetB = new Spawn(null, 'B');
+			targetB.pos.x = 1;
+	
+			var targetC = new Spawn(null, 'C');
+			targetC.pos.x = 10;
+	
+			var targetD = new Spawn(null, 'D');
+			targetD.pos.x = 11;
+			
+			var targets = [];
+			targets[targetA.id] = targetA;
+			targets[targetB.id] = targetB;
+			targets[targetC.id] = targetC;
+			targets[targetD.id] = targetD;
+			Game.getObjectById = id => targets[id];
+			
+			var object = new Miner();
+			object._findTargets = room => [ targetA, targetB, targetC ];
+
+			assert.equal(targetB, object._findClosestTarget(new Creep('TARGET_MODE_X')));
+			return object;
+		}
+
+		describe('#findClosestTarget', () => {
+			it('target found', () => {
+				var creep = new Creep('Miner');
+				creep.memory.target = 'C';
+
+				var object = setupMiner();
+				
+				assert.equal('C', object._findClosestTarget(creep).id);
+				assert.equal(0, info.getLines().length, info.getLines().toString());
+			});
+			
+			it('target not valid', () => {
+				// if it was not found in "findTargets()", the target is not valid -> use anyway
+				var creep = new Creep('Miner');
+				creep.memory.target = 'D';
+
+				var object = setupMiner();
+				
+				assert.equal('D', object._findClosestTarget(creep).id);
+				assert.equal(0, info.getLines().length, info.getLines().toString());
+			});
+
+			it('target not found', () => {
+				// target is not even a game object -> error and wait
+				var creep = new Creep('Miner');
+				creep.memory.target = 'E';
+
+				var object = setupMiner();
+				
+				assert.equal(null, object._findClosestTarget(creep));
+				assert.equal(1, info.getLines().length);
+				assert.equal('🛑 Miner could not find target: E', info.getLine(0));
+			});
 		});
 	});
 });

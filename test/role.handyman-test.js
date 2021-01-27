@@ -15,6 +15,11 @@ describe('role.handyman', () => {
 	before(() => {
 	    global.Game = require('./mock/game-mock').Game;
 	});
+
+	beforeEach(() => {
+		Game.clearAll();
+		info.clearLines();
+	});
 	
 	it('constructor', () => {
 		var startsWith = 'class Handyman';
@@ -214,9 +219,11 @@ describe('role.handyman', () => {
 
 			var object = new Handyman();
 			
-			assert.deepEqual([target2, target1], object._sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual([target1, target2], object._sortTargetForClosest([target1, target2], creep));
 		});
+	});
 
+	describe('#findClosestTarget', () => {
 		it('sort by hits but stay with target', () => {
 			
 			var creep = new Creep('sortTargetForClosest', [CARRY, CARRY]);
@@ -229,17 +236,25 @@ describe('role.handyman', () => {
 			target2.hitsMax = 1000; 
 			target2.hits = 700;
 
-			var object = new Handyman();
+			var targets = [];
+			targets[target1.id] = target1;
+			targets[target2.id] = target2;
+			Game.getObjectById = id => targets[id];
 			
-			assert.deepEqual([target2, target1], object._sortTargetForClosest([target1, target2], creep));
+			var object = new Handyman();
+			object._findTargets = room => [ target1, target2 ];
+			
+			assert.deepEqual(target1, object._findClosestTarget(creep));
 			
 			// 2nd time take the same target
 
+			console.log('ABCDEF' +creep.memory.target);
+			
 			target1.hits = 900;
-			assert.deepEqual([target2], object._sortTargetForClosest([target1, target2], creep));
+			assert.deepEqual(target1, object._findClosestTarget(creep));
 		});
 
-		it('sort by hits but don not stay with target after fix', () => {
+		it('sort by hits but do not stay with target after fix', () => {
 			var creep = new Creep('sortTargetForClosest', [CARRY, CARRY]);
 			
 			var target1 = new Spawn();
@@ -249,15 +264,97 @@ describe('role.handyman', () => {
 			var target2 = new Spawn();
 			target2.hitsMax = 1000; 
 			target2.hits = 700;
+			
+			var targets = [];
+			targets[target1.id] = target1;
+			targets[target2.id] = target2;
+			Game.getObjectById = id => targets[id];
 
 			var object = new Handyman();
+			object._findTargets = room => [ target1, target2 ];
 			
-			assert.deepEqual([target2, target1], object._sortTargetForClosest([target1, target2], creep));
-			
+			assert.deepEqual(target1, object._findClosestTarget(creep));
+
 			// 2nd time the target was fixed, so take the other target
 
-			target2.hits = 1000;
-			assert.deepEqual([target1], object._sortTargetForClosest([target1], creep));
+			target1.hits = 1000;
+			object._findTargets = room => [ target2 ];
+			assert.deepEqual(target2, object._findClosestTarget(creep));
+		});
+	});
+
+	describe('TARGET_MODE_USE_IF_VALID', () => {
+		var setupHandyman = function() {
+			
+			// this is the default set up (see #findClosestTarget)
+	
+			var targetA = new Spawn(null, 'A');
+			targetA.hitsMax = 1000; 
+			targetA.hits = 400;
+			targetA.pos.x = 4;
+	
+			var targetB = new Spawn(null, 'B');
+			targetB.hitsMax = 1000; 
+			targetB.hits = 100;
+			targetB.pos.x = 1;
+	
+			var targetC = new Spawn(null, 'C');
+			targetC.hitsMax = 1000; 
+			targetC.hits = 1000;
+			targetC.pos.x = 10;
+	
+			var targetD = new Spawn(null, 'D');
+			targetD.hitsMax = 1000; 
+			targetD.hits = 1100;
+			targetD.pos.x = 11;
+			
+			var targets = [];
+			targets[targetA.id] = targetA;
+			targets[targetB.id] = targetB;
+			targets[targetC.id] = targetC;
+			targets[targetD.id] = targetD;
+			Game.getObjectById = id => targets[id];
+			
+			var object = new Handyman();
+			object._findTargets = room => [ targetA, targetB, targetC ];
+
+			assert.equal(targetB, object._findClosestTarget(new Creep('TARGET_MODE_X')));
+			return object;
+		}
+		
+		describe('#findClosestTarget', () => {
+			it('target found', () => {
+				var creep = new Creep('Handyman');
+				creep.memory.target = 'C';
+
+				var object = setupHandyman();
+				
+				assert.equal('C', object._findClosestTarget(creep).id);
+				assert.equal(0, info.getLines().length, info.getLines().toString());
+			});
+
+			it('target not valid', () => {
+				// if it was not found in "findTargets()", the target is not valid -> use other
+				var creep = new Creep('Handyman');
+				creep.memory.target = 'D';
+
+				var object = setupHandyman();
+				
+				assert.equal('B', object._findClosestTarget(creep).id);
+				assert.equal(0, info.getLines().length, info.getLines().toString());
+			});
+			
+			it('target not found', () => {
+				// target is not even a game object -> error and use other
+				var creep = new Creep('Handyman');
+				creep.memory.target = 'E';
+
+				var object = setupHandyman();
+				
+				assert.equal('B', object._findClosestTarget(creep).id);
+				assert.equal(1, info.getLines().length);
+				assert.equal('🛑 Handyman could not find target: E', info.getLine(0));
+			});
 		});
 	});
 });
