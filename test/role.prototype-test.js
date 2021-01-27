@@ -1183,4 +1183,151 @@ describe('role.protoype', () => {
 			});
 		});
 	});
+
+	describe('SOURCE_MODE_X', () => {
+		var setupRolePrototype = function(sourceMode) {
+			
+			assert.notEqual(null, sourceMode);
+			
+			// this is the default set up (see #findClosestSource)
+	
+			var sourceA = new Spawn(null, 'A');
+			sourceA.pos.x = 4;
+	
+			var sourceB = new Spawn(null, 'B');
+			sourceB.pos.x = 1;
+	
+			var sourceC = new Spawn(null, 'C');
+			sourceC.pos.x = 10;
+	
+			var sourceD = new Spawn(null, 'D');
+			sourceD.pos.x = 11;
+			
+			var sources = [];
+			sources[sourceA.id] = sourceA;
+			sources[sourceB.id] = sourceB;
+			sources[sourceC.id] = sourceC;
+			sources[sourceD.id] = sourceD;
+			Game.getObjectById = id => sources[id];
+			
+			var object = new RolePrototype();
+			object._sourceMode = sourceMode;
+			object._findSources = room => [ sourceA, sourceB, sourceC ];
+
+			assert.equal(sourceB, object._findClosestSource(new Creep('SOURCE_MODE_X')));
+			return object;
+		}
+		
+		describe('USE_IF_VALID', () => {
+			describe('#findClosestSource', () => {
+				it('source found', () => {
+					var creep = new Creep('SOURCE_MODE_USE_IF_VALID');
+					creep.memory.source = 'C';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_IF_VALID);
+					
+					assert.equal('C', object._findClosestSource(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+
+				it('source not valid', () => {
+					// if it was not found in "findSources()", the source is not valid -> use other
+					var creep = new Creep('SOURCE_MODE_USE_IF_VALID');
+					creep.memory.source = 'D';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_IF_VALID);
+					
+					assert.equal('B', object._findClosestSource(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+				
+				it('source not found', () => {
+					// source is not even a game object -> error and use other
+					var creep = new Creep('SOURCE_MODE_USE_IF_VALID');
+					creep.memory.source = 'E';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_IF_VALID);
+					
+					assert.equal('B', object._findClosestSource(creep).id);
+					assert.equal(1, info.getLines().length);
+					assert.equal('🛑 SOURCE_MODE_USE_IF_VALID could not find source: E', info.getLine(0));
+				});
+			});
+		});
+		
+		describe('USE_OR_WAIT', () => {
+			describe('#findClosestSource', () => {
+				it('source found', () => {
+					var creep = new Creep('SOURCE_MODE_USE_OR_WAIT');
+					creep.memory.source = 'C';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_OR_WAIT);
+					
+					assert.equal('C', object._findClosestSource(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+				
+				it('source not valid', () => {
+					// if it was not found in "findSources()", the source is not valid -> use anyway
+					var creep = new Creep('SOURCE_MODE_USE_OR_WAIT');
+					creep.memory.source = 'D';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_OR_WAIT);
+					
+					assert.equal('D', object._findClosestSource(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+
+				it('source not found', () => {
+					// source is not even a game object -> error and wait
+					var creep = new Creep('SOURCE_MODE_USE_OR_WAIT');
+					creep.memory.source = 'E';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_OR_WAIT);
+					
+					assert.equal(null, object._findClosestSource(creep));
+					assert.equal(1, info.getLines().length);
+					assert.equal('🛑 SOURCE_MODE_USE_OR_WAIT could not find source: E', info.getLine(0));
+				});
+			});
+		});
+
+		describe('USE_OR_ERROR', () => {
+			describe('#findClosestSource', () => {
+				it('source found', () => {
+					var creep = new Creep('SOURCE_MODE_USE_OR_ERROR');
+					creep.memory.source = 'C';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_OR_ERROR);
+					
+					assert.equal('C', object._findClosestSource(creep).id);
+					assert.equal(0, info.getLines().length);
+				});
+				
+				it('source not valid', () => {
+					// if it was not found in "findSources()", the source is not valid -> error
+					var creep = new Creep('SOURCE_MODE_USE_OR_ERROR');
+					creep.memory.source = 'D';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_OR_ERROR);
+					
+					assert.equal(null, object._findClosestSource(creep));	
+					assert.equal(1, info.getLines().length);
+					assert.equal('🛑 SOURCE_MODE_USE_OR_ERROR could not find source in list: D', info.getLine(0));
+				});
+				
+				it('source not found', () => {
+					// source is not even a game object -> error
+					var creep = new Creep('SOURCE_MODE_USE_OR_ERROR');
+					creep.memory.source = 'E';
+
+					var object = setupRolePrototype(RolePrototype.SOURCE_MODE_USE_OR_ERROR);
+					
+					assert.equal(null, object._findClosestSource(creep));	
+					assert.equal(1, info.getLines().length);
+					assert.equal('🛑 SOURCE_MODE_USE_OR_ERROR could not find source: E', info.getLine(0));
+				});
+			});
+		});
+	});
 });

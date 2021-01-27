@@ -394,4 +394,71 @@ describe('role.courier', () => {
 			});
 		});
 	});
+
+	describe('SOURCE_MODE_USE_OR_WAIT', () => {
+		var setupCourier = function() {
+			
+			// this is the default set up (see #findClosestSource)
+	
+			var sourceA = new Spawn(null, 'A');
+			sourceA.pos.x = 4;
+	
+			var sourceB = new Spawn(null, 'B');
+			sourceB.pos.x = 1;
+	
+			var sourceC = new Spawn(null, 'C');
+			sourceC.pos.x = 10;
+	
+			var sourceD = new Spawn(null, 'D');
+			sourceD.pos.x = 11;
+			
+			var sources = [];
+			sources[sourceA.id] = sourceA;
+			sources[sourceB.id] = sourceB;
+			sources[sourceC.id] = sourceC;
+			sources[sourceD.id] = sourceD;
+			Game.getObjectById = id => sources[id];
+			
+			var object = new Courier();
+			object._findSources = room => [ sourceA, sourceB, sourceC ];
+
+			assert.equal(sourceB, object._findClosestSource(new Creep('SOURCE_MODE_X')));
+			return object;
+		}
+		
+		describe('#findClosestSource', () => {
+			it('source found', () => {
+				var creep = new Creep('Courier');
+				creep.memory.source = 'C';
+
+				var object = setupCourier();
+				
+				assert.equal('C', object._findClosestSource(creep).id);
+				assert.equal(0, info.getLines().length, info.getLines().toString());
+			});
+			
+			it('source not valid', () => {
+				// if it was not found in "findSources()", the source is not valid -> use anyway
+				var creep = new Creep('Courier');
+				creep.memory.source = 'D';
+
+				var object = setupCourier();
+				
+				assert.equal('D', object._findClosestSource(creep).id);
+				assert.equal(0, info.getLines().length, info.getLines().toString());
+			});
+
+			it('source not found', () => {
+				// source is not even a game object -> error and wait
+				var creep = new Creep('Courier');
+				creep.memory.source = 'E';
+
+				var object = setupCourier();
+				
+				assert.equal(null, object._findClosestSource(creep));
+				assert.equal(1, info.getLines().length);
+				assert.equal('🛑 Courier could not find source: E', info.getLine(0));
+			});
+		});
+	});
 });

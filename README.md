@@ -164,7 +164,9 @@ Documentation on which memory is used for which information. Mandatory elements 
 | **role**              |               | `string`    | the role this creep fulfills (if it is necessary) |
 | **home**              |               | `string`    | the base this creep belongs too |
 | selfdestruct          |               | `boolean`   | if `true`, the creep will go to the next spawn and recycle itself |
+| source                |               | `string`    | the ID of the source the creep will use; all creeps will wait for this source to refill instead of searching for alternatives |
 | target                |               | `string`    | the ID of the target the creep will prioritize; depending on the role the creeps will handle invalid targets differently: <ul><li><b>Builder, Handyman, Harvester & Storekeeper</b> will silently fallback to different targets</li><li><b>Courier & Miner</b> will wait till the target becomes valid again</li><li><b>Explorer & Upgrader</b> will print an error</li></ul> |
+
 
 
 

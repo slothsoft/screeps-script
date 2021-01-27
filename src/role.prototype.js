@@ -3,18 +3,20 @@
  * - basic fields & methods
  * - moving to an appropriate source
  * - spawning new creeps
- * - commuting between an source and a target
+ * - commuting between a source and a target
  * 
  * You need to implement / set:
  * - roleName
  * - (color, symbol)
  * - _findTargets(room)
- * - work(creep)
+ * - _work(creep)
  * 
  * You might need to override / set:
  * - priority
+ * - _targetMode (how to handle set and not found targets)
  * - isNecessary(room) (on default it returns if a valid target is found)
- * - sortTargetForClosest(targets, creep) (on default it sorts for positions)
+ * - spawnCreep(spawn) (to spawn with something different than standard parts)
+ * - _sortTargetForClosest(targets, creep) (on default it sorts for positions)
  */
  
 var constants = require('./main.constants');
@@ -32,6 +34,7 @@ class RolePrototype {
 	    this.priority = 0; // the higher the better
 	    
 	    this._targetMode = RolePrototype.TARGET_MODE_USE_IF_VALID;
+	    this._sourceMode = RolePrototype.SOURCE_MODE_USE_OR_WAIT;
 	}
 	
 	/*
@@ -206,11 +209,42 @@ class RolePrototype {
 	 */
     
     _findClosestSource(creep) {
-        var sources = this._findSources(creep.room);
+    	var specificSource;
+    	if (creep.memory.source) {
+    		// creep has specific source in mind
+    		specificSource = Game.getObjectById(creep.memory.source);
+    		if (specificSource && this._sourceMode == RolePrototype.SOURCE_MODE_USE_OR_WAIT) {
+    			// only in TARGET_MODE_USE_OR_WAIT we don't care for the validity of the source
+    			return specificSource;
+    		}
+    		if (!specificSource) {
+    			info.error(game.getDisplayName(creep) + ' could not find source: ' + creep.memory.source);
+    			
+        		if (this._sourceMode != RolePrototype.TARGET_MODE_USE_IF_VALID) {
+	    			// only in TARGET_MODE_USE_IF_VALID can we recover from that error
+	    			return null;
+        		}
+    		}
+    	}
+        var sources = this._findSources(specificSource ? specificSource.room : creep.room);
         if (sources) {
+        	// let's see if we found our pre-selected source
+        	if (specificSource) {
+        		var found = sources.filter(t => t.id == specificSource.id);
+        		if (found.length > 0) {
+        			return found[0];
+        		}
+        		// our specific source is not valid 
+        		// - TARGET_MODE_USE_OR_ERROR errors out
+        	    // - TARGET_MODE_USE_IF_VALID falls back to valid source
+    			if (this._sourceMode == RolePrototype.TARGET_MODE_USE_OR_ERROR) {
+        			info.error(game.getDisplayName(creep) + ' could not find source in list: ' + creep.memory.source);
+        			return null;
+        		}
+        	}
             sources = this._sortSourceForClosest(sources, creep);
             return sources.length > 0 ? sources[0] : null;
-        }
+		}
         return null;
     }
 
@@ -240,7 +274,7 @@ class RolePrototype {
                         (structure.structureType == STRUCTURE_LINK && structure.memory && structure.memory.type == constants.LINK_TYPE_TARGET)) && 
                         structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }}) : [];
-            
+
         var sources = this._useSourceAsSource ? room.find(FIND_SOURCES_ACTIVE, {
                 filter: (source) => {
                     if (game.findAllCreeps().filter(creep => creep.memory.homeSource == source.id).length) {
@@ -528,5 +562,12 @@ RolePrototype.TARGET_MODE_USE_IF_VALID = 'useIfValid';
 RolePrototype.TARGET_MODE_USE_OR_WAIT = 'useOrWait';
 /* Use the target if valid, else throw an error */
 RolePrototype.TARGET_MODE_USE_OR_ERROR = 'useOrError';
+
+/* Use the source if valid, else switch to any other one */
+RolePrototype.SOURCE_MODE_USE_IF_VALID = 'useIfValid';
+/* Use the source if valid, else wait for it to become valid */
+RolePrototype.SOURCE_MODE_USE_OR_WAIT = 'useOrWait';
+/* Use the source if valid, else throw an error */
+RolePrototype.SOURCE_MODE_USE_OR_ERROR = 'useOrError';
 
 module.exports = RolePrototype;
