@@ -93,7 +93,7 @@ class RolePrototype {
         		}
     		}
     	}
-        var targets = this._findTargets(specificTarget ? specificTarget.room : creep.room);
+        var targets = this._findTargets(this._baseRoom);
         if (targets) {
         	// let's see if we found our pre-selected target
         	if (specificTarget) {
@@ -226,7 +226,7 @@ class RolePrototype {
         		}
     		}
     	}
-        var sources = this._findSources(specificSource ? specificSource.room : creep.room);
+        var sources = this._findSources(this._baseRoom);
         if (sources) {
         	// let's see if we found our pre-selected source
         	if (specificSource) {
@@ -302,9 +302,13 @@ class RolePrototype {
 	 * interest.
 	 * 
 	 * @param {Creep} creep
+	 * @param baseRoom
 	 */
     
-    run(creep) {
+    run(creep, baseRoom = RolePrototype._fetchBaseRoomForCreep(creep)) {
+    	this._creep = creep;
+    	this._baseRoom = baseRoom;
+    	
     	// we want to keep track when a creep is actually moving
     	creep.memory.moving = false;
     	
@@ -398,6 +402,32 @@ class RolePrototype {
         }
     }
 
+    /*
+	 * Finds the room of the creep's base.
+	 * 
+	 * @param {Creep} creep
+	 */
+    
+    static _fetchBaseRoomForCreep(creep) {
+    	var baseRoom = RolePrototype._fetchBaseRoomForName(creep.memory.home);
+    	return baseRoom ? baseRoom : creep.room;
+    }
+
+    /*
+	 * Finds the room for the base namse.
+	 * 
+	 * @param baseName
+	 */
+    
+    static _fetchBaseRoomForName(baseName) {
+    	var allRooms = game.findAllRooms();
+    	var baseRooms = allRooms ? allRooms.filter(room => room.memory.base ? room.memory.base.name == baseName : false) : [];
+    	if (baseRooms.length > 0) {
+    		return baseRooms[0];
+    	}
+    	return null;
+    }
+	
     /*
 	 * Creep loots the tombstone.
 	 * 

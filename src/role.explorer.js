@@ -188,7 +188,7 @@ class Explorer extends RolePrototype {
 	}
 	
 	_buildSpawn(creep) {
-		new Builder().run(creep);
+		new Builder().run(creep, this._baseRoom);
 		
 		if (this._findSpawns(creep.room).length > 0) {
 	        creep.memory.phase = PHASE_RETIRE;

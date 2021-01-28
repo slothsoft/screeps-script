@@ -16,7 +16,6 @@ class Builder extends RolePrototype {
 	 */
 	
     _work(creep) {
-    	this._creep = creep;
     	this._commuteBetweenSourceAndTarget(creep, target => creep.build(target));
     }
     

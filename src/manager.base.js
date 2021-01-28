@@ -164,7 +164,7 @@ class BaseManager {
 	        	.forEach(creep => {
             try {
                 var creepRole = this._findNecessaryMandatoryRole(creep.memory.role);
-                creepRole.run(creep);
+                creepRole.run(creep, this._room);
 
                 // the creep counts for the room it is currently in, not the base's room
                 var currentNumber = creep.room.memory.roleInfo[creepRole.roleName].currentNumber;
