@@ -562,7 +562,6 @@ describe('role.protoype', () => {
 		});
 		
 		it('diverse error', () => {
-			info.clearLines();
 			var target = new Spawn();
 			
 			var object = new RolePrototype();
@@ -747,7 +746,6 @@ describe('role.protoype', () => {
 		});
 		
 		it('diverse error', () => {
-			info.clearLines();
 			var source = new Spawn();
 			
 			var object = new RolePrototype();
@@ -891,8 +889,6 @@ describe('role.protoype', () => {
 		});
 
 		it('self-destruct', () => {
-			info.clearLines();
-			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
 
@@ -919,8 +915,6 @@ describe('role.protoype', () => {
 		});
 
 		it('pickup energy', () => {
-			info.clearLines();
-
 			var droppedEnergy = { 
 				pos: new RoomPosition(),
 			};
@@ -957,8 +951,6 @@ describe('role.protoype', () => {
 		});
 
 		it('loot tombstone', () => {
-			info.clearLines();
-
 			var tombstone = { 
 				pos: new RoomPosition(),
 			};
@@ -990,12 +982,40 @@ describe('role.protoype', () => {
 			assert.equal(12, creep.pos.x);
 			assert.equal(13, creep.pos.y);
 		});
+
+		it('moveToGameObject', () => {
+			
+			var creep = new Creep('run');
+
+			var gameObject = new Spawn();
+			gameObject.pos.x = 13;
+			gameObject.pos.y = 42;
+
+			Game.getObjectById = id => id == gameObject.id ? gameObject : null;
+			creep.memory.moveToGameObject = gameObject.id;
+			
+			var object = new RolePrototype();
+			object.run(creep);
+
+			// game object is far away, so go there
+			assert.equal(gameObject.pos.x, creep.pos.x);
+			assert.equal(gameObject.pos.y, creep.pos.y);
+			assert.equal(gameObject.id, creep.memory.moveToGameObject);
+
+			// game object is now close, so remove game objects from memory and do normal work
+			var workCalled = false;
+			object._work = () => workCalled = true;
+			object.run(creep);
+
+			assert.equal(gameObject.pos.x, creep.pos.x);
+			assert.equal(gameObject.pos.y, creep.pos.y);
+			assert.equal(null, creep.memory.moveToGameObject);
+			assert.equal(true, workCalled);
+		});
 	});
 
 	describe('#selfdestruct', () => {
 		it('no spawn', () => {
-			info.clearLines();
-			
 			var creep = new Creep('run');
 			creep.memory.selfdestruct = true;
 			
@@ -1009,8 +1029,6 @@ describe('role.protoype', () => {
 		});
 
 		it('lifecycle', () => {
-			info.clearLines();
-			
 			var creep = new Creep('selfdestruct');
 			creep.memory.selfdestruct = true;
 

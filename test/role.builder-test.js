@@ -173,7 +173,69 @@ describe('role.builder', () => {
 			assert.equal(12, creep.pos.x);
 			assert.equal(13, creep.pos.y);
 			assert.equal(true, workCalled);
+		});
 
+		it('loot tombstone', () => {
+			var tombstone = { 
+				pos: new RoomPosition(),
+			};
+			tombstone.pos.x = 12;
+			tombstone.pos.y = 13;
+			tombstone.store = new Store(100);
+			tombstone.store.usedCapacity = 50;
+			
+			var creep = new Creep('run');
+			creep.store = new Store(100);
+			creep.pos.findInRange = (type) => (type == FIND_TOMBSTONES) ? [ tombstone ] : [];
+			
+			var object = new Builder();
+			
+			// tombstone is far away, so go there
+			creep.pickup = resource => (resource == tombstone) ? ERR_NOT_IN_RANGE : -1;
+			object._work = (workingCreep) => assert.fail('Creep cannot work while looting!');
+			
+			object.run(creep);
+
+			assert.equal(12, creep.pos.x);
+			assert.equal(13, creep.pos.y);
+			
+			// tombstone is close, so pickup
+			creep.pickup = resource => (resource == tombstone) ? OK : -1;
+			
+			object.run(creep);
+
+			assert.equal(12, creep.pos.x);
+			assert.equal(13, creep.pos.y);
+		});
+
+		it('moveToGameObject', () => {
+			
+			var creep = new Creep('run');
+
+			var gameObject = new Spawn();
+			gameObject.pos.x = 13;
+			gameObject.pos.y = 42;
+
+			Game.getObjectById = id => id == gameObject.id ? gameObject : null;
+			creep.memory.moveToGameObject = gameObject.id;
+			
+			var object = new Builder();
+			object.run(creep);
+
+			// game object is far away, so go there
+			assert.equal(gameObject.pos.x, creep.pos.x);
+			assert.equal(gameObject.pos.y, creep.pos.y);
+			assert.equal(gameObject.id, creep.memory.moveToGameObject);
+
+			// game object is now close, so remove game objects from memory and do normal work
+			var workCalled = false;
+			object._work = () => workCalled = true;
+			object.run(creep);
+
+			assert.equal(gameObject.pos.x, creep.pos.x);
+			assert.equal(gameObject.pos.y, creep.pos.y);
+			assert.equal(null, creep.memory.moveToGameObject);
+			assert.equal(true, workCalled);
 		});
 	});
 

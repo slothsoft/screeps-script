@@ -313,6 +313,17 @@ class RolePrototype {
 	    this._useStorageAsSource = !memoryRoleConfig || memoryRoleConfig.useStorageAsSource;
 	    this._useSourceAsSource = !memoryRoleConfig || memoryRoleConfig.useSourceAsSource;
     	
+	    // TOP PRIORITY: Boss tells me to move to a specific game object
+
+        if (creep.memory.moveToGameObject) {
+            var gameObject = Game.getObjectById(creep.memory.moveToGameObject);
+            if (creep.pos.isNearTo(gameObject)) {
+            	creep.memory.moveToGameObject = null;
+            } else {
+            	this._moveToLocation(creep, gameObject);
+                return;
+            }
+        }
         
         // self-destructing is more important than working
         

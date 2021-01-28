@@ -129,3 +129,23 @@ global.selfdestruct = function (creepName) {
     creep.memory.selfdestruct = true;
 };
 
+/*
+ * Moves the creep to a specific game object.
+ * 
+ * @param creepName
+ * @param gameObjectId
+ */
+ 
+global.moveCreepTo = function (creepName, gameObjectId) { 
+    var creep = Game.creeps[creepName];
+    if (!creep) {
+        info.error('Could not find creep: ' + creepName);
+        return;
+    }
+    if (!Game.getObjectById(gameObjectId)) {
+        info.error('Could not find game object: ' + gameObjectId);
+        return;
+    }
+    creep.memory.moveToGameObject = gameObjectId;
+};
+

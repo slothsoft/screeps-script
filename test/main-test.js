@@ -263,4 +263,47 @@ describe('main', () => {
 			assert.equal('🛑 Could not find role: 1234567890', info.getLine(0));
 		});
 	});
+
+	describe('#moveCreepTo', () => {
+		it('move', () => {
+			
+			var creep = new Creep('run');
+	
+			var gameObject = new Spawn();
+			gameObject.pos.x = 13;
+			gameObject.pos.y = 42;
+	
+			Game.getObjectById = id => id == gameObject.id ? gameObject : null;
+			
+			moveCreepTo(creep.id, gameObject.id);
+	
+			assert.equal(gameObject.id, creep.memory.moveToGameObject);
+		});
+
+		it('no creep', () => {
+			
+			var gameObject = new Spawn();
+			gameObject.pos.x = 13;
+			gameObject.pos.y = 42;
+	
+			Game.getObjectById = id => id == gameObject.id ? gameObject : null;
+			
+			moveCreepTo('unknown', gameObject.id);
+	
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find creep: unknown', info.getLine(0));
+		});
+		
+		it('no game object', () => {
+			
+			var creep = new Creep('run');
+	
+			Game.getObjectById = id => null;
+			
+			moveCreepTo(creep.id, 'unknown');
+
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find game object: unknown', info.getLine(0));
+		});
+	});
 });

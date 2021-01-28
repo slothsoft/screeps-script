@@ -91,6 +91,7 @@ An Explorer creeps will go through the following phases (it might skip one or mo
 | `fetchOldestCreep(<baseName>)`             | fetches the oldest creep in the world (the one with the lowest `ticksToLive`); fetches the oldest creep in the base if &lt;baseName&gt; was set |
 | `makeLinkSource(<id>)`                       | makes a link with a specific ID an source |
 | `makeLinkTarget(<id>)`                       | makes a link with a specific ID an target |
+| `moveCreepTo(<creepName>, <gameObjectId>)` | the creep will go to the game objects and start working there |
 | `selfdestruct(<creepName>)`                 | the creep will go to the next spawn and recycle itself |
 | `spawnCreepForRoom(<roomName>, <roleName>)` | spawns a new creep in a room with a specific role |
 | `spawnExplorer(<spawnId>, <flagName>)`   | spawns a new explorer for a spawn ID and a flag name|
@@ -163,6 +164,7 @@ Documentation on which memory is used for which information. Mandatory elements 
 | debug                 |               | `boolean`   | if `true`, the creep will print each tick what it is doing |
 | **role**              |               | `string`    | the role this creep fulfills (if it is necessary) |
 | **home**              |               | `string`    | the base this creep belongs too |
+| moveToGameObject      |               | `string`    | a game object for the creep to walk to |
 | selfdestruct          |               | `boolean`   | if `true`, the creep will go to the next spawn and recycle itself |
 | source                |               | `string`    | the ID of the source the creep will use; all creeps will wait for this source to refill instead of searching for alternatives |
 | target                |               | `string`    | the ID of the target the creep will prioritize; depending on the role the creeps will handle invalid targets differently: <ul><li><b>Builder, Handyman, Harvester & Storekeeper</b> will silently fallback to different targets</li><li><b>Courier & Miner</b> will wait till the target becomes valid again</li><li><b>Explorer & Upgrader</b> will print an error</li></ul> |

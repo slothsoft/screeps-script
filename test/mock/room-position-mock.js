@@ -18,6 +18,10 @@ class RoomPosition {
 	findInRange() {
 		return [];
 	}
+	
+	isNearTo(target) {
+		return target.pos.x == this.x && target.pos.y == this.y;
+	}
 }
 
 module.exports = RoomPosition;
