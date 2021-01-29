@@ -105,7 +105,7 @@ class LinkManager {
 		var targetLink = this._findTargetLink(sourceLink);
 		if (targetLink) {
 			sourceLink.transferEnergy(targetLink);  
-			info.log('💫 transfering resources from ' + sourceLink.id + ' to ' + targetLink.id);
+			info.log('💫 transfering resources from ' + game.getDisplayName(sourceLink) + ' to ' + game.getDisplayName(targetLink));
 		}
 	}
 

@@ -131,7 +131,7 @@ class Miner extends RolePrototype {
 	            filter: (structure) => {
 	                return (structure.structureType == STRUCTURE_STORAGE ||
 	                        structure.structureType == STRUCTURE_CONTAINER ||
-                            (structure.structureType == STRUCTURE_LINK && structure.memory && structure.memory.type == 'source')) &&
+                            (structure.structureType == STRUCTURE_LINK && game.fetchMemoryOfStructure(structure).type == 'source')) &&
 	                       (!testCreepPosition || this.creep.pos.inRangeTo(structure, this._maxRangeToTarget)) &&
 	                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
 	            }

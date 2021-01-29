@@ -4,6 +4,7 @@
  * like a harvester.
  */
  
+var game = require('./main.game');
 var info = require('./main.info');
 
 var RolePrototype = require('./role.prototype');
@@ -42,6 +43,7 @@ class StoreKeeper extends RolePrototype {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                             structure.structureType == STRUCTURE_SPAWN ||
+                            (structure.structureType == STRUCTURE_LINK && game.fetchMemoryOfStructure(structure).type == 'source') ||
                             structure.structureType == STRUCTURE_TOWER) && 
                             (structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
                 }
