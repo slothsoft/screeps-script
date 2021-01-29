@@ -103,7 +103,6 @@ describe('main.info', () => {
 
 	describe('#log', () => {
 		it('simple', () => {
-			MainInfo.clearLines();
 			MainInfo.log('A');
 			MainInfo.log('B');
 			MainInfo.log('C');
@@ -117,7 +116,6 @@ describe('main.info', () => {
 		it('reject over height', () => {
 			MainInfo.getMaxHeight = () => 2;
 			
-			MainInfo.clearLines();
 			MainInfo.log('A');
 			MainInfo.log('B');
 			MainInfo.log('C');
@@ -131,7 +129,6 @@ describe('main.info', () => {
 	describe('#error', () => {
 		it('simple', () => {
 			MainInfo.getMaxHeight = () => 3;
-			MainInfo.clearLines();
 			
 			MainInfo.error('A');
 			MainInfo.error('B');
@@ -147,7 +144,6 @@ describe('main.info', () => {
 	describe('#warning', () => {
 		it('simple', () => {
 			MainInfo.getMaxHeight = () => 3;
-			MainInfo.clearLines();
 			
 			MainInfo.warning('A');
 			MainInfo.warning('B');
@@ -160,7 +156,7 @@ describe('main.info', () => {
 		});
 	});
 
-	describe('#clearLog', () => {
+	describe('#clearLines', () => {
 		it('simple', () => {
 			MainInfo.log('A');
 			MainInfo.log('B');

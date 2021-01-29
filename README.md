@@ -88,6 +88,7 @@ An Explorer creeps will go through the following phases (it might skip one or mo
 
 | Memory                                              | Description  |
 | --------------------------------------------------- | ------------ |
+| `clearConsole()`                               | clears the lines of the JavaScript and in-game consoles |
 | `fetchOldestCreep(<baseName>)`             | fetches the oldest creep in the world (the one with the lowest `ticksToLive`); fetches the oldest creep in the base if &lt;baseName&gt; was set |
 | `makeLinkSource(<id>)`                       | makes a link with a specific ID an source |
 | `makeLinkTarget(<id>)`                       | makes a link with a specific ID an target |

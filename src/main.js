@@ -3,7 +3,7 @@
  */
 
 var MainUtil = require('./main.util');
-var info = require('./main.info');
+var MainInfo = require('./main.info');
 
 var BaseManager = require('./manager.base');
 var LinkManager = require('./manager.link');
@@ -32,7 +32,7 @@ module.exports.loop = function () {
     
     // print GUI on top
     
-    info.visualize();
+    MainInfo.visualize();
 }
 
 // some helper methods to make managing this thing more easily
@@ -49,10 +49,10 @@ global.fetchOldestCreep = function (baseName) {
     	sort((a, b) => { return a.ticksToLive - b.ticksToLive });
     
     if (oldestCreep.length > 0) {
-        info.log('Oldest creep: ' + oldestCreep[0].name + ' (' + oldestCreep[0].ticksToLive + ' ttl)');
+        MainInfo.log('Oldest creep: ' + oldestCreep[0].name + ' (' + oldestCreep[0].ticksToLive + ' ttl)');
         return oldestCreep[0];
     } 
-    info.error('No creep found.');
+    MainInfo.error('No creep found.');
     return null;
 };
 
@@ -90,7 +90,7 @@ global.spawnCreepForRoom = function (roomName, roleName) {
     if (room) {
         return new BaseManager(room).spawnCreepForRoleName(roleName);
     } 
-    info.error('Could not find room: ' + roomName);
+    MainInfo.error('Could not find room: ' + roomName);
     return false;
 };
 
@@ -123,7 +123,7 @@ global.makeLinkSource = function (linkId) {
 global.selfdestruct = function (creepName) { 
     var creep = Game.creeps[creepName];
     if (!creep) {
-        info.error('Could not find creep: ' + creepName);
+        MainInfo.error('Could not find creep: ' + creepName);
         return;
     }
     creep.memory.selfdestruct = true;
@@ -139,13 +139,22 @@ global.selfdestruct = function (creepName) {
 global.moveCreepTo = function (creepName, gameObjectId) { 
     var creep = Game.creeps[creepName];
     if (!creep) {
-        info.error('Could not find creep: ' + creepName);
+        MainInfo.error('Could not find creep: ' + creepName);
         return;
     }
     if (!Game.getObjectById(gameObjectId)) {
-        info.error('Could not find game object: ' + gameObjectId);
+        MainInfo.error('Could not find game object: ' + gameObjectId);
         return;
     }
     creep.memory.moveToGameObject = gameObjectId;
 };
+
+/*
+ * Clears the lines of the JavaScript and in-game consoles.
+ */
+ 
+global.clearConsole = function () { 
+	MainInfo.clearLines();
+};
+
 

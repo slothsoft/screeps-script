@@ -306,4 +306,16 @@ describe('main', () => {
 			assert.equal('🛑 Could not find game object: unknown', info.getLine(0));
 		});
 	});
+
+	describe('#clearConsole', () => {
+		it('simple', () => {
+			info.log('A');
+			info.log('B');
+			info.log('C');
+
+			clearConsole();
+
+			assert.equal(info.getLines().length, 0);
+		});
+	});
 });
