@@ -2,53 +2,19 @@
  * This module is used to display some information to the screen, so debugging is easier.
  */
  
-// TODO: print -> visualize ?
-// TODO: generally make methods more consistent
-// TODO: this class is not really a class - it's a singleton of sorts?
-
-var constants = require('./main.constants');
 var MainUtil = require('./main.util');
 
 class MainInfo {
 
-	/*
-	 * Fetches the memory of the room's console.
-	 * 
-	 * @param {Room} room
-	 */
-	
-	/* static */ fetchMemoryOfRoomConsole(room) {
-		var defaultArray = {
-			x: 30,
-			y: 0,
-			height: 49,
-			roleInfoX: 0,
-			roleInfoY: 0,
-			opacity: 0.8,
-		};
-		if (room.memory.console) {
-			room.memory.console = Object.assign(defaultArray, room.memory.console);
-		} else {
-			room.memory.console = defaultArray;
-		}
-		return room.memory.console;
-	}
-	
-	constructor() {
-		this._lineTimes = [];
-		this._lines = [];
-	}
-    
     /*
 	 * Displays the collected information on the screen.
 	 */
     
-	visualize() {   
-        for (var roomName in Game.rooms) {
-            var room = Game.rooms[roomName];
+	static visualize() {   
+		MainUtil.findAllRooms().forEach(room => {
             this._visualizeRoleInfos(room);
             this._visualizeConsole(room);
-        }
+        });
     }
 
     /*
@@ -57,11 +23,11 @@ class MainInfo {
 	 * @param {Room} room
 	 */
     
-    _visualizeRoleInfos(room) {   
+	static _visualizeRoleInfos(room) {   
         if (!room.memory.roleInfo)
             return;
 
-    	var console = this.fetchMemoryOfRoomConsole(room);
+    	var console = MainInfo._fetchMemoryOfRoomConsole(room);
         var x = console.roleInfoX;
         var y = console.roleInfoY;
         
@@ -86,52 +52,86 @@ class MainInfo {
         }
     }
 
+	/*
+	 * Fetches the memory of the room's console.
+	 * 
+	 * @param {Room} room
+	 */
+	
+	static _fetchMemoryOfRoomConsole(room) {
+		var defaultArray = {
+			x: 30,
+			y: 0,
+			height: 49,
+			roleInfoX: 0,
+			roleInfoY: 0,
+			opacity: 0.8,
+		};
+		if (room.memory.console) {
+			room.memory.console = Object.assign(defaultArray, room.memory.console);
+		} else {
+			room.memory.console = defaultArray;
+		}
+		return room.memory.console;
+	}
+
     /*
 	 * Displays the console for a specific room on the screen.
 	 * 
 	 * @param {Room} room
 	 */
     
-    _visualizeConsole(room) {   
-    	var console = this.fetchMemoryOfRoomConsole(room);
+	static _visualizeConsole(room) {   
+    	var console = this._fetchMemoryOfRoomConsole(room);
         var x = console.x;
         var xLine = x + 5;
         var yMin = console.y;
         var height = console.height;
         var y = yMin + height;
+
+        var wasDrawn = false;
         
-        if (this._lines.length == 0) {
-            room.visual.text('<no console entries>', x, y, {align: 'left', opacity: console.opacity});
-        } else {
-            for (const lineIndex in this._lines) {
-                var time = this._lineTimes[lineIndex];
-                room.visual.text(time.toISOString().substring(2, 16).replace('T', ' '), x, y, {align: 'left'});
-                room.visual.text(this._lines[lineIndex], xLine, y, {align: 'left'});
-                
-                y--;
-                if (y <= yMin) {
-                    break;
-                }
+        for (const lineIndex in this._lines) {
+        	var lineRoom = this._lineRooms[lineIndex];
+        	if (lineRoom && lineRoom != room) {
+        		continue;
+        	}
+        	
+            var time = this._lineTimes[lineIndex];
+            room.visual.text(time.toISOString().substring(2, 16).replace('T', ' '), x, y, {align: 'left'});
+            
+            room.visual.text(this._lines[lineIndex], xLine, y, {align: 'left'});
+            
+            wasDrawn = true;
+            y--;
+            if (y <= yMin) {
+                break;
             }
         }
+        
+        if (!wasDrawn) {
+            room.visual.text('<no console entries>', xLine, y, {align: 'left', opacity: console.opacity});
+        } 
     }
 
     /*
 	 * Clears the UI console.
 	 */
     
-    clearLines() {   
+	static clearLines() {   
         this._lineTimes = [];
         this._lines = [];
+        this._lineRooms = [];
     }
     
     /*
 	 * Logs the string to the UI console.
 	 * 
 	 * @param the new line
+	 * @param {Room} room
 	 */
     
-    log(newLine) {   
+	static log(newLine, room) {   
         if (newLine === 'object' && newLine !== null) {
             console.log(JSON.stringify(newLine));
         } else {
@@ -144,27 +144,31 @@ class MainInfo {
         
         this._lines.splice(0, 0, newLine);
         this._lines = this._lines.slice(0, height);
+        
+        this._lineRooms.splice(0, 0, room);
+        this._lineRooms = this._lineRooms.slice(0, height);
     }
 
     /*
 	 * Logs the error to the UI console.
 	 * 
 	 * @param the new line
+	 * @param {Room} room
 	 */
     
-    error(newLine) {   
-        this.log('🛑 ' + newLine);
+	static error(newLine, room) {   
+        this.log('🛑 ' + newLine, room);
     }
 
     /*
 	 * Logs the warning to the UI console.
 	 * 
 	 * @param the new line
+	 * @param {Room} room
 	 */
-    
 
-    warning(newLine) {   
-        this.log('⚠ ' + newLine);
+	static warning(newLine, room) {   
+        this.log('⚠ ' + newLine, room);
     }
 
     /*
@@ -173,18 +177,22 @@ class MainInfo {
 	 * @param the new line
 	 */
     
-    getMaxHeight() {   
+	static getMaxHeight() {   
         var result = Math.max(MainUtil.findAllRooms().map(room => (room.memory.console && room.memory.console.height)));
         return result || 10;
     }
 
-    getLine(index) {
+	static getLine(index) {
     	return this._lines[index];
     }
     
-    getLines() {
+	static getLines() {
     	return this._lines;
     }
 };
 
-module.exports = new MainInfo();
+MainInfo._lineTimes = [];
+MainInfo._lines = [];
+MainInfo._lineRooms = [];
+
+module.exports = MainInfo;

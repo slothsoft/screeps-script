@@ -157,7 +157,7 @@ class MemoryManager {
 	    	if (spawn.room.memory.base) {
 	    		// 2nd spawn in a room
 	    		spawn.memory.home = spawn.room.memory.base.name;
-	    		info.log('🏠 Created new spawn in base: ' + spawn.room.memory.home);
+	    		info.log('🏠 Created new spawn in base: ' + spawn.memory.home);
 	    	} else {
 	    		// new base in this room
 	    		this.fetchRoomBase(spawn.room, spawn.name);

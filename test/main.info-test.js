@@ -1,5 +1,7 @@
-var classUnderTest = require('../src/main.info');
+var MainInfo = require('../src/main.info');
 var assert = require('assert');
+
+var MainUtil = require('../src/main.util');
 
 var MemoryManager = require('../src/manager.memory');
 var Room = require('./mock/room-mock');
@@ -7,15 +9,21 @@ var Room = require('./mock/room-mock');
 // All methods tested.
 
 describe('main.info', () => {
+	beforeEach(() => {
+		Game.clearAll();
+		MainInfo.clearLines();
+	});
+	
 	it('exists', () => {
-		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
+		var startsWith = 'class MainInfo';
+		assert.equal(startsWith, MainInfo.toString().substring(0, startsWith.length));
 	});
 
-	describe('#fetchMemoryOfRoomConsole', () => {
+	describe('#_fetchMemoryOfRoomConsole', () => {
 		it('no memory', () => {
 			var room = new Room();
 	
-			var result = classUnderTest.fetchMemoryOfRoomConsole(room);
+			var result = MainInfo._fetchMemoryOfRoomConsole(room);
 			
 			var expecting = {
 				x: 30,
@@ -37,7 +45,7 @@ describe('main.info', () => {
 				height: 0,
 			};
 	
-			var result = classUnderTest.fetchMemoryOfRoomConsole(room);
+			var result = MainInfo._fetchMemoryOfRoomConsole(room);
 			
 			var expecting = {
 				x: 13,
@@ -62,7 +70,7 @@ describe('main.info', () => {
 				roleInfoY: 10,
 			};
 	
-			var result = classUnderTest.fetchMemoryOfRoomConsole(room);
+			var result = MainInfo._fetchMemoryOfRoomConsole(room);
 			
 			var expecting = {
 				x: 13,
@@ -81,86 +89,86 @@ describe('main.info', () => {
 	describe('#getMaxHeight', () => {
 		it('simple', () => {
 			var room1 = new Room();
-			classUnderTest.fetchMemoryOfRoomConsole(room1).height = 123;
+			MainInfo._fetchMemoryOfRoomConsole(room1).height = 123;
 			
 			var room2 = new Room();
-			classUnderTest.fetchMemoryOfRoomConsole(room2).height = 456;
+			MainInfo._fetchMemoryOfRoomConsole(room2).height = 456;
 			
 			var room3 = new Room();
-			classUnderTest.fetchMemoryOfRoomConsole(room3).height = 789;
+			MainInfo._fetchMemoryOfRoomConsole(room3).height = 789;
 			
-			assert.equal(classUnderTest.getMaxHeight(), 789);
+			assert.equal(MainInfo.getMaxHeight(), 789);
 		});
 	});
 
 	describe('#log', () => {
 		it('simple', () => {
-			classUnderTest.clearLines();
-			classUnderTest.log('A');
-			classUnderTest.log('B');
-			classUnderTest.log('C');
+			MainInfo.clearLines();
+			MainInfo.log('A');
+			MainInfo.log('B');
+			MainInfo.log('C');
 
-			assert.equal(classUnderTest.getLines().length, 3);
-			assert.equal(classUnderTest.getLine(0).includes('C'), true);
-			assert.equal(classUnderTest.getLine(1).includes('B'), true);
-			assert.equal(classUnderTest.getLine(2).includes('A'), true);
+			assert.equal(MainInfo.getLines().length, 3);
+			assert.equal(MainInfo.getLine(0).includes('C'), true);
+			assert.equal(MainInfo.getLine(1).includes('B'), true);
+			assert.equal(MainInfo.getLine(2).includes('A'), true);
 		});
 
 		it('reject over height', () => {
-			classUnderTest.getMaxHeight = () => 2;
+			MainInfo.getMaxHeight = () => 2;
 			
-			classUnderTest.clearLines();
-			classUnderTest.log('A');
-			classUnderTest.log('B');
-			classUnderTest.log('C');
+			MainInfo.clearLines();
+			MainInfo.log('A');
+			MainInfo.log('B');
+			MainInfo.log('C');
 			
-			assert.equal(classUnderTest.getLines().length, 2);
-			assert.equal(classUnderTest.getLine(0).includes('C'), true);
-			assert.equal(classUnderTest.getLine(1).includes('B'), true);
+			assert.equal(MainInfo.getLines().length, 2);
+			assert.equal(MainInfo.getLine(0).includes('C'), true);
+			assert.equal(MainInfo.getLine(1).includes('B'), true);
 		});
 	});
 
 	describe('#error', () => {
 		it('simple', () => {
-			classUnderTest.getMaxHeight = () => 3;
-			classUnderTest.clearLines();
+			MainInfo.getMaxHeight = () => 3;
+			MainInfo.clearLines();
 			
-			classUnderTest.error('A');
-			classUnderTest.error('B');
-			classUnderTest.error('C');
+			MainInfo.error('A');
+			MainInfo.error('B');
+			MainInfo.error('C');
 
-			assert.equal(classUnderTest.getLines().length, 3);
-			assert.equal(classUnderTest.getLine(0).includes('🛑 C'), true);
-			assert.equal(classUnderTest.getLine(1).includes('🛑 B'), true);
-			assert.equal(classUnderTest.getLine(2).includes('🛑 A'), true);
+			assert.equal(MainInfo.getLines().length, 3);
+			assert.equal(MainInfo.getLine(0).includes('🛑 C'), true);
+			assert.equal(MainInfo.getLine(1).includes('🛑 B'), true);
+			assert.equal(MainInfo.getLine(2).includes('🛑 A'), true);
 		});
 	});
 
 	describe('#warning', () => {
 		it('simple', () => {
-			classUnderTest.getMaxHeight = () => 3;
-			classUnderTest.clearLines();
+			MainInfo.getMaxHeight = () => 3;
+			MainInfo.clearLines();
 			
-			classUnderTest.warning('A');
-			classUnderTest.warning('B');
-			classUnderTest.warning('C');
+			MainInfo.warning('A');
+			MainInfo.warning('B');
+			MainInfo.warning('C');
 
-			assert.equal(classUnderTest.getLines().length, 3);
-			assert.equal(classUnderTest.getLine(0).includes('⚠ C'), true);
-			assert.equal(classUnderTest.getLine(1).includes('⚠ B'), true);
-			assert.equal(classUnderTest.getLine(2).includes('⚠ A'), true);
+			assert.equal(MainInfo.getLines().length, 3);
+			assert.equal(MainInfo.getLine(0).includes('⚠ C'), true);
+			assert.equal(MainInfo.getLine(1).includes('⚠ B'), true);
+			assert.equal(MainInfo.getLine(2).includes('⚠ A'), true);
 		});
 	});
 
 	describe('#clearLog', () => {
 		it('simple', () => {
-			classUnderTest.log('A');
-			classUnderTest.log('B');
-			classUnderTest.log('C');
+			MainInfo.log('A');
+			MainInfo.log('B');
+			MainInfo.log('C');
 
-			classUnderTest.clearLines();
+			MainInfo.clearLines();
 
-			assert.equal(classUnderTest.getLines().length, 0);
+			assert.equal(MainInfo.getLines().length, 0);
 		});
 	});
 
@@ -169,7 +177,7 @@ describe('main.info', () => {
 			
 			var room = new Room();
 			
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 			
 			assert.equal(undefined, room.visual.elements);
 		});
@@ -185,7 +193,7 @@ describe('main.info', () => {
 					
 			};
 			
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 
 			assert.notEqual(undefined, room.visual.elements);
 			assert.equal('Hello World    4/10🟡', room.visual.elements[0][0]);
@@ -206,7 +214,7 @@ describe('main.info', () => {
 					requiredNumber: 2,
 				}
 			};
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 
 			assert.notEqual(undefined, room.visual.elements);
 			assert.equal('Hello World    4/10🟡', room.visual.elements[0][0]);
@@ -228,7 +236,7 @@ describe('main.info', () => {
 					requiredNumber: 0,
 				}
 			};
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 
 			assert.notEqual(undefined, room.visual.elements);
 			assert.equal('Hello World    4/10🟡', room.visual.elements[0][0]);
@@ -250,7 +258,7 @@ describe('main.info', () => {
 					requiredNumber: 2,
 				}
 			};
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 
 			assert.notEqual(undefined, room.visual.elements);
 			assert.equal('Hello World    4/10🟡', room.visual.elements[0][0]);
@@ -272,7 +280,7 @@ describe('main.info', () => {
 					requiredNumber: 0,
 				}
 			};
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 
 			assert.notEqual(undefined, room.visual.elements);
 			assert.equal('Hello World    4/10🟡', room.visual.elements[0][0]);
@@ -294,7 +302,7 @@ describe('main.info', () => {
 					requiredNumber: -1, // <--
 				}
 			};
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 
 			assert.notEqual(undefined, room.visual.elements);
 			assert.equal('Hello World    4/10🟡', room.visual.elements[0][0]);
@@ -314,7 +322,7 @@ describe('main.info', () => {
 					requiredNumber: -1, 
 				}
 			};
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 
 			assert.notEqual(undefined, room.visual.elements);
 			assert.equal('Hello World    4/10🟡', room.visual.elements[0][0]);
@@ -331,11 +339,66 @@ describe('main.info', () => {
 					
 			};
 			
-			classUnderTest._visualizeRoleInfos(room);
+			MainInfo._visualizeRoleInfos(room);
 
 			assert.notEqual(undefined, room.visual.elements);
 			assert.equal('Hello World    4/10🟡', room.visual.elements[0][0]);
 			assert.equal(null, room.visual.elements[0][1]);
+		});
+	});
+
+
+	describe('#visualizeConsole', () => {
+		it('empty', () => {
+
+			var room = new Room();
+			MainUtil.findAllRooms = () => [ room ];
+
+			MainInfo._visualizeConsole(room);
+
+			assert.equal(undefined, room.visual.elements[35][48]);
+			assert.equal('<no console entries>', room.visual.elements[35][49]);
+		});
+
+		it('log', () => {
+			
+			var room = new Room();
+			MainUtil.findAllRooms = () => [ room ];
+
+			MainInfo.log('A');
+			MainInfo.log('B');
+			MainInfo.log('C');
+			MainInfo.log('D');
+			
+			MainInfo._visualizeConsole(room);
+
+			assert.equal(undefined, room.visual.elements[35][46]);
+			assert.equal('B', room.visual.elements[35][47]);
+			assert.equal('C', room.visual.elements[35][48]);
+			assert.equal('D', room.visual.elements[35][49]);
+		});
+
+		it('for room', () => {
+			
+			var room = new Room();
+			var otherRoom = new Room();
+			MainUtil.findAllRooms = () => [ room, otherRoom ];
+
+			MainInfo.log('A');
+			MainInfo.log('B', room);
+			MainInfo.log('C', otherRoom);
+			
+			MainInfo._visualizeConsole(room);
+
+			assert.equal(undefined, room.visual.elements[35][47]);
+			assert.equal('A', room.visual.elements[35][48]);
+			assert.equal('B', room.visual.elements[35][49]);
+
+			MainInfo._visualizeConsole(otherRoom);
+
+			assert.equal(undefined, otherRoom.visual.elements[35][47]);
+			assert.equal('A', otherRoom.visual.elements[35][48]);
+			assert.equal('C', otherRoom.visual.elements[35][49]);
 		});
 	});
 });

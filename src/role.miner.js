@@ -47,7 +47,7 @@ class Miner extends RolePrototype {
 	    var spawn = spawns[0];
 	    var resultingCreep = this._spawnCreepFromSpawn(spawn, sourceId);
 	    if (resultingCreep) {
-	        info.log(this.symbol + ' Spawning new ' + this.roleName + ' (' + resultingCreep.body.length + 'p)');
+	        info.log(this.symbol + ' Spawning new ' + this.roleName + ' (' + resultingCreep.body.length + 'p)', this._baseRoom);
 	        return resultingCreep;
 	    }
 	    return resultingCreep;
@@ -96,7 +96,7 @@ class Miner extends RolePrototype {
 	        if (creep.ticksToLive < ticksToGetReady) {
 	            var spawnedCreep = this.spawnCreepFromSpawnName(creep.memory.homeSpawn, creep.memory.source);
 	            if (spawnedCreep) {
-	                info.log(this.symbol + ' Training the replacement ' + this.roleName);
+	                info.log(this.symbol + ' Training the replacement ' + this.roleName, this._baseRoom);
 	                creep.memory.trainedReplacement = true;
 	            }
 	        }

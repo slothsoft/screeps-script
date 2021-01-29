@@ -141,12 +141,12 @@ class RolePrototype {
     	var workResult = work(target);
         if (workResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
-                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is moving to target ' + MainUtil.getDisplayName(target));  
+                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is moving to target ' + MainUtil.getDisplayName(target), this._baseRoom);  
             }
         	this._moveToLocation(creep, target);
         } else if (workResult == OK) {     
             if (creep.memory.debug) {
-                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is working on target ' + MainUtil.getDisplayName(target));  
+                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is working on target ' + MainUtil.getDisplayName(target), this._baseRoom);  
             }
         } else {      
         	this._handleTargetWorkResult(creep, workResult);
@@ -189,12 +189,12 @@ class RolePrototype {
     	var harvestResult = source.structureType ? creep.withdraw(source, RESOURCE_ENERGY) : creep.harvest(source);
         if (harvestResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
-                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is moving to source ' + MainUtil.getDisplayName(source));  
+                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is moving to source ' + MainUtil.getDisplayName(source), this._baseRoom);  
             }
             this._moveToLocation(creep, source);
         } else if (harvestResult == OK) {     
             if (creep.memory.debug) {
-                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is harvesting from source ' + MainUtil.getDisplayName(source));  
+                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is harvesting from source ' + MainUtil.getDisplayName(source), this._baseRoom);  
             }
         } else {      
             this._handleSourceWorkResult(creep, harvestResult);
@@ -342,7 +342,7 @@ class RolePrototype {
         var droppedEnergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3).filter(e => e.resourceType == RESOURCE_ENERGY);
     	if (droppedEnergy.length > 0 && creep.store.getFreeCapacity() > 0) {
             if (creep.memory.debug) {
-            	info.log('🟡 ' + MainUtil.getDisplayName(creep) + ' is picking up resource ' + MainUtil.getDisplayName(droppedEnergy[0]));
+            	info.log('🟡 ' + MainUtil.getDisplayName(creep) + ' is picking up resource ' + MainUtil.getDisplayName(droppedEnergy[0]), this._baseRoom);
             }
         	if (creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
         		this._moveToLocation(creep, droppedEnergy[0]);
@@ -363,7 +363,7 @@ class RolePrototype {
 //	        var ruin = creep.pos.findInRange(FIND_RUINS, 3);
 //	    	if (ruin.length > 0 && creep.store.getFreeCapacity() > 0) {
 //	            if (creep.memory.debug) {
-//	            	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is looting ruin ' + MainUtil.getDisplayName(dropenergy[0]));
+//	            	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is looting ruin ' + MainUtil.getDisplayName(dropenergy[0]), this._baseRoom);
 //	            }
 //	            var withdrawAnswer = creep.withdraw(ruin[0], RESOURCE_ENERGY);
 //	        	if (withdrawAnswer == ERR_NOT_IN_RANGE) {
@@ -389,16 +389,16 @@ class RolePrototype {
             var recycleAnswer = spawn.recycleCreep(creep);
             if (recycleAnswer == ERR_NOT_IN_RANGE) {
                 if (creep.memory.debug) {      
-                    info.log('🔙 ' + MainUtil.getDisplayName(creep) + ' is moving to spawn ' + spawn.id);  
+                    info.log('🔙 ' + MainUtil.getDisplayName(creep) + ' is moving to spawn ' + spawn.id, this._baseRoom);  
                 }
                 this._moveToLocation(creep, spawn);
             } else if (recycleAnswer == OK) {  
                 if (creep.memory.debug) {
-                    info.log('🗑 ' + MainUtil.getDisplayName(creep) + ' was recycled.');  
+                    info.log('🗑 ' + MainUtil.getDisplayName(creep) + ' was recycled.', this._baseRoom);  
                 }
             }
         } else {
-            info.error(MainUtil.getDisplayName(creep) + ' could not find a spawn.');  
+            info.error(MainUtil.getDisplayName(creep) + ' could not find a spawn.', this._baseRoom);  
         }
     }
 
@@ -438,15 +438,15 @@ class RolePrototype {
 	    var withdrawResult = creep.withdraw(tombstone, RESOURCE_ENERGY);
 		if (withdrawResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
-    	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is moving to tombstone ' + MainUtil.getDisplayName(tombstone));
+    	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is moving to tombstone ' + MainUtil.getDisplayName(tombstone), this._baseRoom);
             }
     		this._moveToLocation(creep, tombstone);
 		} else if (withdrawResult == OK) {
             if (creep.memory.debug) {      
-    	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is looting the tombstone ' + MainUtil.getDisplayName(tombstone));
+    	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is looting the tombstone ' + MainUtil.getDisplayName(tombstone), this._baseRoom);
             }
 		} else {
-	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' cannot loot the tombstone: ' + withdrawResult);
+	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' cannot loot the tombstone: ' + withdrawResult, this._baseRoom);
 		}
 	}
 
