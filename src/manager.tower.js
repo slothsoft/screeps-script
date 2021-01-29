@@ -7,7 +7,7 @@
  * - TODO: heal other structures ...?
  */
 
-var game = require('./main.game');
+var MainUtil = require('./main.util');
  
 class TowerManager {
 
@@ -18,7 +18,7 @@ class TowerManager {
 	 */
 	
 	static runAll() {
-	    game.findAllRooms().forEach(room => new TowerManager(room).runTowers());
+	    MainUtil.findAllRooms().forEach(room => new TowerManager(room).runTowers());
 	}
 	
 	constructor(room) {

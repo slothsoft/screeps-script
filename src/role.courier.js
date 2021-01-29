@@ -1,10 +1,10 @@
 /*
- * Courier transfer data between two game objects of unknown type.
+ * Couriers transfer data between two game objects of unknown type.
  * 
  * Right now only Mineral => Lab for RESOURCE_OXYGEN is supported. 
  */
 
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 var info = require('./main.info');
 
 var RolePrototype = require('./role.prototype');
@@ -54,7 +54,7 @@ class Courier extends RolePrototype {
     _findById(room, id) {
     	var object = Game.getObjectById(id);
     	if (!object) {
-    		info.error(game.getDisplayName(room) + ' could not find game object with ID: ' + id);
+    		info.error(MainUtil.getDisplayName(room) + ' could not find game object with ID: ' + id);
     		return [];
     	}
         return  [ object ];

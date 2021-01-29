@@ -2,7 +2,7 @@
  * The main loop of the game. 
  */
 
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 var info = require('./main.info');
 
 var BaseManager = require('./manager.base');
@@ -44,7 +44,7 @@ module.exports.loop = function () {
  */
 
 global.fetchOldestCreep = function (baseName) {
-    var oldestCreep = game.findAllCreeps().
+    var oldestCreep = MainUtil.findAllCreeps().
     	filter(creep => (!baseName || creep.room.memory.home == baseName)).
     	sort((a, b) => { return a.ticksToLive - b.ticksToLive });
     

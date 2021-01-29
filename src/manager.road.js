@@ -2,7 +2,7 @@
  * This manager handles road building.
  */
 
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 
 var TileWatcher = require('./tile.watcher');
  
@@ -13,7 +13,7 @@ class RoadManager extends TileWatcher {
 	 */
 	
 	static watchAllRooms() {
-	    game.findAllRooms().forEach(room => new RoadManager(room).watchRoom());
+	    MainUtil.findAllRooms().forEach(room => new RoadManager(room).watchRoom());
 	}
 	
 	constructor(room) {

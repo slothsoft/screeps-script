@@ -1,7 +1,7 @@
 var MemoryManager = require('../src/manager.memory');
 var assert = require('assert');
 
-var game = require('../src/main.game');
+var MainUtil = require('../src/main.util');
 var memory = require('./mock/memory-mock');
 
 var Room = require('./mock/room-mock');
@@ -126,7 +126,7 @@ describe('manager.memory', () => {
 	
 			var role = { roleName: 'Role' };
 			
-			game.findAllRooms = () => [ room1, room2 ];
+			MainUtil.findAllRooms = () => [ room1, room2 ];
 			MemoryManager._fetchAllRoomRoleConfigs([ role ]);
 			
 			var expecting = {
@@ -170,7 +170,7 @@ describe('manager.memory', () => {
 			var role1 = { roleName: 'Role1' };
 			var role2 = { roleName: 'Role2' };
 
-			game.findAllRooms = () => [ room1, room2 ];
+			MainUtil.findAllRooms = () => [ room1, room2 ];
 			MemoryManager._fetchAllRoomRoleConfigs([ role1, role2 ]);
 			
 			var expecting = {
@@ -227,7 +227,7 @@ describe('manager.memory', () => {
 			var role1 = { roleName: 'Role1' };
 			var role2 = { roleName: 'Role2' };
 
-			game.findAllRooms = () => [ room1, room2 ];
+			MainUtil.findAllRooms = () => [ room1, room2 ];
 			MemoryManager._fetchAllRoomRoleConfigs([ role1, role2 ]);
 			
 			var expecting = {
@@ -324,7 +324,7 @@ describe('manager.memory', () => {
 				roleName: 'Role', 
 			};
 			
-			game.findAllRooms = () => [ room1, room2 ];
+			MainUtil.findAllRooms = () => [ room1, room2 ];
 			MemoryManager._clearAllRoomRoleInfos( [ role ]);
 			
 			var expecting = {
@@ -368,7 +368,7 @@ describe('manager.memory', () => {
 				roleName: 'Role2' 
 			};
 
-			game.findAllRooms = () => [ room1, room2 ];
+			MainUtil.findAllRooms = () => [ room1, room2 ];
 			var result = MemoryManager._clearAllRoomRoleInfos([ role1, role2 ]);
 			
 			var expecting = {
@@ -520,7 +520,7 @@ describe('manager.memory', () => {
 			MemoryManager.fetchRoomBase(room2, 'New York');
 			var roleConfig = MemoryManager._fetchRoomRoleConfig(room2, [ { roleName: 'Role' } ]);
 			
-			game.findAllRooms = () => [ room1, room2, room3 ];
+			MainUtil.findAllRooms = () => [ room1, room2, room3 ];
 			assert.deepEqual(roleConfig, MemoryManager.fetchRoomRoleConfigForBase('New York'));
 		});
 
@@ -529,7 +529,7 @@ describe('manager.memory', () => {
 			var room2 = new Room();
 			var room3 = new Room();
 
-			game.findAllRooms = () => [ room1, room2, room3 ];
+			MainUtil.findAllRooms = () => [ room1, room2, room3 ];
 			assert.equal(null, MemoryManager.fetchRoomRoleConfigForBase('New York'));
 		});
 	});

@@ -2,7 +2,7 @@ var BaseManager = require('../src/manager.base');
 var assert = require('assert');
 
 var constants = require('../src/main.constants');
-var game = require('../src/main.game');
+var MainUtil = require('../src/main.util');
 var info = require('../src/main.info');
 
 var MemoryManager = require('../src/manager.memory');
@@ -899,7 +899,7 @@ describe('manager.base', () => {
 			
 			var manager = new BaseManager(room);
 			manager._allRoles = [ role1, role2 ];
-			game.findAllCreeps = () => [creep1, creep2];
+			MainUtil.findAllCreeps = () => [creep1, creep2];
 			
 			MemoryManager._clearRoomRoleInfo(room, manager._allRoles);
 			manager._moveCreeps();
@@ -934,7 +934,7 @@ describe('manager.base', () => {
 			
 			var manager = new BaseManager(room);
 			manager._allRoles = [ role ];
-			game.findAllCreeps = () => [creep];
+			MainUtil.findAllCreeps = () => [creep];
 			
 			MemoryManager._clearRoomRoleInfo(room, manager._allRoles);
 			manager._moveCreeps();
@@ -968,7 +968,7 @@ describe('manager.base', () => {
 			
 			var manager = new BaseManager(room);
 			manager._allRoles = [ role ];
-			game.findAllCreeps = () => [creep];
+			MainUtil.findAllCreeps = () => [creep];
 			
 			MemoryManager._clearRoomRoleInfo(room, manager._allRoles);
 			manager._moveCreeps();
@@ -1002,7 +1002,7 @@ describe('manager.base', () => {
 			
 			var manager = new BaseManager(room);
 			manager._allRoles = [ role ];
-			game.findAllCreeps = () => [creep];
+			MainUtil.findAllCreeps = () => [creep];
 			
 			MemoryManager._clearRoomRoleInfo(room, manager._allRoles);
 			manager._moveCreeps();

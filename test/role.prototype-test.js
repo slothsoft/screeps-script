@@ -2,7 +2,7 @@ var RolePrototype = require('../src/role.prototype');
 var assert = require('assert');
 
 require('./mock/game-mock');
-var game = require('../src/main.game');
+var MainUtil = require('../src/main.util');
 var info = require('../src/main.info');
 
 var Creep = require('./mock/creep-mock');
@@ -1358,7 +1358,7 @@ describe('role.protoype', () => {
 			var room = new Room();
 			room.memory.base = { name : 'C'  };
 			
-			game.findAllRooms = () => [ creep.room, room ];
+			MainUtil.findAllRooms = () => [ creep.room, room ];
 			
 			assert.equal(room, RolePrototype._fetchBaseRoomForCreep(creep));
 		});
@@ -1370,7 +1370,7 @@ describe('role.protoype', () => {
 			var room = new Room();
 			room.memory.base = { name : 'D'  };
 
-			game.findAllRooms = () => [ creep.room, room ];
+			MainUtil.findAllRooms = () => [ creep.room, room ];
 			
 			assert.equal(creep.room, RolePrototype._fetchBaseRoomForCreep(creep));
 		});

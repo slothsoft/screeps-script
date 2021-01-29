@@ -4,7 +4,7 @@
  * TODO: maybe memory could be stored closer to where it is used?
  */
  
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 var info = require('./main.info');
 
 class MemoryManager {
@@ -17,7 +17,7 @@ class MemoryManager {
 	 */
 	
 	static fetchRoomRoleConfigForBase(baseName, allRoles = []) {
-		var roomsOfBase = game.findAllRooms().filter(room => room.memory.base && room.memory.base.name === baseName);
+		var roomsOfBase = MainUtil.findAllRooms().filter(room => room.memory.base && room.memory.base.name === baseName);
 		if (roomsOfBase.length > 0) {
 			return this._fetchRoomRoleConfig(roomsOfBase[0], allRoles);
 		}
@@ -31,7 +31,7 @@ class MemoryManager {
 	 */
 
 	static _fetchAllRoomRoleConfigs(allRoles) {
-		game.findAllRooms().forEach(room => {
+		MainUtil.findAllRooms().forEach(room => {
 			if (room.memory.base) {
 				this._fetchRoomRoleConfig(room, allRoles);
 			}
@@ -93,7 +93,7 @@ class MemoryManager {
 	 */
 	
 	static _clearAllRoomRoleInfos(allRoles) {
-		game.findAllRooms().forEach(room => this._clearRoomRoleInfo(room, allRoles));
+		MainUtil.findAllRooms().forEach(room => this._clearRoomRoleInfo(room, allRoles));
 	}
 
 	/*
@@ -153,7 +153,7 @@ class MemoryManager {
 	static _initSpawns() {  
 	    // all spawns (and all creeps) have a home, so that we find them again
 	    
-	    game.findAllSpawns().filter(spawn => !spawn.memory.home).forEach(spawn => {
+	    MainUtil.findAllSpawns().filter(spawn => !spawn.memory.home).forEach(spawn => {
 	    	if (spawn.room.memory.base) {
 	    		// 2nd spawn in a room
 	    		spawn.memory.home = spawn.room.memory.base.name;

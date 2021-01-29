@@ -4,7 +4,7 @@
  * then one base, all further have to be marked manually?
  */
  
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 var constants = require('./main.constants');
 var info = require('./main.info');
 
@@ -28,7 +28,7 @@ class BaseManager {
 	 */
 	
 	static runAll(allRoles = BaseManager.fetchAllRoles()) {
-	    game.findAllRooms().forEach(room => new BaseManager(room, allRoles).runBase());
+	    MainUtil.findAllRooms().forEach(room => new BaseManager(room, allRoles).runBase());
 	}
     
 	static fetchAllRoles() {
@@ -75,7 +75,7 @@ class BaseManager {
         	
         	if (alreadySpawned) return;
         	
-            var foundCreeps = game.findAllCreeps().filter(creep => creep.memory.role == role.roleName && creep.memory.home == baseName);
+            var foundCreeps = MainUtil.findAllCreeps().filter(creep => creep.memory.role == role.roleName && creep.memory.home == baseName);
             
             if (foundCreeps.length < MemoryManager.getRequiredNumberForRoomAndRole(this._room, role.roleName)) {
                 if (this._spawnCreepForRole(role)) {
@@ -138,7 +138,7 @@ class BaseManager {
      */
     
     _fetchFreeSpawn(baseName) {  
-        var freeSpawns = game.findAllSpawns().filter(spawn => (!baseName || (spawn.memory.home == baseName)) && !spawn.spawning);
+        var freeSpawns = MainUtil.findAllSpawns().filter(spawn => (!baseName || (spawn.memory.home == baseName)) && !spawn.spawning);
         return freeSpawns.length > 0 ? freeSpawns[0] : null;
     }  
         
@@ -147,7 +147,7 @@ class BaseManager {
      */
     
     _showSpawningAnimation() {  
-    	game.findAllSpawns().filter(spawn => spawn.spawning && spawn.room == this._room).forEach(spawn => {
+    	MainUtil.findAllSpawns().filter(spawn => spawn.spawning && spawn.room == this._room).forEach(spawn => {
             spawn.room.visual.text('🔁', spawn.pos.x - 1, spawn.pos.y, {align: 'left', opacity: 0.8});
         });
     }
@@ -158,7 +158,7 @@ class BaseManager {
     
     _moveCreeps() {  
     	var baseName = this._room.memory.base.name;
-        game.findAllCreeps()
+        MainUtil.findAllCreeps()
 	        	.filter(creep => creep.memory.home == baseName) // creeps of this base
 	        	.filter(creep => !creep.spawning) // that are not spawning
 	        	.forEach(creep => {

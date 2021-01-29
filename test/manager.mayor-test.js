@@ -1,7 +1,6 @@
 var MayorManager = require('../src/manager.mayor');
 var assert = require('assert');
 
-var game = require('../src/main.game');
 var info = require('../src/main.info');
 
 var Room = require('./mock/room-mock');

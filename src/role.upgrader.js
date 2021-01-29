@@ -1,8 +1,7 @@
 /*
- * Upgrader handle the room controller.
+ * Upgraders handle the room controller.
  */
  
-var game = require('./main.game');
 var info = require('./main.info');
 
 var RolePrototype = require('./role.prototype');

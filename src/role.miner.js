@@ -1,10 +1,10 @@
 /*
- * Miner cannot move or carry stuff, but they are very good at harvesting stuff. 
+ * Miners cannot move or carry stuff, but they are very good at harvesting stuff. 
  * So have a container or storage ready for him to use.
  */
  
 var info = require('./main.info');
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 
 var MemoryManager = require('./manager.memory');
 
@@ -30,7 +30,7 @@ class Miner extends RolePrototype {
 	 */
 	
 	spawnCreep(spawn) {
-		var claimedSources = game.findAllCreeps().filter(creep => creep.memory.role == 'Miner').filter(creep => creep.memory.source).map(creep => creep.memory.source);
+		var claimedSources = MainUtil.findAllCreeps().filter(creep => creep.memory.role == 'Miner').filter(creep => creep.memory.source).map(creep => creep.memory.source);
 		var allSources = spawn.room.find(FIND_SOURCES).filter(source => !claimedSources.includes(source.id));
 		if (allSources.length > 0) {
 			return this._spawnCreepFromSpawn(spawn, allSources[0].id);
@@ -39,7 +39,7 @@ class Miner extends RolePrototype {
 	}
 
 	spawnCreepFromSpawnName(spawnName, sourceId) {
-	    var spawns = game.findAllSpawns().filter(spawn => spawn.name == spawnName);
+	    var spawns = MainUtil.findAllSpawns().filter(spawn => spawn.name == spawnName);
 	    if (spawns.length == 0) {
 	        info.error('Could not find spawn: ' + spawnName);
 	        return false;
@@ -131,7 +131,7 @@ class Miner extends RolePrototype {
 	            filter: (structure) => {
 	                return (structure.structureType == STRUCTURE_STORAGE ||
 	                        structure.structureType == STRUCTURE_CONTAINER ||
-                            (structure.structureType == STRUCTURE_LINK && game.fetchMemoryOfStructure(structure).type == 'source')) &&
+                            (structure.structureType == STRUCTURE_LINK && MainUtil.fetchMemoryOfStructure(structure).type == 'source')) &&
 	                       (!testCreepPosition || this.creep.pos.inRangeTo(structure, this._maxRangeToTarget)) &&
 	                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
 	            }

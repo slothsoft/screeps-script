@@ -2,7 +2,7 @@
  * The mayor is a helper to find issues with the base (and even fix them).
  */
  
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 var info = require('./main.info');
 
 var RoadManager = require('./manager.road');
@@ -16,11 +16,11 @@ class MayorManager {
 	 */
 	
 	static runAll() {
-	    game.findAllRooms().forEach(room => {
+	    MainUtil.findAllRooms().forEach(room => {
 	    	try {
 		    	new MayorManager(room).run(); 
 			} catch (e) {
-				info.error('Could not run Mayor for room ' + game.getDisplayName(room) + ': ' + e);
+				info.error('Could not run Mayor for room ' + MainUtil.getDisplayName(room) + ': ' + e);
 				console.log(e.stack);
 			}
 	    });

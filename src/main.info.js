@@ -7,7 +7,7 @@
 // TODO: this class is not really a class - it's a singleton of sorts?
 
 var constants = require('./main.constants');
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 
 class MainInfo {
 
@@ -174,7 +174,7 @@ class MainInfo {
 	 */
     
     getMaxHeight() {   
-        var result = Math.max(game.findAllRooms().map(room => (room.memory.console && room.memory.console.height)));
+        var result = Math.max(MainUtil.findAllRooms().map(room => (room.memory.console && room.memory.console.height)));
         return result || 10;
     }
 

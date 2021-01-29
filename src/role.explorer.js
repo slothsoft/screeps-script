@@ -5,7 +5,7 @@
  
 var constants = require('./main.constants');
 var info = require('./main.info');
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 
 var MemoryManager = require('./manager.memory');
 
@@ -27,7 +27,7 @@ class Explorer extends RolePrototype {
 	}
 
 	_findTargets(room) {
-	    return game.findAllFlags();
+	    return MainUtil.findAllFlags();
 	}
 
 	/*
@@ -36,15 +36,15 @@ class Explorer extends RolePrototype {
 	 */
 	
 	spawnCreep(spawn) {
-		var claimedFlags = game.findAllCreeps().filter(creep => creep.memory.target).map(creep => creep.memory.target);
-		var allFlags = game.findAllFlags().filter(flag => !claimedFlags.includes(flag.name));
+		var claimedFlags = MainUtil.findAllCreeps().filter(creep => creep.memory.target).map(creep => creep.memory.target);
+		var allFlags = MainUtil.findAllFlags().filter(flag => !claimedFlags.includes(flag.name));
 		if (allFlags.length > 0)
 			return this._spawnCreepFromSpawn(spawn, allFlags[0].name);
 		return false;
 	}
 
 	spawnCreepFromSpawnName(spawnName, flagName) {
-	    var spawns = game.findAllSpawns().filter(spawn => spawn.name == spawnName);
+	    var spawns = MainUtil.findAllSpawns().filter(spawn => spawn.name == spawnName);
 	    if (spawns.length == 0) {
 	        info.error('Could not find spawn: ' + spawnName);
 	        return false;
@@ -89,7 +89,7 @@ class Explorer extends RolePrototype {
 	            this._retire(creep);
 	            break;
 	        default:
-	    	    info.error(game.getDisplayName(creep) + ' has no recognized phase: ' + creep.memory.phase);
+	    	    info.error(MainUtil.getDisplayName(creep) + ' has no recognized phase: ' + creep.memory.phase);
 	            break;
 	    }
 	}
@@ -109,7 +109,7 @@ class Explorer extends RolePrototype {
 	    if (!targetFlag) {
 	        targetFlag = this._findClosestTarget(creep);
 	        creep.memory.target = targetFlag.name;
-    	    info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' travels to ' + targetFlag.name);
+    	    info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' travels to ' + targetFlag.name);
       		creep.memory.home = targetFlag.name;
 	    }
 	    
@@ -120,7 +120,7 @@ class Explorer extends RolePrototype {
 	    if (creep.room == targetFlag.room) {
 	    	var hasRoomAlready = creep.room.controller.my;
 	        creep.memory.phase = hasRoomAlready ? PHASE_CREATE_SPAWN : PHASE_CLAIM_FLAG_ROOM;
-	        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' claims the room of ' + targetFlag.name);
+	        info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' claims the room of ' + targetFlag.name);
 	    }
 	}
 
@@ -137,13 +137,13 @@ class Explorer extends RolePrototype {
       	} else if (answer == OK) {
       		creep.memory.phase = PHASE_CREATE_SPAWN;
       	} else {
-      		info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' cannot claim: ' + answer);
+      		info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' cannot claim: ' + answer);
       	}
 
 	    if (creep.room.controller.my) {
 	    	var hasSpawnAlready = this._findSpawns(creep.room).length > 0;
 	        creep.memory.phase = hasSpawnAlready ? PHASE_BUILD_SPAWN : PHASE_CREATE_SPAWN;
-	        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' builds a spawn on ' + targetFlag.name);
+	        info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' builds a spawn on ' + targetFlag.name);
 	    }
 	}
 
@@ -172,7 +172,7 @@ class Explorer extends RolePrototype {
     	
     	var hasSpawnConstructionSiteAlready = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType == STRUCTURE_SPAWN }).length > 0;
     	if (hasSpawnConstructionSiteAlready) {
-	        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is a Builder now.');
+	        info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is a Builder now.');
 	        creep.memory.phase = PHASE_BUILD_SPAWN;
 	        return;
     	}
@@ -180,10 +180,10 @@ class Explorer extends RolePrototype {
         var targetFlag = this._findTargets(creep.room).filter(target => target.name == creep.memory.target)[0];
         var createResult = targetFlag.pos.createConstructionSite(STRUCTURE_SPAWN, targetFlag.name) ;
         if (createResult == OK) {
-	        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is a Builder now.');
+	        info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is a Builder now.');
 	        creep.memory.phase = PHASE_BUILD_SPAWN;
         } else  {
-	        info.error(this.symbol + ' ' + game.getDisplayName(creep) + ' could not create spawn: ' + createResult);
+	        info.error(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' could not create spawn: ' + createResult);
         }
 	}
 	
@@ -198,7 +198,7 @@ class Explorer extends RolePrototype {
 	
 	_retire(creep) {
         var targetFlag = this._findTargets(creep.room).filter(target => target.name == creep.memory.target)[0];
-        info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' has finished ' + targetFlag.name);
+        info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' has finished ' + targetFlag.name);
         
         // create base
         MemoryManager.fetchRoomBase(creep.room, targetFlag.name);

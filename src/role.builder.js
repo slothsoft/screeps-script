@@ -1,5 +1,5 @@
 /*
- * Builder create buildings. 
+ * Builders create buildings. 
  */
  
 var RolePrototype = require('./role.prototype');

@@ -20,7 +20,7 @@
  */
  
 var constants = require('./main.constants');
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 var info = require('./main.info');
 
 var MemoryManager = require('./manager.memory');
@@ -85,7 +85,7 @@ class RolePrototype {
     			return specificTarget;
     		}
     		if (!specificTarget) {
-    			info.error(game.getDisplayName(creep) + ' could not find target: ' + creep.memory.target);
+    			info.error(MainUtil.getDisplayName(creep) + ' could not find target: ' + creep.memory.target);
     			
         		if (this._targetMode != RolePrototype.TARGET_MODE_USE_IF_VALID) {
 	    			// only in TARGET_MODE_USE_IF_VALID can we recover from that error
@@ -105,7 +105,7 @@ class RolePrototype {
         		// - TARGET_MODE_USE_OR_ERROR errors out
         	    // - TARGET_MODE_USE_IF_VALID falls back to valid target
     			if (this._targetMode == RolePrototype.TARGET_MODE_USE_OR_ERROR) {
-        			info.error(game.getDisplayName(creep) + ' could not find target in list: ' + creep.memory.target);
+        			info.error(MainUtil.getDisplayName(creep) + ' could not find target in list: ' + creep.memory.target);
         			return null;
         		}
         	}
@@ -141,12 +141,12 @@ class RolePrototype {
     	var workResult = work(target);
         if (workResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
-                info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is moving to target ' + game.getDisplayName(target));  
+                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is moving to target ' + MainUtil.getDisplayName(target));  
             }
         	this._moveToLocation(creep, target);
         } else if (workResult == OK) {     
             if (creep.memory.debug) {
-                info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is working on target ' + game.getDisplayName(target));  
+                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is working on target ' + MainUtil.getDisplayName(target));  
             }
         } else {      
         	this._handleTargetWorkResult(creep, workResult);
@@ -160,7 +160,7 @@ class RolePrototype {
 	 */
 
     _handleTargetWorkResult(creep, workResult) {
-    	info.warning(game.getDisplayName(creep) + ' cannot work: ' + workResult);  
+    	info.warning(MainUtil.getDisplayName(creep) + ' cannot work: ' + workResult);  
     }
     
     /*
@@ -189,12 +189,12 @@ class RolePrototype {
     	var harvestResult = source.structureType ? creep.withdraw(source, RESOURCE_ENERGY) : creep.harvest(source);
         if (harvestResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
-                info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is moving to source ' + game.getDisplayName(source));  
+                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is moving to source ' + MainUtil.getDisplayName(source));  
             }
             this._moveToLocation(creep, source);
         } else if (harvestResult == OK) {     
             if (creep.memory.debug) {
-                info.log(this.symbol + ' ' + game.getDisplayName(creep) + ' is harvesting from source ' + game.getDisplayName(source));  
+                info.log(this.symbol + ' ' + MainUtil.getDisplayName(creep) + ' is harvesting from source ' + MainUtil.getDisplayName(source));  
             }
         } else {      
             this._handleSourceWorkResult(creep, harvestResult);
@@ -218,7 +218,7 @@ class RolePrototype {
     			return specificSource;
     		}
     		if (!specificSource) {
-    			info.error(game.getDisplayName(creep) + ' could not find source: ' + creep.memory.source);
+    			info.error(MainUtil.getDisplayName(creep) + ' could not find source: ' + creep.memory.source);
     			
         		if (this._sourceMode != RolePrototype.TARGET_MODE_USE_IF_VALID) {
 	    			// only in TARGET_MODE_USE_IF_VALID can we recover from that error
@@ -238,7 +238,7 @@ class RolePrototype {
         		// - TARGET_MODE_USE_OR_ERROR errors out
         	    // - TARGET_MODE_USE_IF_VALID falls back to valid source
     			if (this._sourceMode == RolePrototype.TARGET_MODE_USE_OR_ERROR) {
-        			info.error(game.getDisplayName(creep) + ' could not find source in list: ' + creep.memory.source);
+        			info.error(MainUtil.getDisplayName(creep) + ' could not find source in list: ' + creep.memory.source);
         			return null;
         		}
         	}
@@ -277,7 +277,7 @@ class RolePrototype {
 
         var sources = this._useSourceAsSource ? room.find(FIND_SOURCES_ACTIVE, {
                 filter: (source) => {
-                    if (game.findAllCreeps().filter(creep => creep.memory.role == 'Miner' && creep.memory.source == source.id).length) {
+                    if (MainUtil.findAllCreeps().filter(creep => creep.memory.role == 'Miner' && creep.memory.source == source.id).length) {
                         // source was claimed by a miner
                         return false;
                     }
@@ -294,7 +294,7 @@ class RolePrototype {
 	 */
 
     _handleSourceWorkResult(creep, harvestResult) {
-        info.warning(game.getDisplayName(creep) + ' cannot harvest: ' + harvestResult); 
+        info.warning(MainUtil.getDisplayName(creep) + ' cannot harvest: ' + harvestResult); 
     }
     
     /*
@@ -342,7 +342,7 @@ class RolePrototype {
         var droppedEnergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 3).filter(e => e.resourceType == RESOURCE_ENERGY);
     	if (droppedEnergy.length > 0 && creep.store.getFreeCapacity() > 0) {
             if (creep.memory.debug) {
-            	info.log('🟡 ' + game.getDisplayName(creep) + ' is picking up resource ' + game.getDisplayName(droppedEnergy[0]));
+            	info.log('🟡 ' + MainUtil.getDisplayName(creep) + ' is picking up resource ' + MainUtil.getDisplayName(droppedEnergy[0]));
             }
         	if (creep.pickup(droppedEnergy[0]) == ERR_NOT_IN_RANGE) {
         		this._moveToLocation(creep, droppedEnergy[0]);
@@ -363,7 +363,7 @@ class RolePrototype {
 //	        var ruin = creep.pos.findInRange(FIND_RUINS, 3);
 //	    	if (ruin.length > 0 && creep.store.getFreeCapacity() > 0) {
 //	            if (creep.memory.debug) {
-//	            	info.log('⚰ ' + game.getDisplayName(creep) + ' is looting ruin ' + game.getDisplayName(dropenergy[0]));
+//	            	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is looting ruin ' + MainUtil.getDisplayName(dropenergy[0]));
 //	            }
 //	            var withdrawAnswer = creep.withdraw(ruin[0], RESOURCE_ENERGY);
 //	        	if (withdrawAnswer == ERR_NOT_IN_RANGE) {
@@ -389,16 +389,16 @@ class RolePrototype {
             var recycleAnswer = spawn.recycleCreep(creep);
             if (recycleAnswer == ERR_NOT_IN_RANGE) {
                 if (creep.memory.debug) {      
-                    info.log('🔙 ' + game.getDisplayName(creep) + ' is moving to spawn ' + spawn.id);  
+                    info.log('🔙 ' + MainUtil.getDisplayName(creep) + ' is moving to spawn ' + spawn.id);  
                 }
                 this._moveToLocation(creep, spawn);
             } else if (recycleAnswer == OK) {  
                 if (creep.memory.debug) {
-                    info.log('🗑 ' + game.getDisplayName(creep) + ' was recycled.');  
+                    info.log('🗑 ' + MainUtil.getDisplayName(creep) + ' was recycled.');  
                 }
             }
         } else {
-            info.error(game.getDisplayName(creep) + ' could not find a spawn.');  
+            info.error(MainUtil.getDisplayName(creep) + ' could not find a spawn.');  
         }
     }
 
@@ -420,7 +420,7 @@ class RolePrototype {
 	 */
     
     static _fetchBaseRoomForName(baseName) {
-    	var allRooms = game.findAllRooms();
+    	var allRooms = MainUtil.findAllRooms();
     	var baseRooms = allRooms ? allRooms.filter(room => room.memory.base ? room.memory.base.name == baseName : false) : [];
     	if (baseRooms.length > 0) {
     		return baseRooms[0];
@@ -438,15 +438,15 @@ class RolePrototype {
 	    var withdrawResult = creep.withdraw(tombstone, RESOURCE_ENERGY);
 		if (withdrawResult == ERR_NOT_IN_RANGE) {
             if (creep.memory.debug) {      
-    	    	info.log('⚰ ' + game.getDisplayName(creep) + ' is moving to tombstone ' + game.getDisplayName(tombstone));
+    	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is moving to tombstone ' + MainUtil.getDisplayName(tombstone));
             }
     		this._moveToLocation(creep, tombstone);
 		} else if (withdrawResult == OK) {
             if (creep.memory.debug) {      
-    	    	info.log('⚰ ' + game.getDisplayName(creep) + ' is looting the tombstone ' + game.getDisplayName(tombstone));
+    	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' is looting the tombstone ' + MainUtil.getDisplayName(tombstone));
             }
 		} else {
-	    	info.log('⚰ ' + game.getDisplayName(creep) + ' cannot loot the tombstone: ' + withdrawResult);
+	    	info.log('⚰ ' + MainUtil.getDisplayName(creep) + ' cannot loot the tombstone: ' + withdrawResult);
 		}
 	}
 

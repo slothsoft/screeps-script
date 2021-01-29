@@ -3,7 +3,7 @@ var assert = require('assert');
 
 var constants = require('../src/main.constants');
 var info = require('../src/main.info');
-var game = require('../src/main.game');
+var MainUtil = require('../src/main.util');
 
 var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock');
@@ -47,7 +47,7 @@ describe('main', () => {
 			var creep3 = new Creep('C');
 			creep3.ticksToLive = 2000;
 			
-			game.findAllCreeps = () => [ creep1, creep2, creep3 ];
+			MainUtil.findAllCreeps = () => [ creep1, creep2, creep3 ];
 
 			assert.equal(creep2, fetchOldestCreep());
 			assert.equal(1, info.getLines().length);
@@ -55,7 +55,7 @@ describe('main', () => {
 		});
 
 		it('without creep', () => {
-			game.findAllCreeps = () => [ ];
+			MainUtil.findAllCreeps = () => [ ];
 
 			assert.equal(null, fetchOldestCreep());
 			assert.equal(1, info.getLines().length);

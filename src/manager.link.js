@@ -3,7 +3,7 @@
  */
 
 var constants = require('./main.constants');
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 var info = require('./main.info');
 
 var MemoryManager = require('./manager.memory');
@@ -20,7 +20,7 @@ class LinkManager {
 	 */
 	
 	static runAll() {
-	    game.findAllRooms().forEach(room => new LinkManager(room).runLinks());
+	    MainUtil.findAllRooms().forEach(room => new LinkManager(room).runLinks());
 	}
 	
 	/*
@@ -52,7 +52,7 @@ class LinkManager {
 
 	static _makeLinkType(linkId, type) {
 		var object = Game.getObjectById(linkId);
-		var memory = game.fetchMemoryOfStructure(object);
+		var memory = MainUtil.fetchMemoryOfStructure(object);
 		memory.type = type; 
 	}
 	
@@ -81,7 +81,7 @@ class LinkManager {
             	if (structure.structureType != STRUCTURE_LINK) {
             		return false;
             	}
-        		var memory = game.fetchMemoryOfStructure(structure);
+        		var memory = MainUtil.fetchMemoryOfStructure(structure);
             	if (!memory.type) {
             		memory.type = TYPE_SOURCE;
             	}
@@ -105,7 +105,7 @@ class LinkManager {
 		var targetLink = this._findTargetLink(sourceLink);
 		if (targetLink) {
 			sourceLink.transferEnergy(targetLink);  
-			info.log('💫 transfering resources from ' + game.getDisplayName(sourceLink) + ' to ' + game.getDisplayName(targetLink));
+			info.log('💫 transfering resources from ' + MainUtil.getDisplayName(sourceLink) + ' to ' + MainUtil.getDisplayName(targetLink));
 		}
 	}
 
@@ -120,7 +120,7 @@ class LinkManager {
 	        	if (structure.structureType != STRUCTURE_LINK) {
 	        		return false;
 	        	}
-	            return game.fetchMemoryOfStructure(structure).type == TYPE_TARGET
+	            return MainUtil.fetchMemoryOfStructure(structure).type == TYPE_TARGET
 	            	&& structure.store.getFreeCapacity(RESOURCE_ENERGY) >  0;
 	        }
 		});

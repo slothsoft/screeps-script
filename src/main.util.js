@@ -2,7 +2,7 @@
  * These methods _really_ should be game methods, but oh well ¯\_(ツ)_/¯
  */
 
-class MainGame {
+class MainUtil {
 
 	/*
 	 * Finds all spawns in the game and puts them in an array.
@@ -100,4 +100,4 @@ class MainGame {
 
 }
 
-module.exports = MainGame;
+module.exports = MainUtil;

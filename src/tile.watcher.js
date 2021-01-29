@@ -3,8 +3,6 @@
  * and does some magic at the end of that period in response.
  */
 
-var game = require('./main.game');
-
 var TileArray = require('./tile.array');
 
 class TileWatcher {

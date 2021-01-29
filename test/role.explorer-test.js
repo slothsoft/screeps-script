@@ -3,7 +3,7 @@ var assert = require('assert');
 
 var constants = require('../src/main.constants');
 var info = require('../src/main.info');
-var game = require('../src/main.game');
+var MainUtil = require('../src/main.util');
 
 var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock');
@@ -47,7 +47,7 @@ describe('role.explorer', () => {
 			var flag = new Spawn();
 			flag.name = 'My Flag';
 			
-			game.findAllFlags = () => [ flag ];
+			MainUtil.findAllFlags = () => [ flag ];
 
 			var object = new Explorer();
 			assert.deepEqual([ flag ], object._findTargets(flag.room));
@@ -173,7 +173,7 @@ describe('role.explorer', () => {
 
 			var flag = new Spawn();
 			flag.name = 'Flag Name';
-			game.findAllFlags = () => [ flag ];
+			MainUtil.findAllFlags = () => [ flag ];
 			
 			var object = new Explorer();
 			
@@ -193,7 +193,7 @@ describe('role.explorer', () => {
 			var spawn = new Spawn();
 			spawn.name = 'My Spawn';
 			spawn.room.energyAvailable = 50;
-			game.findAllFlags = () => [ ];
+			MainUtil.findAllFlags = () => [ ];
 			
 			var object = new Explorer();
 			
@@ -364,7 +364,7 @@ describe('role.explorer', () => {
 			assert.equal(null, creep.memory.target);
 			
 			// first time this is called find flag and store it in memory 
-			game.findAllFlags = () => [ flag1, flag2 ];
+			MainUtil.findAllFlags = () => [ flag1, flag2 ];
 			
 			work(object, creep);
 			

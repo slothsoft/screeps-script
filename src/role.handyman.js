@@ -1,5 +1,5 @@
 /*
- * Handyman repair buildings. 
+ * Handymen repair buildings. 
  */
  
 var RolePrototype = require('./role.prototype');

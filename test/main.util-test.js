@@ -1,38 +1,38 @@
-var MainGame = require('../src/main.game');
+var MainUtil = require('../src/main.util');
 var assert = require('assert');
 
 // All methods will be mocked.
 
-describe('main.game', () => {
+describe('main.util', () => {
 	it('exists', () => {
-		var startsWith = 'class MainGame';
-		assert.equal(startsWith, MainGame.toString().substring(0, startsWith.length));
+		var startsWith = 'class MainUtil';
+		assert.equal(startsWith, MainUtil.toString().substring(0, startsWith.length));
 	});
 
-	describe('main.game', () => {
+	describe('main.util', () => {
 		it('undefined', () => {
-			assert.equal('undefined', MainGame.getDisplayName());
+			assert.equal('undefined', MainUtil.getDisplayName());
 		});
 		
 		it('by name', () => {
-			assert.equal('Name', MainGame.getDisplayName({ id : 'ID', name : 'Name' }));
+			assert.equal('Name', MainUtil.getDisplayName({ id : 'ID', name : 'Name' }));
 		});
 
 		it('by memory name', () => {
-			assert.equal('Memory', MainGame.getDisplayName({ id : 'ID', memory: { name: 'Memory' }}));
+			assert.equal('Memory', MainUtil.getDisplayName({ id : 'ID', memory: { name: 'Memory' }}));
 		});
 
 		it('by structure memory name', () => {
 			Memory.structures.ID.name = 'Structure';
-			assert.equal('Structure', MainGame.getDisplayName({ id : 'ID', structureType: true}));
+			assert.equal('Structure', MainUtil.getDisplayName({ id : 'ID', structureType: true}));
 		});
 		
 		it('by ID', () => {
-			assert.equal('ID', MainGame.getDisplayName({ id : 'ID', memory: {} }));
+			assert.equal('ID', MainUtil.getDisplayName({ id : 'ID', memory: {} }));
 		});
 
 		it('by json', () => {
-			assert.equal('{"test":"123"}', MainGame.getDisplayName({ test : '123' }));
+			assert.equal('{"test":"123"}', MainUtil.getDisplayName({ test : '123' }));
 		});
 	});
 
@@ -46,7 +46,7 @@ describe('main.game', () => {
 				id: 'ABCDEFG1234567',
 			};
 			
-			var result = MainGame.fetchMemoryOfStructure(structure);
+			var result = MainUtil.fetchMemoryOfStructure(structure);
 
 			assert.deepEqual({}, result);
 			assert.deepEqual({}, structure.memory);
@@ -59,7 +59,7 @@ describe('main.game', () => {
 			};
 			
 			Memory.structures = {};
-			var result = MainGame.fetchMemoryOfStructure(structure);
+			var result = MainUtil.fetchMemoryOfStructure(structure);
 
 			assert.deepEqual({}, result);
 			assert.deepEqual({}, structure.memory);
@@ -74,7 +74,7 @@ describe('main.game', () => {
 			Memory.structures = {};
 			Memory.structures.ABCDEFG1234567 = { a: 'n' };
 			
-			var result = MainGame.fetchMemoryOfStructure(structure);
+			var result = MainUtil.fetchMemoryOfStructure(structure);
 
 			assert.deepEqual({ a: 'n' }, result);
 			assert.deepEqual({ a: 'n' }, structure.memory);
@@ -87,7 +87,7 @@ describe('main.game', () => {
 				memory: { a: 'b' },
 			};
 			
-			var result = MainGame.fetchMemoryOfStructure(structure);
+			var result = MainUtil.fetchMemoryOfStructure(structure);
 
 			assert.deepEqual({ a: 'b' }, result);
 		});

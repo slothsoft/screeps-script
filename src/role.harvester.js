@@ -1,8 +1,8 @@
 /*
- * Harvester collect resources that can be used to do stuff.
+ * Harvesters collect resources that can be used to do stuff.
  */
 
-var game = require('./main.game');
+var MainUtil = require('./main.util');
 
 var RolePrototype = require('./role.prototype');
  
@@ -30,7 +30,7 @@ class Harvester extends RolePrototype {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                             structure.structureType == STRUCTURE_SPAWN ||
-                            (structure.structureType == STRUCTURE_LINK && game.fetchMemoryOfStructure(structure).type == 'source') ||
+                            (structure.structureType == STRUCTURE_LINK && MainUtil.fetchMemoryOfStructure(structure).type == 'source') ||
                             structure.structureType == STRUCTURE_TOWER) && 
                             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }

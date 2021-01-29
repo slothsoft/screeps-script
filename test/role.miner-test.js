@@ -3,7 +3,7 @@ var assert = require('assert');
 
 var constants = require('../src/main.constants');
 var info = require('../src/main.info');
-var game = require('../src/main.game');
+var MainUtil = require('../src/main.util');
 
 var MemoryManager = require('../src/manager.memory');
 
@@ -69,7 +69,7 @@ describe('role.miner', () => {
 				assert.equal(true, filter(structure));
 
 				structure.structureType = STRUCTURE_LINK;
-				game.fetchMemoryOfStructure(structure).type = 'source';
+				MainUtil.fetchMemoryOfStructure(structure).type = 'source';
 				assert.equal(true, filter(structure));
 			};
 
@@ -98,7 +98,7 @@ describe('role.miner', () => {
 				assert.equal(true, filter(structure));
 
 				structure.structureType = STRUCTURE_LINK;
-				game.fetchMemoryOfStructure(structure).type = 'source';
+				MainUtil.fetchMemoryOfStructure(structure).type = 'source';
 				assert.equal(true, filter(structure));
 			};
 
@@ -133,7 +133,7 @@ describe('role.miner', () => {
 				assert.equal(false, filter(structure));
 
 				structure.structureType = STRUCTURE_LINK;
-				game.fetchMemoryOfStructure(structure).type = 'source';
+				MainUtil.fetchMemoryOfStructure(structure).type = 'source';
 				assert.equal(false, filter(structure));
 			};
 
@@ -171,7 +171,7 @@ describe('role.miner', () => {
 				assert.equal(false, filter(structure));
 				
 				structure.structureType = STRUCTURE_LINK;
-				game.fetchMemoryOfStructure(structure).type = constants.LINK_TYPE_TARGET;
+				MainUtil.fetchMemoryOfStructure(structure).type = constants.LINK_TYPE_TARGET;
 				assert.equal(false, filter(structure));
 			};
 
@@ -653,7 +653,7 @@ describe('role.miner', () => {
 			
 			var source3 = new Spawn();
 
-			game.findAllCreeps = () => [ creep1, creep2 ];
+			MainUtil.findAllCreeps = () => [ creep1, creep2 ];
 			spawn.room.find = (type) => [ source1, source2, source3 ];
 			
 			var object = new Miner();
@@ -685,7 +685,7 @@ describe('role.miner', () => {
 			
 			var source3 = new Spawn();
 
-			game.findAllCreeps = () => [ creep1, creep2 ];
+			MainUtil.findAllCreeps = () => [ creep1, creep2 ];
 			spawn.room.find = (type) => [ source1, source2, source3 ];
 			
 			var object = new Miner();
@@ -723,7 +723,7 @@ describe('role.miner', () => {
 			creep3.memory.role = 'Miner';
 			creep3.memory.source = source3.id;
 
-			game.findAllCreeps = () => [ creep1, creep2, creep3 ];
+			MainUtil.findAllCreeps = () => [ creep1, creep2, creep3 ];
 			spawn.room.find = (type) => [ source1, source2, source3 ];
 			
 			var object = new Miner();
