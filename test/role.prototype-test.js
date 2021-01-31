@@ -5,6 +5,8 @@ require('./mock/game-mock');
 var MainUtil = require('../src/main.util');
 var info = require('../src/main.info');
 
+var MemoryManager = require('../src/manager.memory');
+
 var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock');
 var RoomPosition = require('./mock/room-position-mock');
@@ -422,24 +424,41 @@ describe('role.protoype', () => {
 	
 	describe('#isNecessary', () => {
 		it('target present', () => {
-			var object = new RolePrototype();
+			var room = new Room();
+			MemoryManager.fetchRoomBase(room, 'A');
+			
+			var object = new RolePrototype('Role');
+			MemoryManager._fetchRoomRoleConfig(room, [ object ]);
+			room.memory.base.roleConfig.Role.requiredNumber = 1;
+			
 			object._findTargets = room => [ 'target' ];
 			
-			assert.equal(true, object.isNecessary('room'));
+			assert.equal(true, object.isNecessary(room));
 		});
 
+		it('target present but not required', () => {
+			var room = new Room();
+			MemoryManager.fetchRoomBase(room, 'B');
+			
+			var object = new RolePrototype('Role');
+			MemoryManager._fetchRoomRoleConfig(room, [ object ]);
+			
+			object._findTargets = room => [ 'target' ];
+			
+			assert.equal(false, object.isNecessary(room));
+		});
+		
 		it('no targets', () => {
-			var object = new RolePrototype();
+			var room = new Room();
+			MemoryManager.fetchRoomBase(room, 'C');
+			
+			var object = new RolePrototype('Role');
+			MemoryManager._fetchRoomRoleConfig(room, [ object ]);
+			room.memory.base.roleConfig.Role.requiredNumber = 1;
+			
 			object._findTargets = room => [];
 			
-			assert.equal(false, object.isNecessary('room'));
-		});
-
-		it('default', () => {
-			var object = new RolePrototype();
-			object._findTargets = room => [];
-			
-			assert.equal(false, object.isNecessary('room'));
+			assert.equal(false, object.isNecessary(room));
 		});
 	});
 

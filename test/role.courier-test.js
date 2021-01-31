@@ -4,6 +4,8 @@ var assert = require('assert');
 var constants = require('../src/main.constants');
 var info = require('../src/main.info');
 
+var MemoryManager = require('../src/manager.memory');
+
 var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock');
 var Spawn = require('./mock/spawn-mock');
@@ -351,8 +353,13 @@ describe('role.courier', () => {
 			var room = new Room();
 			room.memory.target = 'target';
 			room.memory.source = 'source';
+
+			MemoryManager.fetchRoomBase(room, 'Base');
 			
 			var object = new Courier();	
+			MemoryManager._fetchRoomRoleConfig(room, [ object ]);
+			room.memory.base.roleConfig.Courier.requiredNumber = 1;
+			
 			Game.getObjectById = (id) => id == 'target' ? new Spawn() : null;
 			
 			assert.equal(true, object.isNecessary(room));
@@ -362,8 +369,13 @@ describe('role.courier', () => {
 			var room = new Room();
 			room.memory.target = 'target';
 			room.memory.source = 'source';
+
+			MemoryManager.fetchRoomBase(room, 'Base');
 			
 			var object = new Courier();	
+			MemoryManager._fetchRoomRoleConfig(room, [ object ]);
+			room.memory.base.roleConfig.Courier.requiredNumber = 1;
+			
 			Game.getObjectById = (id) => null;
 			
 			assert.equal(false, object.isNecessary(room));

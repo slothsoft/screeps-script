@@ -53,6 +53,10 @@ class RolePrototype {
 	 */
     
     isNecessary(room) {
+    	if (!room.memory.base.roleConfig[this.roleName].requiredNumber) {
+    		// if this role is not required, it's not necessary either
+    		return false;
+    	}
         var targets = this._findTargets(room);
         return targets && targets.length > 0;
     }
