@@ -8,7 +8,6 @@ var TileArray = require('./tile.array');
 class TileWatcher {
 	
 	constructor(id, room) {
-		this._array = new TileArray(50, 50);
 		this._id = id;
 		this._room = room;
 	}

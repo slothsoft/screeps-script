@@ -86,7 +86,7 @@ class LinkManager {
             		memory.type = TYPE_SOURCE;
             	}
                 return memory.type == TYPE_SOURCE 
-                	&& structure.store.getUsedCapacity(RESOURCE_ENERGY) >  0;
+                	&& structure.store.getFreeCapacity(RESOURCE_ENERGY) >  0;
             }
 		});
 	}

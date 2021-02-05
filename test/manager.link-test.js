@@ -115,7 +115,7 @@ describe('manager.link', () => {
 				
 				var structure = {};
 				structure.store = new Store(100);
-				structure.store.usedCapacity = 100;
+				structure.store.usedCapacity = 50;
 				
 				// 'no type' means it's a source
 				structure.structureType = STRUCTURE_LINK; 
@@ -144,7 +144,7 @@ describe('manager.link', () => {
 				var structure = {};
 				structure.id = 'ID';
 				structure.store = new Store(100);
-				structure.store.usedCapacity = 100;
+				structure.store.usedCapacity = 0;
 				
 				structure.structureType = STRUCTURE_SPAWN; 
 				assert.equal(false, filter(structure));
@@ -155,7 +155,7 @@ describe('manager.link', () => {
 				structure.memory.type = 'source';
 				assert.equal(true, filter(structure));
 
-				structure.store.usedCapacity = 0;
+				structure.store.usedCapacity = 100;
 				assert.equal(false, filter(structure));
 			};
 	
