@@ -143,12 +143,23 @@ Documentation on which memory is used for which information. Mandatory elements 
 
 
 
+### Structure Memory
+
+Potential all structures can have some memory stored at `structures.<id>`. 
+
+| Memory                | Type          | Description  |
+| --------------------- | ------------- | ------------ |
+| debug                 | `boolean`   | if `true`, the structure will print every time it does something |
+| name                  | `string`    | human readable name, useful for error message or debugging |
+
+
+
 ### Link Memory
 
 | Memory                | Type          | Description  |
 | --------------------- | ------------- | ------------ |
 | type                  | `string`    | `source` if link is a source, `target` if it is a target |
-| transferId            | `string`    | sources and targets of a specific `transferId` are matched, so you can have multiple source→target pairs per room  |
+| transferId            | `string`    | sources and targets of a specific `transferId` are matched, so you can have multiple source→target pairs per room |
 
 
 ### Spawn Memory
