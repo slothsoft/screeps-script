@@ -6,6 +6,7 @@ var MainUtil = require('./main.util');
 var MainInfo = require('./main.info');
 
 var BaseManager = require('./manager.base');
+var CpuManager = require('./manager.cpu');
 var LinkManager = require('./manager.link');
 var MayorManager = require('./manager.mayor');
 var MemoryManager = require('./manager.memory');
@@ -20,19 +21,21 @@ module.exports.loop = function () {
     // init all necessary information
 
 	var allRoles = BaseManager.fetchAllRoles();
-	MemoryManager.initRound(allRoles);
+	CpuManager.initRound();
+	CpuManager.measure('initRound()', () => MemoryManager.initRound(allRoles));
     
     // run the entire base
     
-	BaseManager.runAll();
-	TowerManager.runAll();
-    LinkManager.runAll();
-	RoadManager.watchAllRooms();
-	MayorManager.runAll();
-    
+	CpuManager.measure('BaseManager', BaseManager.runAll);
+	CpuManager.measure('TowerManager', TowerManager.runAll);
+	CpuManager.measure('LinkManager', LinkManager.runAll);
+	CpuManager.measure('RoadManager', RoadManager.watchAllRooms);
+	CpuManager.measure('MayorManager', MayorManager.runAll);
+	   
     // print GUI on top
     
     MainInfo.visualize();
+    CpuManager.visualize();
 }
 
 // some helper methods to make managing this thing more easily

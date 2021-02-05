@@ -3,6 +3,7 @@ var assert = require('assert');
 
 var constants = require('../src/main.constants');
 var info = require('../src/main.info');
+var MainUtil = require('../src/main.util');
 
 var Room = require('./mock/room-mock');
 var Store = require('./mock/store-mock');
@@ -258,6 +259,30 @@ describe('manager.link', () => {
 			manager._runLink(sourceLink);
 			
 			assert.equal(true, transferEnergyCalled);
+			assert.equal(0, info.getLines().length);
+		});
+
+		it('with debug', () => {
+
+			var room = new Room();
+			
+			var sourceLink = { id: 'SOURCE' };
+			MainUtil.fetchMemoryOfStructure(sourceLink).debug = true;
+			
+			var targetLink = { id: 'TARGET' };
+
+			var transferEnergyCalled = false;
+			sourceLink.transferEnergy = (t) => {
+				transferEnergyCalled = true;
+
+				assert.deepEqual(targetLink, t);
+			};
+			
+			var manager = new LinkManager(room);
+			manager._findTargetLink = source => targetLink;
+			manager._runLink(sourceLink);
+			
+			assert.equal(true, transferEnergyCalled);
 			assert.equal(1, info.getLines().length);
 			assert.equal('💫 transfering resources from SOURCE to TARGET', info.getLine(0));
 		});
@@ -337,8 +362,7 @@ describe('manager.link', () => {
 			manager.runLinks();
 			
 			assert.equal(true, transferEnergyCalled);
-			assert.equal(1, info.getLines().length);
-			assert.equal('💫 transfering resources from SOURCE1 to TARGET', info.getLine(0));
+			assert.equal(0, info.getLines().length);
 		});
 	});
 });

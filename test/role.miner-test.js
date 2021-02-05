@@ -43,7 +43,7 @@ describe('role.miner', () => {
 	});
 
 	describe('#getPartsMaxMultiplier', () => {
-		it('always 5', () => {
+		it('always 6', () => {
 			var object = new Miner();
 			assert.equal(6, object._getPartsMaxMultiplier());
 		});

@@ -73,7 +73,7 @@ class Miner extends RolePrototype {
 	 */
 
 	_getPartsMaxMultiplier(spawn) {
-		return 5;
+		return 6; // fixes some rounding errors
 	}
 
 	_work(creep) {

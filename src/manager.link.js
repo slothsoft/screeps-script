@@ -105,7 +105,7 @@ class LinkManager {
 		var targetLink = this._findTargetLink(sourceLink);
 		if (targetLink) {
 			sourceLink.transferEnergy(targetLink);  
-			if (MainUtil.fetchMemoryOfStructure(targetLink).debug) {
+			if (MainUtil.fetchMemoryOfStructure(sourceLink).debug || MainUtil.fetchMemoryOfStructure(targetLink).debug) {
 				info.log('💫 transfering resources from ' + MainUtil.getDisplayName(sourceLink) + ' to ' + MainUtil.getDisplayName(targetLink), this._room);
 			}
 		}
