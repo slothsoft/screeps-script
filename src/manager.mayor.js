@@ -80,9 +80,7 @@ class MayorManager {
 		if (!this._room.memory.base) {
 			return;
 		}
-		
-		//new RoomManager(this._room).run();
-		
+				
 		this._validateRoads();
 		this._validateCreeps();
 		this._validateBuildings();
@@ -201,18 +199,86 @@ class MayorManager {
 					 info.error('Could not fix error "' + error.text + '": ' + e);
 				 }
 			 });
-			 this.warnings.forEach(warning => warning.act());
+			 this.warnings.forEach(warning => {
+				 try {
+					 warning.act();
+				 } catch (e) {
+					 info.error('Could not fix warning "' + error.text + '": ' + e);
+				 }
+			 });
 		}
 	}
 
 	_validateBuildings() {
+		// if there are already non-road construction site, we won't do anything for now
+		var notRoadConstructionSites = this._room.find(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType != STRUCTURE_ROAD });
+		if (notRoadConstructionSites.length > 0) {
+			return;
+		}
+
+		var roomManager = new RoomManager(this._room);
+		var somethingWasBuilt = false;
 		
+		for (var i = 0; i < RoomManager.TILES_TO_BE_BUILD.length; i++) {
+			var tileToBeBuild = RoomManager.TILES_TO_BE_BUILD[i];
+			
+			// so for this building there are free slots
+			if (roomManager.fetchFreeBuildingSlots(tileToBeBuild.character) > 0) {
+				this.warnings.push({ 
+					text: 'Buildable structure ' + tileToBeBuild.structureType, 
+					solution: 'I\'m building ' +  tileToBeBuild.structureType,
+					act: () => this._buildStructure(roomManager, tileToBeBuild),
+				});
+				somethingWasBuilt = true;
+				break;
+			}
+		}
+		
+		if (!somethingWasBuilt) {
+			for (var i = 0; i < RoomManager.TILES_ENDLESS_STRUCTURES.length; i++) {
+				var tileToBeBuild = RoomManager.TILES_ENDLESS_STRUCTURES[i];
+
+				// these buildings can be built as much as needed
+				var buildingPositions = this._fetchBuildingSitePositionsForTile(roomManager, tileToBeBuild);
+				
+				if (buildingPositions.length > 0) {
+					this.warnings.push({ 
+						text: 'Buildable structure ' + tileToBeBuild.structureType, 
+						solution: 'I\'m building ' +  tileToBeBuild.structureType,
+						act: () => this._buildStructureAtPosition(buildingPositions[0], tileToBeBuild),
+					});
+					break;
+				}
+			}
+		}
 	}
 	
-	_fetchAvailableExtensions() {
-		return CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][this._room.controller.level];
+	_buildStructure(roomManager, tileToBeBuild) {
+		var buildingPositions = this._fetchBuildingSitePositionsForTile(roomManager, tileToBeBuild);
+		
+		if (buildingPositions.length > 0) {
+			this._buildStructureAtPosition(buildingPositions[0], tileToBeBuild);
+		} else {
+			info.warning("Could not find building position for " + tileToBeBuild.structureType);
+		}
 	}
 	
+	_fetchBuildingSitePositionsForTile(roomManager, tileToBeBuild) {
+		var spawn = this._room.find(FIND_MY_SPAWNS)[0]; // TODO: do we need other than the first?
+		return roomManager.fetchBuildingSitePositionsForTile(tileToBeBuild.character)
+			.filter(pos => (pos.look().filter(obj => obj.type == LOOK_STRUCTURES).length == 0))
+			.sort((a, b) => spawn.pos.getRangeTo(a.x, a.y) -  spawn.pos.getRangeTo(b.x, b.y));
+	}
+	
+	_buildStructureAtPosition(buildingPosition, tileToBeBuild) {
+		var constructionResult = buildingPosition.createConstructionSite(tileToBeBuild.structureType);
+		if (constructionResult == OK) {
+			info.log('👷‍♀️ Mayor built a ' + tileToBeBuild.structureType + ' at: ' + buildingPosition);
+		} else {
+			info.error('👷‍♀️ Mayor could not build ' + tileToBeBuild.structureType + ' at: ' + buildingPosition);
+		}
+	}
+
 	/*
 	 * Visualizes the mayor problems.
 	 */

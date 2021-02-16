@@ -1,9 +1,9 @@
+var Room = require('./mock/room-mock');
+
 var MayorManager = require('../src/manager.mayor');
 var assert = require('assert');
 
 var info = require('../src/main.info');
-
-var Room = require('./mock/room-mock');
 
 // TODO: Test these methods:
 // - runAll()
@@ -15,6 +15,8 @@ var Room = require('./mock/room-mock');
 // - fixProblems()
 // - visualize()
 // - getModeDisplayName()
+// - validateBuildings()
+// - fetchAvailableExtensions() 
 
 describe('manager.mayor', () => {
 	before(() => {

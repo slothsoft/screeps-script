@@ -1,3 +1,7 @@
+var Creep = require('./mock/creep-mock');
+var Room = require('./mock/room-mock');
+var Spawn = require('./mock/spawn-mock');
+
 var classUnderTest = require('../src/main');
 var assert = require('assert');
 
@@ -5,9 +9,6 @@ var constants = require('../src/main.constants');
 var info = require('../src/main.info');
 var MainUtil = require('../src/main.util');
 
-var Creep = require('./mock/creep-mock');
-var Room = require('./mock/room-mock');
-var Spawn = require('./mock/spawn-mock');
 
 // All methods tested.
 

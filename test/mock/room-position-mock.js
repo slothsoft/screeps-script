@@ -4,9 +4,10 @@
 
 class RoomPosition {
 
-	constructor() {
-		this.x = 0;
-		this.y = 0;
+	constructor(x = 0, y = 0, roomName) {
+		this.x = x;
+		this.y = y;
+		this.roomName = roomName;
 	}
 
 	getRangeTo(target) {

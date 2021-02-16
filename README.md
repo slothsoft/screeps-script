@@ -9,6 +9,7 @@ My scripts for the game [Screeps](https://screeps.com/). The official API is loc
         - [Explorer](#explorer)
     - [Roads](#roads)
     - [Mayor](#mayor)
+    - [Automatic Building](#automatic-building)
 - [Console Commands](#console-commands)
 - [Memory](#memory)
     - [Room Memory](#room-memory)
@@ -84,6 +85,31 @@ An Explorer creeps will go through the following phases (it might skip one or mo
 
 
 
+### Automatic Building
+
+The `RoomManager` is used to build automatically one building site after the other. 
+
+To configure what should be build, copy the memory of the `rooms.<room>.roomManager.layout` into an editor and replace the regex `(.{50})` with `$1\n` (this will make 50 lines of 50 chars out of the string, instead of the default 50 x 50 char long string. 
+
+After changing the values, replace the line breaks with an empty string again.
+
+The layout contains the following characters:
+
+| Character                                           | Description  | Can be build?  |
+| --------------------------------------------------- | ------------ | -------------- |
+|   | plain | `false` |
+| ~ | swamp | `false` |
+| █ | wall | `false` |
+| Ø | controller | `false` |
+| © | mineral | `false` |
+|  Ⓢ | source | `false` |
+| o | extension | `false` |
+| w | buildable wall |  `true` |
+| r | rampart |  `true` |
+| ? | unknown |  `false` |
+
+
+
 ## Console Commands
 
 | Memory                                              | Description  |
@@ -140,6 +166,10 @@ Documentation on which memory is used for which information. Mandatory elements 
 | ..tick                | `number `   | **[Not for user!]** if _tick_ gets to _watchTime_ the tile information is stored for future use |
 | ..currentTiles        | `string `   | **[Not for user!]** the used information for each tile that gets updated each tick |
 | ..tick                | `number `   | **[Not for user!]** the information for each tile for the last _watchTime_ ticks |
+| roomManager           | `object `   | the configuration for the room manager |
+| ..debug               | `boolean`   | prints the room configuration to the screen |
+| ..layout              | `string`    | contains the layout of the entire room's buildings (see [Automatic Building](#automatic-building)) |
+
 
 
 

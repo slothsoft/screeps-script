@@ -274,7 +274,7 @@ describe('manager.road', () => {
 
 			room.memory.roadManager.threshold = 0;
 			positions = watcher.fetchPositionsOverThreshold();
-			assert.deepEqual([ expected3, expected2, expected3 ], positions);
+			assert.deepEqual([ expected3, expected2, expected1 ], positions);
 
 			room.memory.roadManager.threshold = 678;
 			positions = watcher.fetchPositionsOverThreshold();
