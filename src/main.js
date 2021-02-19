@@ -11,10 +11,13 @@ var LinkManager = require('./manager.link');
 var MayorManager = require('./manager.mayor');
 var MemoryManager = require('./manager.memory');
 var RoadManager = require('./manager.road');
+var RoomManager = require('./manager.room');
 var TowerManager = require('./manager.tower');
 
 var Explorer = require('./role.explorer');
 var Miner = require('./role.miner');
+
+var TileArray = require('./tile.array');
 
 module.exports.loop = function () {
     
@@ -160,4 +163,19 @@ global.clearConsole = function () {
 	MainInfo.clearLines();
 };
 
+/*
+ * Creates the editable layout in the memory of the room. Will override previous layouts.
+ * 
+ * @param roomName 
+ * @param array {TileArray} (or nothing)
+ */
 
+global.generateLayoutForRoom = function (roomName, array = new TileArray(50, 50)) {
+	var room = Game.rooms[roomName];
+    if (room) {
+    	var layout = RoomManager.generateLayoutForRoom(room, array);
+        return layout.replace(/.{50}/, "$1\n");
+    } 
+    MainInfo.error('Could not find room: ' + roomName);
+    return false;
+};

@@ -19,7 +19,8 @@ class Spawn {
 	    this.memory = Memory.spawns[this.id] = {};
 		this.pos = new RoomPosition();	
 		this.store = new Store(300);
-	    
+		this.structureType = 'spawn';
+		
 	    this.room = room;
 	}
 	

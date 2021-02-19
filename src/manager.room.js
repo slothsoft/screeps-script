@@ -9,6 +9,21 @@ var TileArray = require('./tile.array');
 
 class RoomManager {
 
+	/*
+	 * Creates the editable layout in the memory of the room. Will override previous layouts.
+	 * 
+	 * @param room {Room}
+	 * @param array {TileArray} (or nothing)
+	 */
+	
+	static generateLayoutForRoom(room, array = new TileArray(50, 50)) {
+		var roomManager = new RoomManager(room);
+		var array = roomManager._generateLayout(array);
+		var compactString = array.toCompactString();
+		roomManager._fetchMemoryOfManager().layout = compactString;
+		return compactString;
+	}
+	
 	constructor(room) {
 		this._room = room;
 	}
@@ -24,9 +39,9 @@ class RoomManager {
 		this._initArrayIfNecessary();
 		
 		var result = [];
-		
-		for (var x = 0; x < 50; x++) {
-			for (var y = 0; y < 50; y++) {
+
+		for (var x = 0; x < this._array.width; x++) {
+			for (var y = 0; y < this._array.height; y++) {
 				var value = this._array.get(x, y); 
 				if (value === character) {
 					var pos = new RoomPosition(x, y, this._room.name);
@@ -60,12 +75,7 @@ class RoomManager {
 		if (this._memory.layout) {
 			this._array.fromCompactString(this._memory.layout);
 		} else {
-			for (var x = 0; x < 50; x++) {
-				for (var y = 0; y < 50; y++) {
-					var value = this._fetchTileAt(x, y); 
-					this._array.set(x, y, value);
-				}
-			}	
+			this._generateLayout(this._array);
 		}
 		
 		this._memory.layout = this._array.toCompactString();
@@ -73,6 +83,97 @@ class RoomManager {
 		if (this._memory.debug) {
 			this._printRoom(array);
 		}
+	}
+
+	/*
+	 * Generates the building array for the current room.
+	 * 
+	 * @param array {TileArray} (or nothing)
+	 */
+	
+	_generateLayout(array = new TileArray(50, 50)) {
+		this._generateExistingTiles(array);
+		this._generateStructuresToBeBuild(array);
+		return array;
+	}
+
+	/*
+	 * Fills the array with existing terrain, structures etc.
+	 */
+	
+	_generateExistingTiles(array) {
+		for (var x = 0; x < array.width; x++) {
+			for (var y = 0; y < array.height; y++) {
+				var value = this._fetchTileAt(x, y); 
+				array.set(x, y, value);
+			}
+		}	
+	}
+
+	/*
+	 * Generates structures that can be build automatically into the array.
+	 * 
+	 * @param array {TileArray}
+	 */
+	
+	_generateStructuresToBeBuild(array) {
+		var spawns = this._room.find(FIND_MY_SPAWNS);
+		if (spawns.length > 0) {
+			var spawn = spawns[0];
+			var extensionsCount = this._getExtensionsCount();
+			
+			var extensionPositions = this._findExtensionPointsForSpawn(array, spawn, extensionsCount);
+			extensionPositions.forEach(pos => array.set(pos.x, pos.y, RoomManager.TILE_EXTENSION));
+		}
+	}
+
+	/*
+	 * Returns the number of available extensions. 
+	 * (Method is to mock this function in tests.)
+	 */
+	
+	_getExtensionsCount() {
+		return CONTROLLER_STRUCTURES['extension'][8];
+	}
+	
+	/*
+	 * This is the algorithm that generates the extensions relative to the main spawn.
+	 * 
+	 * @param array the array to meddle with
+	 * @param spawn the spawn to find the positions relative too
+	 * @param limit number of extensions
+	 */
+	
+	_findExtensionPointsForSpawn(array, spawn, limit = array.width * array.height) {
+		// remove existing spawn count
+		limit -= (array.toCompactString().match(/o/g) || []).length;
+		
+		var spawnPos = (spawn.pos.x + spawn.pos.y) % 2;
+		
+		var validPlacementValues = [
+			RoomManager.TILE_TERRAIN_PLAIN,
+			RoomManager.TILE_TERRAIN_SWAMP,
+		];
+		
+		
+		var result = [];
+		
+		for (var x = 0; x < array.width; x++) {
+			for (var y = 0; y < array.height; y++) {
+				if ((((x + y) % 2) == spawnPos) && 
+						!(x == spawn.pos.x && y == spawn.pos.y) &&
+						validPlacementValues.includes(array.get(x, y))) {
+					result.push({
+						x: x,
+						y: y,
+					});
+				}
+			}
+		}
+		return result
+			.sort((a, b) => spawn.pos.getRangeTo(a.x, a.y) - spawn.pos.getRangeTo(b.x, b.y))
+			.slice(0, limit)
+			.map(pos => new RoomPosition(pos.x, pos.y, this._room.name));
 	}
 
 	/*
@@ -171,8 +272,8 @@ class RoomManager {
 	 */
 	
 	_printRoom(array) {
-		for (var x = 0; x < 50; x++) {
-			for (var y = 0; y < 50; y++) {
+		for (var x = 0; x < array.width; x++) {
+			for (var y = 0; y < array.height; y++) {
 				var value = array.get(x, y);
 				if (value !== undefined) {
 					this._room.visual.text(value, x, y, {align: 'center', opacity: 0.8});
@@ -202,9 +303,9 @@ RoomManager.TILE_TERRAIN_PLAIN = ' ';
 RoomManager.TILE_TERRAIN_SWAMP = '~';
 RoomManager.TILE_TERRAIN_WALL = '█';
 RoomManager.TILES_TERRAIN = [
-	new RoomTerrainTile(RoomManager.TILE_TILE_TERRAIN_PLAIN, 'plain'), 
-	new RoomTerrainTile(RoomManager.TILE_TILE_TERRAIN_SWAMP, 'swamp'), 
-	new RoomTerrainTile(RoomManager.TILE_TILE_TERRAIN_WALL, 'wall'), 
+	new RoomTerrainTile(RoomManager.TILE_TERRAIN_PLAIN, 'plain'), 
+	new RoomTerrainTile(RoomManager.TILE_TERRAIN_SWAMP, 'swamp'), 
+	new RoomTerrainTile(RoomManager.TILE_TERRAIN_WALL, 'wall'), 
 ];
 
 /*
@@ -253,9 +354,11 @@ class RoomStructureTile {
 }
 
 RoomManager.TILE_EXTENSION = 'o';
+RoomManager.TILE_SPAWN = 'S';
 
 RoomManager.TILES_TO_BE_BUILD = [ 
 	new RoomStructureTile(RoomManager.TILE_EXTENSION, STRUCTURE_EXTENSION),
+	new RoomStructureTile(RoomManager.TILE_SPAWN, STRUCTURE_SPAWN),
 ];
 
 /*

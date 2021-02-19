@@ -5,8 +5,8 @@
 class TileArray {
 	
 	constructor(width = 0, height = 0) {
-		this._width = width;
-		this._height = height;
+		this.width = width;
+		this.height = height;
 		
 		this._array = new Array(width);
 		for (var x = 0; x < width; x++) {
@@ -54,11 +54,11 @@ class TileArray {
 			paddingChar: ' ',
 		};
 		opt = Object.assign(defaultOpt, opt);
-		var valueLength = string.length / this._width / this._height;
+		var valueLength = string.length / this.width / this.height;
 
-		for (var y = 0; y < this._height; y++) {
-			for (var x = 0; x < this._width; x++) {
-				var position = (x + y * this._width) * valueLength;
+		for (var y = 0; y < this.height; y++) {
+			for (var x = 0; x < this.width; x++) {
+				var position = (x + y * this.width) * valueLength;
 				this.set(x, y, string.substring(position, position + valueLength).split(opt.paddingChar).join(''));
 			}
 		}
@@ -66,8 +66,8 @@ class TileArray {
 	
 	_flatMap() {
 		var result = [];
-		for (var y = 0; y < this._height; y++) {
-			for (var x = 0; x < this._width; x++) {
+		for (var y = 0; y < this.height; y++) {
+			for (var x = 0; x < this.width; x++) {
 				result.push(this._array[x][y]);
 			}
 		}

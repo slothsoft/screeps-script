@@ -10,9 +10,16 @@ class RoomPosition {
 		this.roomName = roomName;
 	}
 
-	getRangeTo(target) {
-		var targetX = target.pos.x - this.x;
-		var targetY = target.pos.y - this.y;
+	getRangeTo(targetOrX, y) {
+		if (y !== undefined) {
+			return this._getRangeToXY(targetOrX, y);
+		}
+		return this._getRangeToXY(targetOrX.pos.x, targetOrX.pos.y);
+	}
+
+	_getRangeToXY(x, y) {
+		var targetX = x - this.x;
+		var targetY = y - this.y;
 		return Math.pow(targetX * targetX + targetY * targetY, 1/2);
 	}
 	

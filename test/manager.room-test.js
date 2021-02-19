@@ -1,7 +1,10 @@
 var Room = require('./mock/room-mock');
+var Spawn = require('./mock/spawn-mock');
 
 var RoomManager = require('../src/manager.room');
 var assert = require('assert');
+
+var TileArray = require('../src/tile.array');
 
 /*
  * If you want to add another supported tile type, add it to:
@@ -68,6 +71,7 @@ describe('manager.room', () => {
 						{ type: LOOK_TERRAIN,  terrain: 'wall' },
 
 						{ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_EXTENSION } },
+						{ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_SPAWN } },
 
 						{ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_WALL } },
 						{ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_RAMPART } },
@@ -78,6 +82,7 @@ describe('manager.room', () => {
 					[
 						// acceptedStructures
 						{ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_EXTENSION } },
+						{ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_SPAWN } },
 					],
 					[
 						// notExpectedStructures
@@ -109,6 +114,7 @@ describe('manager.room', () => {
 						{ type: LOOK_MINERALS },
 
 						{ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_EXTENSION } },
+						{ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_SPAWN } },
 					]));
 		});
 	});
@@ -175,13 +181,13 @@ describe('manager.room', () => {
 			assert.equal(expectedCharacter, character, 'Could not get character from ' + JSON.stringify(stuff));
 		};
 		it('plain', () => {
-			testFetchTileAt({ type: LOOK_TERRAIN,  terrain: 'plain' }, RoomManager.TILE_TILE_TERRAIN_PLAIN);
+			testFetchTileAt({ type: LOOK_TERRAIN,  terrain: 'plain' }, RoomManager.TILE_TERRAIN_PLAIN);
 		});
 		it('swamp', () => {
-			testFetchTileAt({ type: LOOK_TERRAIN,  terrain: 'swamp' }, RoomManager.TILE_TILE_TERRAIN_SWAMP);
+			testFetchTileAt({ type: LOOK_TERRAIN,  terrain: 'swamp' }, RoomManager.TILE_TERRAIN_SWAMP);
 		});
 		it('wall', () => {
-			testFetchTileAt({ type: LOOK_TERRAIN,  terrain: 'wall' }, RoomManager.TILE_TILE_TERRAIN_WALL);
+			testFetchTileAt({ type: LOOK_TERRAIN,  terrain: 'wall' }, RoomManager.TILE_TERRAIN_WALL);
 		});
 		it('controller', () => {
 			testFetchTileAt({ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_CONTROLLER } }, RoomManager.TILE_CONTROLLER);
@@ -191,6 +197,9 @@ describe('manager.room', () => {
 		});
 		it('extension', () => {
 			testFetchTileAt({ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_EXTENSION } }, RoomManager.TILE_EXTENSION);
+		});
+		it('spawn', () => {
+			testFetchTileAt({ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_SPAWN } }, RoomManager.TILE_SPAWN);
 		});
 		it('wall', () => {
 			testFetchTileAt({ type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_WALL } }, RoomManager.TILE_WALL);
@@ -282,7 +291,7 @@ describe('manager.room', () => {
 			var result = roomManager.fetchFreeBuildingSlots(tileCharacter);
 			
 			assert.notEqual(undefined, result);
-			assert.equal(expectedResult, result);
+			assert.equal(expectedResult, result, 'Unexpected result for fetchFreeBuildingSlots()! roomLevel=' + roomLevel + ', usedStructures=' + usedStructures);
 		}
 		it('extensions', () => {
 			// Available {0: 0, 1: 0, 2: 5, 3: 10, 4: 20, 5: 30, 6: 40, 7: 50, 8: 60}
@@ -295,6 +304,227 @@ describe('manager.room', () => {
 			testFetchFreeBuildingSlots(RoomManager.TILE_EXTENSION, 6, 5, 35);
 			testFetchFreeBuildingSlots(RoomManager.TILE_EXTENSION, 7, 55, -5);
 			testFetchFreeBuildingSlots(RoomManager.TILE_EXTENSION, 8, 44, 16);
+		});
+
+		it('spawn', () => {
+			// "spawn": {0: 0, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 2, 8: 3}
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 0, 0, 0);
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 1, 0, 1);
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 2, 1, 0);
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 3, 0, 1);
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 4, 1, 0);
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 5, 0, 1);
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 6, 1, 0);
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 7, 0, 2);
+			testFetchFreeBuildingSlots(RoomManager.TILE_SPAWN, 8, 3, 0);
+		});
+	});
+
+	describe('#generateLayout', () => {
+		it('default', () => {
+			const startY = 42;
+	
+			var room = new Room();
+			room.lookAt = (x, y) => (y == startY && x < allTiles.length) ? [ allTiles[x].stuff ] : [];
+			
+			var roomManager = new RoomManager(room);
+			var array = roomManager._generateLayout();
+	
+			assert.notEqual(undefined, array);
+			for (var i = 0; i < allTiles.length; i++) {
+				assert.equal(allTiles[i].expectedCharacter, array.get(i, startY));
+			}
+		});
+
+		it('with array', () => {
+			const startY = 1;
+	
+			var room = new Room();
+			room.lookAt = (x, y) => (y == startY && x < allTiles.length) ? [ allTiles[x + 3].stuff ] : [];
+
+			var array = new TileArray(5, 3);
+			
+			var roomManager = new RoomManager(room);
+			roomManager._generateLayout(array);
+
+			var compactString = 
+				"?????" +
+				"Ø©oSw" + 
+				"?????";
+	
+			assert.notEqual(undefined, array);
+			assert.equal(compactString, array.toCompactString());
+		});
+
+		it('with spawn', () => {
+			var spawn = new Spawn();
+			spawn.pos.x = 1;
+			spawn.pos.y = 1;
+			
+			var room = new Room();
+			room.lookAt = (x, y) => 
+				(x == spawn.pos.x && y ==spawn.pos.y) ? 
+					[ { type: LOOK_STRUCTURES, structure: spawn } ] : 
+					[ { type: LOOK_TERRAIN,  terrain: 'plain' } ];
+			room.find = () => [ spawn ];
+
+			var array = new TileArray(5, 3);
+			
+			var roomManager = new RoomManager(room);
+			roomManager._generateLayout(array);
+
+			var compactString = 
+				"o o o" +
+				" S o " + 
+				"o o o";
+	
+			assert.notEqual(undefined, array);
+			assert.equal(compactString, array.toCompactString());
+		});
+
+		it('with spawn & extension count', () => {
+			var spawn = new Spawn();
+			spawn.pos.x = 1;
+			spawn.pos.y = 1;
+			
+			var room = new Room();
+			room.lookAt = (x, y) => 
+				(x == spawn.pos.x && y ==spawn.pos.y) ? 
+					[ { type: LOOK_STRUCTURES, structure: spawn } ] : 
+					[ { type: LOOK_TERRAIN,  terrain: 'plain' } ];
+			room.find = () => [ spawn ];
+
+			var array = new TileArray(5, 3);
+			
+			var roomManager = new RoomManager(room);
+			roomManager._getExtensionsCount = () => 5;
+			roomManager._generateLayout(array);
+
+			var compactString = 
+				"o o  " +
+				" S o " + 
+				"o o  ";
+	
+			assert.notEqual(undefined, array);
+			assert.equal(compactString, array.toCompactString());
+		});
+
+		it('with spawn & terrain', () => {
+			var spawn = new Spawn();
+			spawn.pos.x = 1;
+			spawn.pos.y = 1;
+			
+			var room = new Room();
+			room.lookAt = (x, y) => {
+				if (x == spawn.pos.x && y == spawn.pos.y) {
+					return [ { type: LOOK_STRUCTURES, structure: spawn } ];
+				}
+				if (x == 0) {
+					return [ { type: LOOK_TERRAIN,  terrain: 'wall' } ];
+				}
+				if (x == 2) {
+					return [ { type: LOOK_TERRAIN,  terrain: 'swamp' } ];
+				}
+				return [ { type: LOOK_TERRAIN,  terrain: 'plain' } ];
+			}
+			room.find = () => [ spawn ];
+
+			
+			var roomManager = new RoomManager(room);
+			
+			// test 1 - no extensions
+
+			var array = new TileArray(5, 3);
+			roomManager._getExtensionsCount = () => 0;
+			roomManager._generateExistingTiles(array);
+
+			var compactString = 
+				"█ ~  " +
+				"█S~  " + 
+				"█ ~  ";
+	
+			assert.notEqual(undefined, array);
+			assert.equal(compactString, array.toCompactString());
+			
+			// test 2 - many extensions
+
+			array = new TileArray(5, 3);
+			roomManager._getExtensionsCount = () => 10;
+			roomManager._generateLayout(array);
+
+			compactString = 
+				"█ o o" +
+				"█S~o " + 
+				"█ o o";
+	
+			assert.notEqual(undefined, array);
+			assert.equal(compactString, array.toCompactString());
+		});
+
+		it('with spawn & existing extensions', () => {
+			var spawn = new Spawn();
+			spawn.pos.x = 1;
+			spawn.pos.y = 1;
+			
+			var room = new Room();
+			room.lookAt = (x, y) => {
+				if (x == spawn.pos.x && y == spawn.pos.y) {
+					return [ { type: LOOK_STRUCTURES, structure: spawn } ];
+				}
+				if (x == 0) {
+					return [ { type: LOOK_STRUCTURES, structure: { structureType: STRUCTURE_EXTENSION } } ];
+				}
+				return [ { type: LOOK_TERRAIN,  terrain: 'plain' } ];
+			}
+			room.find = () => [ spawn ];
+
+			var array = new TileArray(5, 3);
+			
+			var roomManager = new RoomManager(room);
+			roomManager._getExtensionsCount = () => 5;
+			roomManager._generateLayout(array);
+
+			var compactString = 
+				"o o  " +
+				"oS   " + 
+				"o o  ";
+	
+			assert.notEqual(undefined, array);
+			assert.equal(compactString, array.toCompactString());
+		});
+	});
+
+	describe('#generateLayoutForRoom', () => {
+		it('default', () => {
+			var spawn = new Spawn();
+			spawn.pos.x = 1;
+			spawn.pos.y = 1;
+			
+			var room = new Room();
+			room.lookAt = (x, y) => {
+				if (x == spawn.pos.x && y == spawn.pos.y) {
+					return [ { type: LOOK_STRUCTURES, structure: spawn } ];
+				}
+				if (x == 0) {
+					return [ { type: LOOK_TERRAIN,  terrain: 'wall' } ];
+				}
+				if (x == 2) {
+					return [ { type: LOOK_TERRAIN,  terrain: 'swamp' } ];
+				}
+				return [ { type: LOOK_TERRAIN,  terrain: 'plain' } ];
+			}
+			room.find = () => [ spawn ];
+
+			var layout = RoomManager.generateLayoutForRoom(room, new TileArray(5, 3));
+
+			var compactString = 
+				"█ o o" +
+				"█S~o " + 
+				"█ o o";
+	
+			assert.notEqual(undefined, layout);
+			assert.equal(compactString, layout);
+			assert.equal(compactString, room.memory.roomManager.layout);
 		});
 	});
 	

@@ -343,7 +343,6 @@ describe('main.info', () => {
 		});
 	});
 
-
 	describe('#visualizeConsole', () => {
 		it('empty', () => {
 

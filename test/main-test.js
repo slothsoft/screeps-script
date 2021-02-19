@@ -1,5 +1,6 @@
 var Creep = require('./mock/creep-mock');
 var Room = require('./mock/room-mock');
+var RoomPosition = require('./mock/room-position-mock');
 var Spawn = require('./mock/spawn-mock');
 
 var classUnderTest = require('../src/main');
@@ -9,17 +10,23 @@ var constants = require('../src/main.constants');
 var info = require('../src/main.info');
 var MainUtil = require('../src/main.util');
 
+var TileArray = require('../src/tile.array');
+
 
 // All methods tested.
 
-describe('main', () => {
-	it('exists', () => {
-		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
+describe('main', () => {	
+	beforeEach(() => {
+		global.RoomPosition = RoomPosition;
 	});
 
 	beforeEach(() => {
 		Game.clearAll();
 		info.clearLines();
+	});
+	
+	it('exists', () => {
+		assert.equal(typeof classUnderTest === 'object' && classUnderTest !== null, true);
 	});
 
 	describe('#selfdestruct', () => {
@@ -317,6 +324,50 @@ describe('main', () => {
 			clearConsole();
 
 			assert.equal(info.getLines().length, 0);
+		});
+	});
+	
+	describe('#generateLayoutForRoom', () => {
+		it('default', () => {
+			var spawn = new Spawn();
+			spawn.pos.x = 1;
+			spawn.pos.y = 1;
+			
+			var room = new Room();
+			room.lookAt = (x, y) => {
+				if (x == spawn.pos.x && y == spawn.pos.y) {
+					return [ { type: LOOK_STRUCTURES, structure: spawn } ];
+				}
+				if (x == 0) {
+					return [ { type: LOOK_TERRAIN,  terrain: 'wall' } ];
+				}
+				if (x == 2) {
+					return [ { type: LOOK_TERRAIN,  terrain: 'swamp' } ];
+				}
+				return [ { type: LOOK_TERRAIN,  terrain: 'plain' } ];
+			}
+			room.find = () => [ spawn ];
+
+			var layout = generateLayoutForRoom(room.name, new TileArray(5, 3));
+
+			var compactString = 
+				"█ o o" +
+				"█S~o " + 
+				"█ o o";
+	
+			assert.notEqual(undefined, layout);
+			assert.equal(compactString, layout);
+			assert.equal(compactString, room.memory.roomManager.layout);
+			
+			assert.equal(0, info.getLines().length);
+		});
+
+		it('no room found', () => {
+			var layout = generateLayoutForRoom('Other');
+			assert.equal(false, layout);
+
+			assert.equal(1, info.getLines().length);
+			assert.equal('🛑 Could not find room: Other', info.getLine(0));
 		});
 	});
 });

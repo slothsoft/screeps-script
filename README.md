@@ -116,6 +116,7 @@ The layout contains the following characters:
 | --------------------------------------------------- | ------------ |
 | `clearConsole()`                               | clears the lines of the JavaScript and in-game consoles |
 | `fetchOldestCreep(<baseName>)`             | fetches the oldest creep in the world (the one with the lowest `ticksToLive`); fetches the oldest creep in the base if &lt;baseName&gt; was set |
+| `generateLayoutForRoom(<roomName>)`      | creates a editable room layout for the specific room name; overrides existing layouts |  
 | `makeLinkSource(<id>)`                       | makes a link with a specific ID an source |
 | `makeLinkTarget(<id>)`                       | makes a link with a specific ID an target |
 | `moveCreepTo(<creepName>, <gameObjectId>)` | the creep will go to the game objects and start working there |
